@@ -41,8 +41,8 @@ parsed_input_list_t *parse_input(const char *input, error_parse_t *error)
 
     if (!input)
         return (NULL);
-    add_node_to_parsed_list(&parsing_list);
-    add_node_to_cmd_list(&(parsing_list->cmd_list));
+    ADD_PARSE_NODE(&parsing_list, parsed_input_list_t);
+    ADD_PARSE_NODE(&(parsing_list->cmd_list), cmd_list_t);
     while (input[i] && !(*error)) {
         if (!parse_each_argument(&parsing_list, error, input, &i))
             break;

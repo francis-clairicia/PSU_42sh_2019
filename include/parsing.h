@@ -56,24 +56,24 @@ static const char *splitters[] = {
 
 //Parsing Lists
 typedef struct arguments {
-    char *arg;
     struct arguments *next;
     struct arguments *prev;
+    char *arg;
 } arguments_t;
 
 typedef struct command_list {
+    struct command_list *next;
+    struct command_list *prev;
     arguments_t *args;
     char *redir_name;
     redirection_type_t redir_type;
-    struct command_list *next;
-    struct command_list *prev;
 } cmd_list_t;
 
 typedef struct parsed_input_list {
-    cmd_list_t *cmd_list;
-    splitter_type_t splitter;
     struct parsed_input_list *next;
     struct parsed_input_list *prev;
+    cmd_list_t *cmd_list;
+    splitter_type_t splitter;
 } parsed_input_list_t;
 
 //end -> Parsing list
@@ -143,23 +143,45 @@ static inline void print_parsing_error(const error_parse_t error)
 };
 
 
+/*
+** --> PARSING FUNCTIONS <--
+*/
+
+// Parses an input into a parsed_input_list_t *list.
 parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
 
-void add_node_to_arg_list(arguments_t **head);
-void add_node_to_cmd_list(cmd_list_t **head);
-void add_node_to_parsed_list(parsed_input_list_t **head);
+/////////////////////////////////////////////////////////
 
+// Adds a node to a doubly linked list.
+void *add_parsing_node(void **head, const size_t size);
+
+// Directly giving, in parameters, a head and a type,
+// Redirect to add_parsing_node with a (void **) cast and sizeof(type).
+#define ADD_PARSE_NODE(head, type) \
+        (add_parsing_node((void **)head, sizeof(type)))
+
+/////////////////////////////////////////////////////////
+
+//Returns the enum matching the next redirection in shifted_input.
 ssize_t get_redirection_enum(const char *restrict shifted_input);
+
+//Returns the enum matching the next splitter in shifted_input.
 ssize_t get_splitter_enum(const char *restrict shifted_input);
 
 void free_parsed_input_node(parsed_input_list_t *node);
 void free_parsed_input_list(parsed_input_list_t *head);
 
+
+// Gets Arguments and enums.
+
 void get_quoted_arg(cmd_list_t **head, const bool separator,
-                        const char *input, size_t *i);
+                    const char *input, size_t *i);
+
 void get_unquoted_arg(cmd_list_t **head, const bool separator,
                     const char *input, size_t *i);
+
 bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
+
 void get_redirection(cmd_list_t **head, error_parse_t *error,
                     const char *input, size_t *i);
 

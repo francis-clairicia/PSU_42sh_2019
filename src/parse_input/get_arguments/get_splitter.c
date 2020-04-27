@@ -19,8 +19,8 @@ bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i)
     if (!((*head)->cmd_list->args) || !input[(*i)]
         || is_char_splitter(input[*i]))
         return (true);
-    add_node_to_parsed_list(head);
-    add_node_to_cmd_list(&((*head)->prev->cmd_list));
+    ADD_PARSE_NODE(head, parsed_input_list_t);
+    ADD_PARSE_NODE(&((*head)->prev->cmd_list), cmd_list_t);
     (*head)->prev->splitter = splitter_type;
     return (true);
 }

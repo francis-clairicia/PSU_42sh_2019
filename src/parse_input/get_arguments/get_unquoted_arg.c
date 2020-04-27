@@ -17,7 +17,7 @@ void get_unquoted_arg(cmd_list_t **head, const bool separator,
     if (!separator && (*head)->prev->args)
         (*head)->prev->args->prev->arg = my_strcat((*head)->prev->args->prev->arg, tmp, 1, 1);
     else {
-        add_node_to_arg_list(&(*head)->prev->args);
+        ADD_PARSE_NODE(&(*head)->prev->args, arguments_t);
         (*head)->prev->args->prev->arg = tmp;
     }
 }

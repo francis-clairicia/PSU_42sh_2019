@@ -8,68 +8,25 @@
 #include <stdlib.h>
 #include "parsing.h"
 
-void add_node_to_arg_list(arguments_t **head)
+void *add_parsing_node(void **head, const size_t size)
 {
-    arguments_t *node = NULL;
+    void *node = NULL;
 
     if (!head)
-        return;
-    node = malloc(sizeof(arguments_t));
+        return (NULL);
+    node = malloc(size);
     if (!node)
-        return;
-    node->arg = NULL;
+        return (NULL);
+    my_memset(node, 0, size);
     if (!(*head)) {
-        *head = node;
-        node->next = *head;
-        node->prev = *head;
-    } else {
-        node->next = (*head);
-        node->prev = (*head)->prev;
-        (*head)->prev->next = node;
-        (*head)->prev = node;
-    }
-}
-
-void add_node_to_cmd_list(cmd_list_t **head)
-{
-    cmd_list_t *node = NULL;
-
-    if (!head)
-        return;
-    node = malloc(sizeof(cmd_list_t));
-    if (!node)
-        return;
-    *node = (cmd_list_t){.args = NULL, .redir_name = NULL, .redir_type = NONE};
-    if (!(*head)) {
-        *head = node;
-        node->next = *head;
-        node->prev = *head;
-    } else {
-        node->next = (*head);
-        node->prev = (*head)->prev;
-        (*head)->prev->next = node;
-        (*head)->prev = node;
-    }
-}
-
-void add_node_to_parsed_list(parsed_input_list_t **head)
-{
-    parsed_input_list_t *node = NULL;
-
-    if (!head)
-        return;
-    node = malloc(sizeof(parsed_input_list_t));
-    if (!node)
-        return;
-    *node = (parsed_input_list_t){.cmd_list = NULL, .splitter = NONE};
-    if (!(*head)) {
-        node->next = node;
-        node->prev = node;
+        (*(size_t *)node) = (size_t)node;
+        (*(size_t *)(node + 8)) = (size_t)node;
         *head = node;
     } else {
-        node->next = (*head);
-        node->prev = (*head)->prev;
-        (*head)->prev->next = node;
-        (*head)->prev = node;
+        (*(size_t *)node) = (size_t)(*head);
+        (*(size_t *)(node + 8)) = (*(size_t *)((*head + 8)));
+        (*(size_t *)((*(size_t *)((*head) + 8)))) = (size_t)node;
+        (*(size_t *)((*head) + 8)) = (size_t)node;
     }
+    return (node);
 }
