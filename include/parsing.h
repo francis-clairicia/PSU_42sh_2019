@@ -10,6 +10,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "my.h"
 
 #define NONE (0)
 
@@ -22,7 +23,7 @@ typedef enum redirection_type {
     READ_FROM_FILE_AS_INPUT = 5,
 } redirection_type_t;
 
-static const char first_chars_redirections[] = {"|><"};
+static const char first_chars_redirections[] = "|><";
 
 static const char *redirections[] = {
     "|",
@@ -42,7 +43,7 @@ typedef enum splitter_type {
     OR = 3
 } splitter_type_t;
 
-static const char first_chars_splitters[] = {";&|"};
+static const char first_chars_splitters[] = ";&|";
 
 static const char *splitters[] = {
     ";",
@@ -66,10 +67,10 @@ typedef struct command_list {
     redirection_type_t redir_type;
     struct command_list *next;
     struct command_list *prev;
-} command_list_t;
+} cmd_list_t;
 
 typedef struct parsed_input_list {
-    command_list_t *command_list;
+    cmd_list_t *cmd_list;
     splitter_type_t splitter;
     struct parsed_input_list *next;
     struct parsed_input_list *prev;
@@ -78,11 +79,11 @@ typedef struct parsed_input_list {
 //end -> Parsing list
 
 
-static const char spaces[] = {" \t"};
-static const char backticks[] = {"\"'"};
+static const char spaces[] = " \t";
+static const char backticks[] = "\"'";
 
-static const char all_splitters[] = {" \t\"';&|><"};
-static const char all_stoppers[] = {";&|><"};
+static const char all_splitters[] = " \t\"';&|><";
+static const char all_stoppers[] = ";&|><";
 
 
 static inline bool is_char_spaces(const char c)
@@ -144,23 +145,22 @@ static inline void print_parsing_error(const error_parse_t error)
 
 parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
 
-void add_parsed_list_node(parsed_input_list_t **head);
-void add_cmd_list_node(cmd_list_t **head);
-void add_arg_list_node(arguments_t **head);
+void add_node_to_arg_list(arguments_t **head);
+void add_node_to_cmd_list(cmd_list_t **head);
+void add_node_to_parsed_list(parsed_input_list_t **head);
 
-void free_parsed_input_list(parsed_input_list_t *head);
+ssize_t get_redirection_enum(const char *restrict shifted_input);
+ssize_t get_splitter_enum(const char *restrict shifted_input);
+
 void free_parsed_input_node(parsed_input_list_t *node);
+void free_parsed_input_list(parsed_input_list_t *head);
 
-ssize_t get_redirection_enum(const char *shifted_input);
-ssize_t get_splitter_enum(const char *shifted_input);
-
-void get_redirection(cmd_list_t **head, const char *input,
-                        size_t *i, error_parse_t *error);
 void get_quoted_arg(cmd_list_t **head, const bool separator,
                         const char *input, size_t *i);
 void get_unquoted_arg(cmd_list_t **head, const bool separator,
-                        const char *input, size_t *i);
-bool get_splitter(parsed_input_list_t **head, const char *input,
-                    size_t *i, error_parse_t *error);
+                    const char *input, size_t *i);
+bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
+void get_redirection(cmd_list_t **head, error_parse_t *error,
+                    const char *input, size_t *i);
 
 #endif /* MYSH_PARSER_H_ */

@@ -1,59 +1,67 @@
 ##
-## EPITECH PROJECT, 2019
+## EPITECH PROJECT, 2020
 ## Makefile 42sh
 ## File description:
-## Compiles c files with libs into the 42sh program
+## Makefile used to compile the 42sh program.
 ##
 
-MAIN		=	src/main.c												\
+SRC_NO_TEST			=	src/main.c
 
-SRC			=															\
+SRC_TEST			=	src/mysh.c											\
+						src/parse_input/parse_input.c						\
+						src/parse_input/get_enums.c							\
+						src/parse_input/free_parsed_input.c					\
+						src/parse_input/add_nodes_to_list.c					\
+						src/parse_input/get_arguments/get_quoted_arg.c		\
+						src/parse_input/get_arguments/get_unquoted_arg.c	\
+						src/parse_input/get_arguments/get_splitter.c		\
+						src/parse_input/get_arguments/get_redirection.c		\
 
-SRCTESTS	=	tests/													\
+SRC					=	$(SRC_NO_TEST) $(SRC_TEST)
 
-VPATH		=	/usr/local/lib/
+CFLAGS				=	-Werror -Wextra
 
-NAME		=	42sh
+CPPFLAGS			=	-I./include/
 
-CFLAGS		=	-Wall -Wextra
+override LDFLAGS	+=	-L./lib
 
-CPPFLAGS	=	-I./include/
+override LDLIBS		+=	-lmy
 
-LDFLAGS		=	-L./lib/
+OBJ					=	$(SRC:.c=.o)
 
-LDLIBS		+=	-lmy
+NAME				=	42sh
 
 all:	$(NAME)
 
-$(NAME):
-	$(MAKE) -sC lib/my
-	$(CC) -o $@ $(MAIN) $(SRC) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
+$(NAME):	CFLAGS += -O2
+$(NAME):	$(LDLIBS) $(OBJ)
+	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 
-debug:
-	$(MAKE) -sC lib/my
-	$(CC) -g -o $@ $(SRC) $(MAIN) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
+-lmy:
+	$(MAKE) -s -C ./lib/my
 
-tests_run:
-	$(MAKE) -sC lib/my
-	$(CC) -o $@ $(SRC) $(SRCTESTS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS) -lcriterion --coverage
-	./$@
-	$(RM) $@
+tests_run:	CFLAGS += --coverage
+tests_run:	LDLIBS += -lcriterion
+tests_run:	$(LDLIBS)
+	@find -name "*.gc*" -delete
+	$(CC) -o unit_tests $(SRC_TEST) tests/*.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
+	-./unit_tests
+	$(RM) unit_tests test*.gc*
+	mkdir -p coverage
+	mv *.gc* coverage/
 
-coverage:
-	gcovr --exclude tests/
-	gcovr --exclude tests/ --branches
+debug:	CFLAGS += -g
+debug:	$(LDLIBS)
+	$(CC) -o $@ $(SRC) $(LDFLAGS) $(LDLIBS) $(CFLAGS) $(CPPFLAGS)
 
 clean:
-	$(RM) tests_run
-	$(RM) *.gcda *.gcno
-	$(RM) vgcore.*
+	$(RM) $(OBJ)
+	$(RM) unit_tests *.gc*
 
 fclean:	clean
-	$(RM) $(NAME)
-	$(RM) debug
-	$(MAKE) fclean -sC lib/my
+	rm -f $(NAME)
+	rm -f debug
 
 re:	fclean all
 
-.NOTPARALLEL:
-.PHONY: all debug tests_run coverage clean fclean re
+.PHONY:	all -lmy tests_run debug clean fclean re
