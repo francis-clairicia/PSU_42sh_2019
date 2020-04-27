@@ -1,0 +1,9 @@
+.vscode
+__pycache__
+*.o
+*.a
+a.out
+42sh
+unit_tests
+coverage
+vgcore.*
