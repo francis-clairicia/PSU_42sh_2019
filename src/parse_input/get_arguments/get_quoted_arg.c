@@ -17,11 +17,13 @@ void get_quoted_arg(cmd_list_t **head, const bool separator,
 
     *i += 1;
     tmp = my_strdup_char_i(&(input[*i]), backstick, i);
-    if (!separator && (*head)->prev->args) {
+    if (!separator && ((cmd_list_t *)DCLL_PREV((*head)))->args) {
+        last_arg = &((arguments_t *)DCLL_PREV(((cmd_list_t *)DCLL_PREV(*head))->args))->arg;
         last_arg = &((*head)->prev->args->prev->arg);
         *last_arg = my_strcat(*last_arg, tmp, true, true);
     } else {
-        add_arg_list_node(&(*head)->prev->args);
+        DCLL_ADD_NODE(&((cmd_list_t *)DCLL_PREV((*head)))->args,
+                                sizeof(arguments_t), free_cmd);
         (*head)->prev->args->prev->arg = tmp;
     }
     *i += 1;

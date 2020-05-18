@@ -12,6 +12,8 @@
 #include <stddef.h>
 #include "my.h"
 
+#include "node.h"
+
 #define NONE (0)
 
 //Redirections Input Characters Comparisons.
@@ -56,24 +58,21 @@ static const char *splitters[] = {
 
 //Parsing Lists
 typedef struct arguments {
+    node_t node;
     char *arg;
-    struct arguments *next;
-    struct arguments *prev;
 } arguments_t;
 
 typedef struct command_list {
+    node_t node;
     arguments_t *args;
     char *redir_name;
     redirection_type_t redir_type;
-    struct command_list *next;
-    struct command_list *prev;
 } cmd_list_t;
 
 typedef struct parsed_input_list {
+    node_t node;
     cmd_list_t *cmd_list;
     splitter_type_t splitter;
-    struct parsed_input_list *next;
-    struct parsed_input_list *prev;
 } parsed_input_list_t;
 
 //end -> Parsing list
@@ -150,52 +149,11 @@ static inline void print_parsing_error(const error_parse_t error)
 // Parses an input into a parsed_input_list_t *list.
 parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
 
-/////////////////////////////////////////////////////////
-
-// Adds a node to a doubly linked list.
-void *add_parsing_node(void **head, const size_t size);
-
-
-// Adds an argument node to an argument list.
-void add_arg_list_node(arguments_t **head);
-
-// Adds a cmd_node to a cmd_list.
-void add_cmd_list_node(cmd_list_t **head);
-
-// Adds a parsed_list_node to a parsed_list.
-void add_parsed_list_node(parsed_input_list_t **head);
-
-
-// Directly giving, in parameters, a head and a type,
-// Redirect to add_parsing_node with a (void **) cast and sizeof(type).
-#define ADD_PARSE_NODE(head, type) \
-        (add_parsing_node((void **)head, sizeof(type)))
-
-/////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////
-
-//Gets, from a void *ptr, the address of the given nb_bytes
-//from the start of the ptr.
-#define GET_ELEM_BEGIN(ptr, bytes) \
-        (*(size_t *)(ptr + bytes))
-
-//Gets, from a void *ptr, the address of the given nb_bytes
-//from the end of the ptr.
-#define GET_ELEM_END(ptr, size_of_type, bytes) \
-        (*(size_t *)(ptr + size_of_type - bytes))
-
-/////////////////////////////////////////////////////////
-
 //Returns the enum matching the next redirection in shifted_input.
 ssize_t get_redirection_enum(const char *restrict shifted_input);
 
 //Returns the enum matching the next splitter in shifted_input.
 ssize_t get_splitter_enum(const char *restrict shifted_input);
-
-void free_parsed_input_node(parsed_input_list_t *node);
-void free_parsed_input_list(parsed_input_list_t *head);
-
 
 // Gets Arguments and enums.
 
@@ -227,5 +185,20 @@ bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
 //Increases index to the new arg/splitter/space/end of input.
 void get_redirection(cmd_list_t **head, error_parse_t *error,
                     const char *input, size_t *i);
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+//Free allocated contents of the given argument_t node
+void free_argument(arguments_t *node);
+
+//Free allocated contents of the given cmd_list_t node
+void free_cmd(cmd_list_t *node);
+
+//Free allocated contents of the given parsed_input_list_t node
+void free_parsed_input(parsed_input_list_t *node);
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 #endif /* MYSH_PARSER_H_ */

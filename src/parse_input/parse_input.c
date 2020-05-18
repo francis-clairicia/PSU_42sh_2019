@@ -14,7 +14,7 @@ static bool parse_each_argument(parsed_input_list_t **head,
                                 error_parse_t *error,
                                 const char *input, size_t *i)
 {
-    parsed_input_list_t **cur = &(*head)->prev;
+    parsed_input_list_t **cur = &(*head)->node.prev;
     bool separator = loop_while_spaces(input, i);
 
     if (!(input[(*i)]))
