@@ -62,6 +62,7 @@ SRC			=	my_put_nbr.c					\
 				my_mass_strcmp.c				\
 				my_strdup_until_list_c.c		\
 				my_arrcmp.c						\
+				match.c							\
 
 LINKED_LIST	=	list/my_list.c					\
 				list/my_create_node.c			\

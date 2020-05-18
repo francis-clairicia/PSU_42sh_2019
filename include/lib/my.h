@@ -86,4 +86,6 @@ int my_dprintf(int fd, char const *format, ...);
 int my_vprintf(char const *format, va_list ap);
 int my_vdprintf(int fd, char const *format, va_list ap);
 
+bool match(const char *first, const char *second);
+
 #endif
