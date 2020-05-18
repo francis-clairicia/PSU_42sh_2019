@@ -55,8 +55,10 @@ tests_run:	$(LDLIBS)
 	$(CC) -o unit_tests $(SRC_TEST) tests/*.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
 	./unit_tests
 	$(RM) unit_tests test*.gc*
-	mkdir -p coverage
-	mv *.gc* coverage/
+
+coverage:
+	gcovr --exclude tests/
+	gcovr --exclude tests/ --branches
 
 debug:	CFLAGS += -g
 debug:	$(LDLIBS)
@@ -72,4 +74,4 @@ fclean:	clean
 
 re:	fclean all
 
-.PHONY:	all -lmy tests_run debug clean fclean re
+.PHONY:	all -lmy tests_run coverage debug clean fclean re

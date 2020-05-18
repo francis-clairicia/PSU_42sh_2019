@@ -37,7 +37,7 @@ static bool add_env_node(const char *var_name, const char *var_value,
     else
         set_env_node_as_end(head, node);
     node->var_name = my_strdup(var_name);
-    if (!node->var_name)
+    if (!node->var_name && var_name)
         return (false);
     node->var_value = my_strdup(var_value);
     return (!node->var_value && var_value) ? false : true;

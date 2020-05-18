@@ -11,6 +11,8 @@ unit_tests
 coverage
 
 # Outer Program Dumps
+*.gcda
+*.gcno
 vgcore.*
 
 # Prerequisites

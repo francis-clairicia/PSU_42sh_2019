@@ -23,7 +23,7 @@ bool remove_env_var(env_list_t **env_list, const char *var_name)
         if (variable == *env_list) {
             free_env_node(variable);
             *env_list = NULL;
-            return (false);
+            return (true);
         }
     }
     variable->prev->next = variable->next;
