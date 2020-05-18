@@ -56,24 +56,24 @@ static const char *splitters[] = {
 
 //Parsing Lists
 typedef struct arguments {
+    char *arg;
     struct arguments *next;
     struct arguments *prev;
-    char *arg;
 } arguments_t;
 
 typedef struct command_list {
-    struct command_list *next;
-    struct command_list *prev;
     arguments_t *args;
     char *redir_name;
     redirection_type_t redir_type;
+    struct command_list *next;
+    struct command_list *prev;
 } cmd_list_t;
 
 typedef struct parsed_input_list {
-    struct parsed_input_list *next;
-    struct parsed_input_list *prev;
     cmd_list_t *cmd_list;
     splitter_type_t splitter;
+    struct parsed_input_list *next;
+    struct parsed_input_list *prev;
 } parsed_input_list_t;
 
 //end -> Parsing list
@@ -162,6 +162,20 @@ void *add_parsing_node(void **head, const size_t size);
 
 /////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////
+
+//Gets, from a void *ptr, the address of the given nb_bytes
+//from the start of the ptr.
+#define GET_ELEM_BEGIN(ptr, bytes) \
+        (*(size_t *)(ptr + bytes))
+
+//Gets, from a void *ptr, the address of the given nb_bytes
+//from the end of the ptr.
+#define GET_ELEM_END(ptr, size_of_type, bytes) \
+        (*(size_t *)(ptr + size_of_type - bytes))
+
+/////////////////////////////////////////////////////////
+
 //Returns the enum matching the next redirection in shifted_input.
 ssize_t get_redirection_enum(const char *restrict shifted_input);
 
@@ -174,14 +188,32 @@ void free_parsed_input_list(parsed_input_list_t *head);
 
 // Gets Arguments and enums.
 
+//Gets a quoted arg, put it in a new-last node of the given cmd_list,
+//if separator is false, otherwise, concatenates it to the last arg
+//of the last element of cmd_list.
+//
+//Increases index to the new arg/splitter/space.
 void get_quoted_arg(cmd_list_t **head, const bool separator,
                     const char *input, size_t *i);
 
+//Gets an unquoted arg, put it in a new-last node of the given cmd_list,
+//if separator is false, otherwise, concatenates it to the last arg
+//of the last element of cmd_list.
+//
+//Increases index to the new arg/splitter/space/end of input.
 void get_unquoted_arg(cmd_list_t **head, const bool separator,
                     const char *input, size_t *i);
 
+//Gets a splitter, adds a new-last node to the parsed_input list,
+//sets it the newly-found splitter.
+//
+//Increases index to the new arg/splitter/space/end of input.
 bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
 
+//Gets a redirection, creates a new-last node in the given cmd_list,
+//
+//
+//Increases index to the new arg/splitter/space/end of input.
 void get_redirection(cmd_list_t **head, error_parse_t *error,
                     const char *input, size_t *i);
 

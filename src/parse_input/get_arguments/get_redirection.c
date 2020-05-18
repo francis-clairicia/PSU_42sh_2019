@@ -76,6 +76,9 @@ void get_redirection(cmd_list_t **head, error_parse_t *error,
     if ((*error) != NONE)
         return;
     (*head)->prev->redir_type = redir_type;
-    redir_type == PIPE ? ADD_PARSE_NODE(head, cmd_list_t) : redir_file(head, input, i);
+    if (redir_type == PIPE)
+        ADD_PARSE_NODE(head, cmd_list_t);
+    else
+        redir_file(head, input, i);
     check_direct_redir_error(head, redir_type, input[(*i)], error);
 }

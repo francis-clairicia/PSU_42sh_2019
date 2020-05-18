@@ -19,14 +19,14 @@ void *add_parsing_node(void **head, const size_t size)
         return (NULL);
     my_memset(node, 0, size);
     if (!(*head)) {
-        (*(size_t *)node) = (size_t)node;
-        (*(size_t *)(node + 8)) = (size_t)node;
+        GET_ELEM_END(node, size, 16) = (size_t)node;
+        GET_ELEM_END(node, size, 8) = (size_t)node;
         *head = node;
     } else {
-        (*(size_t *)node) = (size_t)(*head);
-        (*(size_t *)(node + 8)) = (*(size_t *)((*head + 8)));
-        (*(size_t *)((*(size_t *)((*head) + 8)))) = (size_t)node;
-        (*(size_t *)((*head) + 8)) = (size_t)node;
+        GET_ELEM_END(node, size, 16) = (size_t)(*head);
+        GET_ELEM_END(node, size, 8) = GET_ELEM_END(head, size, 8);
+        GET_ELEM_END(GET_ELEM_END(*head, size, 8), size, 16) = (size_t)node;
+        GET_ELEM_END(*head, size, 8) = (size_t)node;
     }
     return (node);
 }

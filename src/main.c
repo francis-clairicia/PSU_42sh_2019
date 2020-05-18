@@ -18,7 +18,13 @@ static int print_help(void)
 
 int main(int ac, char **av)
 {
+    const char *input = "ls a | mkdir >> test ; oui ; héhola && oui || non";
+    parsed_input_list_t *list = NULL;
+    error_parse_t error = NONE;
+
     if (ac > 1 && my_strcmp(av[1], "-h") == 0)
         return (print_help());
+    list = parse_input(input, &error);
+    free_parsed_input_list(list);
     return (0);
 }
