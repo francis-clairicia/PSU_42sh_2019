@@ -12,7 +12,7 @@
 #include <stddef.h>
 #include "my.h"
 
-#include "node.h"
+#include "../dcll.h"
 
 #define NONE (0)
 
@@ -58,19 +58,19 @@ static const char *splitters[] = {
 
 //Parsing Lists
 typedef struct arguments {
-    node_t node;
+    dcll_t dcll;
     char *arg;
 } arguments_t;
 
 typedef struct command_list {
-    node_t node;
+    dcll_t dcll;
     arguments_t *args;
     char *redir_name;
     redirection_type_t redir_type;
 } cmd_list_t;
 
 typedef struct parsed_input_list {
-    node_t node;
+    dcll_t dcll;
     cmd_list_t *cmd_list;
     splitter_type_t splitter;
 } parsed_input_list_t;

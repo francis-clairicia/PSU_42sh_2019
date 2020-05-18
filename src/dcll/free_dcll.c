@@ -2,26 +2,26 @@
 ** EPITECH PROJECT, 2020
 ** PSU_42sh_2019
 ** File description:
-** free_node
+** free_dcll
 */
 
-#include "node.h"
+#include "dcll.h"
 
-void free_node_list(node_t *node)
+void free_dcll_list(dcll_t *dcll)
 {
-    node_t *final = NULL;
-    node_t *tmp = NULL;
+    dcll_t *final = NULL;
+    dcll_t *tmp = NULL;
 
-    if (!node)
+    if (!dcll)
         return;
-    final = node;
-    tmp = node;
+    final = dcll;
+    tmp = dcll;
     do {
-        node = node->next;
+        dcll = dcll->next;
         if (tmp && tmp->freer)
             tmp->freer(tmp);
         if (tmp)
             free(tmp);
-        tmp = node;
+        tmp = dcll;
     } while (tmp != final);
 }

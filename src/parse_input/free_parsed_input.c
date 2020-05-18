@@ -8,32 +8,32 @@
 #include <stdlib.h>
 #include "mysh_parsing.h"
 
-void free_argument(arguments_t *node)
+void free_argument(arguments_t *dcll)
 {
-    if (!node)
+    if (!dcll)
         return;
-    if (node->arg) {
-        free(node->arg);
+    if (dcll->arg) {
+        free(dcll->arg);
     }
 }
 
-void free_cmd(cmd_list_t *node)
+void free_cmd(cmd_list_t *dcll)
 {
-    if (!node)
+    if (!dcll)
         return;
-    if (node->args) {
-        DCLL_FREE_NODE_LIST(node->args);
+    if (dcll->args) {
+        DCLL_FREE_LIST(dcll->args);
     }
-    if (node->redir_name) {
-        free(node->redir_name);
+    if (dcll->redir_name) {
+        free(dcll->redir_name);
     }
 }
 
-void free_parsed_input(parsed_input_list_t *node)
+void free_parsed_input(parsed_input_list_t *dcll)
 {
-    if (!node)
+    if (!dcll)
         return;
-    if (node->cmd_list) {
-        DCLL_FREE_NODE_LIST(node->cmd_list);
+    if (dcll->cmd_list) {
+        DCLL_FREE_LIST(dcll->cmd_list);
     }
 }

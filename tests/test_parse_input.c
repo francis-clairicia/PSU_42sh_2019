@@ -5,6 +5,7 @@
 ** test_parse_input.c
 */
 
+#include <string.h>
 #include <criterion/criterion.h>
 #include "mysh_parsing.h"
 
@@ -14,7 +15,6 @@ Test(parse_input, null_sent)
 
     list = parse_input(NULL, NULL);
     cr_expect_eq(list, NULL);
-    free_parsed_input_list(list);
 }
 
 Test(parse_input, easy_input)
@@ -26,11 +26,11 @@ Test(parse_input, easy_input)
     list = parse_input(input, &error);
     if (!list)
         cr_assert(0);
-    cr_expect_eq(my_strcmp(list->cmd_list->args->arg, "ls"), 0);
-    cr_expect_eq(list->cmd_list->args->next->arg,
-                list->cmd_list->args->prev->arg);
-    cr_expect_eq(my_strcmp(list->cmd_list->args->prev->arg, "-a"), 0);
-    free_parsed_input_list(list);
+    cr_expect(!strcmp(list->cmd_list->args->arg, "ls"));
+    cr_expect_eq(DCLL_NEXT_C(list->cmd_list->args, arguments_t *)->arg,
+                DCLL_PREV_C(list->cmd_list->args, arguments_t *)->arg);
+    cr_expect(!strcmp(
+        DCLL_PREV_C(list->cmd_list->args, arguments_t *)->arg, "-a"));
     cr_assert_eq(error, NONE);
 }
 
@@ -43,13 +43,17 @@ Test(parse_input, hard_input)
     list = parse_input(input, &error);
     if (!list)
         cr_assert(0);
-    cr_expect_eq(my_strcmp(list->cmd_list->args->arg, "ls"), 0);
-    cr_expect_eq(my_strcmp(list->cmd_list->args->prev->arg, "-a"), 0);
-    cr_expect_eq(list->cmd_list->redir_type, PIPE);
-    cr_expect_eq(my_strcmp(list->cmd_list->next->args->arg, "cat"), 0);
-    cr_expect_eq(my_strcmp(list->cmd_list->next->args->prev->arg, "-e"), 0);
-    cr_expect_eq(list->cmd_list->next->redir_type, REDIR_IN_FILE);
-    cr_expect_str_eq(list->cmd_list->next->redir_name, "txta");
-    free_parsed_input_list(list);
-    cr_assert_eq(error, NONE);
+    cr_expect(!strcmp(list->cmd_list->args->arg, "ls"));
+    cr_expect(!strcmp(DCLL_PREV_C(list->cmd_list->args, arguments_t *)->arg,
+                                                                        "-a"));
+    cr_expect(list->cmd_list->redir_type == PIPE);
+    cr_expect(!strcmp(DCLL_NEXT_C(list->cmd_list, cmd_list_t *)->args->arg,
+                                                                        "cat"));
+    cr_expect(!strcmp(DCLL_PREV_C(DCLL_NEXT_C
+            (list->cmd_list, cmd_list_t *)->args, arguments_t *)->arg, "-e"));
+    cr_expect(
+        DCLL_NEXT_C(list->cmd_list, cmd_list_t *)->redir_type == REDIR_IN_FILE);
+    cr_expect_str_eq(
+        DCLL_NEXT_C(list->cmd_list, cmd_list_t *)->redir_name, "txta");
+    cr_assert(error == NONE);
 }

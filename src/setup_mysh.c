@@ -20,6 +20,6 @@ int setup_mysh(const char * const env[])
     //while (mysh(&env_list));
     free_env_list(env_list);
     list = parse_input(input, &error);
-    free_parsed_input_list(list);
+    DCLL_FREE_LIST(list);
     return (0);
 }

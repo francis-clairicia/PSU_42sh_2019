@@ -14,7 +14,7 @@ static bool parse_each_argument(parsed_input_list_t **head,
                                 error_parse_t *error,
                                 const char *input, size_t *i)
 {
-    parsed_input_list_t **cur = &(*head)->node.prev;
+    parsed_input_list_t **cur = (parsed_input_list_t **)&DCLL_PREV(*head);
     bool separator = loop_while_spaces(input, i);
 
     if (!(input[(*i)]))
@@ -41,8 +41,8 @@ parsed_input_list_t *parse_input(const char *input, error_parse_t *error)
 
     if (!input)
         return (NULL);
-    add_parsed_list_node(&parsing_list);
-    add_cmd_list_node(&(parsing_list)->cmd_list);
+    DCLL_ADD(&parsing_list, sizeof(parsed_input_list_t), free_parsed_input);
+    DCLL_ADD(&(parsing_list->cmd_list), sizeof(cmd_list_t), free_cmd);
     while (input[i] && !(*error)) {
         if (!parse_each_argument(&parsing_list, error, input, &i))
             break;

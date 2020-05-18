@@ -16,7 +16,7 @@ static void redir_file(cmd_list_t **head, const char *input, size_t *i)
     char *tmp = NULL;
 
     while (!separator && input[(*i)]) {
-        redir_name = &((*head)->prev->redir_name);
+        redir_name = &((cmd_list_t *)DCLL_PREV(*head))->redir_name;
         quote = is_char_backstick(input[(*i)]);
         if (quote) {
             *i += 1;
@@ -34,11 +34,12 @@ static void redir_file(cmd_list_t **head, const char *input, size_t *i)
 static bool check_pipe_error(cmd_list_t **head, const char c,
                                 error_parse_t *error)
 {
-    if ((*head)->prev->redir_type != NONE
-        && (*head)->prev->redir_type != PIPE) {
+    if (DCLL_PREV_C(*head, cmd_list_t *)->redir_type != NONE &&
+        DCLL_PREV_C(*head, cmd_list_t *)->redir_type != PIPE) {
         (*error) = AMBIGUOUS_OUTPUT_REDIRECT;
         return (false);
-    } else if (!((*head)->prev->prev->args) || !c || is_char_stopper(c)) {
+    } else if (!c || is_char_stopper(c) ||
+        !DCLL_PREV_C(DCLL_PREV_C(*head, cmd_list_t *), cmd_list_t *)->args) {
         (*error) = INVALID_NULL_COMMAND;
         return (false);
     }
@@ -50,7 +51,7 @@ static void check_direct_redir_error(cmd_list_t **head,
                                     const char c,
                                     error_parse_t *error)
 {
-    if (redir_type != PIPE && !(*head)->prev->args
+    if (redir_type != PIPE && !DCLL_PREV_C(*head, cmd_list_t *)->args
         && (!c || is_char_stopper(c))) {
         (*error) = MISSING_NAME_FOR_REDIRECT;
     }
@@ -85,9 +86,9 @@ void get_redirection(cmd_list_t **head, error_parse_t *error,
     check_for_redirect_error(head, redir_type, input[(*i)], error);
     if ((*error) != NONE)
         return;
-    (*head)->prev->redir_type = redir_type;
+    DCLL_PREV_C(*head, cmd_list_t *)->redir_type = redir_type;
     if (redir_type == PIPE)
-        add_cmd_list_node(head);
+        DCLL_ADD(head, sizeof(cmd_list_t), free_cmd);
     else
         redir_file(head, input, i);
     check_direct_redir_error(head, redir_type, input[(*i)], error);
