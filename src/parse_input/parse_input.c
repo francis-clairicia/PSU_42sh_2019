@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "my.h"
-#include "parsing.h"
+#include "mysh_parsing.h"
 
 static bool parse_each_argument(parsed_input_list_t **head,
                                 error_parse_t *error,
@@ -19,7 +19,7 @@ static bool parse_each_argument(parsed_input_list_t **head,
 
     if (!(input[(*i)]))
         return (false);
-    if (is_char_backtick(input[(*i)])) {
+    if (is_char_backstick(input[(*i)])) {
         get_quoted_arg(&((*cur)->cmd_list->prev), separator, input, i);
         return (true);
     }

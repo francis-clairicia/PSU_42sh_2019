@@ -6,7 +6,7 @@
 */
 
 #include "my.h"
-#include "parsing.h"
+#include "mysh_parsing.h"
 
 bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i)
 {

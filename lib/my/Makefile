@@ -59,6 +59,8 @@ SRC			=	my_put_nbr.c					\
 				my_strdup_list_i.c				\
 				my_strlen_until_list_c.c		\
 				my_is_char_in_str.c				\
+				my_mass_strcmp.c				\
+				my_strdup_until_list_c.c		\
 
 LINKED_LIST	=	list/my_list.c					\
 				list/my_create_node.c			\
@@ -106,8 +108,7 @@ all:	$(NAME)
 $(NAME):	$(OBJ)
 	$(AR) rc $(NAME) $(OBJ)
 	cp -u $(NAME) ../
-	mkdir -p ../../include
-	cp ./my.h ./list/mylist.h ../../include
+	cp ./my.h ./list/mylist.h ../../include/lib
 
 clean:
 	$(RM) $(OBJ)

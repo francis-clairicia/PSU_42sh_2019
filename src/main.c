@@ -5,26 +5,20 @@
 ** main.c
 */
 
-#include "parsing.h"
+#include "my.h"
+#include "mysh.h"
+#include "mysh_usage.h"
 
-static int print_help(void)
+int main(const int ac, const char * const av[], const char * const env[])
 {
-    my_putstr("USAGE\n");
-    my_putstr("\t./mysh\n\n");
-    my_putstr("DESCRIPTION\n");
-    my_putstr("\tA C-coded minishell\n");
-    return (0);
-}
-
-int main(int ac, char **av)
-{
-    const char *input = "ls a | mkdir >> test ; oui ; héhola && oui || non";
-    parsed_input_list_t *list = NULL;
-    error_parse_t error = NONE;
-
-    if (ac > 1 && my_strcmp(av[1], "-h") == 0)
-        return (print_help());
-    list = parse_input(input, &error);
-    free_parsed_input_list(list);
-    return (0);
+    if (ac < 1 || !av || !av[0])
+        return (84);
+    if (ac != 1) {
+        if (ac == 2 && my_mass_strcmp(av[1], "-h", "--help", NULL)) {
+            my_printf(usage, av[0]);
+            return (0);
+        }
+        return (84);
+    }
+    return (setup_mysh(env));
 }

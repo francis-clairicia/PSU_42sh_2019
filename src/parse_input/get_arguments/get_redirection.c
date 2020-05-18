@@ -6,12 +6,12 @@
 */
 
 #include "my.h"
-#include "parsing.h"
+#include "mysh_parsing.h"
 
 static void redir_file(cmd_list_t **head, const char *input, size_t *i)
 {
     char **redir_name = &((*head)->prev->redir_name);
-    char quote = is_char_backtick(input[(*i)]);
+    char quote = is_char_backstick(input[(*i)]);
 
     if (quote) {
         *i += 1;

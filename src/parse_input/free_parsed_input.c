@@ -6,7 +6,7 @@
 */
 
 #include <stdlib.h>
-#include "parsing.h"
+#include "mysh_parsing.h"
 
 static void free_args_list(arguments_t *head)
 {

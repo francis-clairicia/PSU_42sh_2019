@@ -5,9 +5,17 @@
 ## Makefile used to compile the 42sh program.
 ##
 
-SRC_NO_TEST			=	src/main.c
+SRC_NO_TEST			=	src/main.c											\
 
-SRC_TEST			=	src/mysh.c											\
+SRC_TEST			=	src/setup_mysh.c									\
+						src/environment/add_new_env_var.c					\
+						src/environment/create_array_from_env_list.c		\
+						src/environment/create_env_list_from_array.c		\
+						src/environment/free_env_list.c						\
+						src/environment/get_env_list_size.c					\
+						src/environment/get_var_in_env_list.c				\
+						src/environment/remove_env_var.c					\
+						src/environment/show_env.c							\
 						src/parse_input/parse_input.c						\
 						src/parse_input/get_enums.c							\
 						src/parse_input/free_parsed_input.c					\
@@ -21,7 +29,7 @@ SRC					=	$(SRC_NO_TEST) $(SRC_TEST)
 
 CFLAGS				=	-Werror -Wextra
 
-CPPFLAGS			=	-I./include/
+CPPFLAGS			=	-I ./include/lib -I ./include/mysh
 
 override LDFLAGS	+=	-L./lib
 
@@ -45,7 +53,7 @@ tests_run:	LDLIBS += -lcriterion
 tests_run:	$(LDLIBS)
 	@find -name "*.gc*" -delete
 	$(CC) -o unit_tests $(SRC_TEST) tests/*.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
-	-./unit_tests
+	./unit_tests
 	$(RM) unit_tests test*.gc*
 	mkdir -p coverage
 	mv *.gc* coverage/
@@ -59,8 +67,8 @@ clean:
 	$(RM) unit_tests *.gc*
 
 fclean:	clean
-	rm -f $(NAME)
-	rm -f debug
+	$(RM) $(NAME)
+	$(RM) debug
 
 re:	fclean all
 

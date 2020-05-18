@@ -6,7 +6,7 @@
 */
 
 #include "my.h"
-#include "parsing.h"
+#include "mysh_parsing.h"
 
 ssize_t get_redirection_enum(const char *restrict shifted_input)
 {
