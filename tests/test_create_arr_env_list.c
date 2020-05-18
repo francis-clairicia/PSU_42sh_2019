@@ -26,3 +26,12 @@ Test(create_array_from_env_list, basic_env_array_conception)
     cr_expect(my_arrcmp((char **)expected, result));
     my_free_array((void *)result);
 }
+
+Test(create_array_from_env_list, null_sent)
+{
+    char **result = NULL;
+
+    result = create_array_from_env_list(NULL);
+    cr_expect_eq(result, NULL);
+    my_free_array((void *)result);
+}

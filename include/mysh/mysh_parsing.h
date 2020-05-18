@@ -155,6 +155,17 @@ parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
 // Adds a node to a doubly linked list.
 void *add_parsing_node(void **head, const size_t size);
 
+
+// Adds an argument node to an argument list.
+void add_arg_list_node(arguments_t **head);
+
+// Adds a cmd_node to a cmd_list.
+void add_cmd_list_node(cmd_list_t **head);
+
+// Adds a parsed_list_node to a parsed_list.
+void add_parsed_list_node(parsed_input_list_t **head);
+
+
 // Directly giving, in parameters, a head and a type,
 // Redirect to add_parsing_node with a (void **) cast and sizeof(type).
 #define ADD_PARSE_NODE(head, type) \

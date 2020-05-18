@@ -20,7 +20,7 @@ static bool parse_each_argument(parsed_input_list_t **head,
     if (!(input[(*i)]))
         return (false);
     if (is_char_backstick(input[(*i)])) {
-        get_quoted_arg(&((*cur)->cmd_list->prev), separator, input, i);
+        get_quoted_arg(&((*cur)->cmd_list), separator, input, i);
         return (true);
     }
     if (is_char_splitter(input[(*i)])) {
@@ -41,8 +41,8 @@ parsed_input_list_t *parse_input(const char *input, error_parse_t *error)
 
     if (!input)
         return (NULL);
-    ADD_PARSE_NODE(&parsing_list, parsed_input_list_t);
-    ADD_PARSE_NODE(&(parsing_list->cmd_list), cmd_list_t);
+    add_parsed_list_node(&parsing_list);
+    add_cmd_list_node(&(parsing_list)->cmd_list);
     while (input[i] && !(*error)) {
         if (!parse_each_argument(&parsing_list, error, input, &i))
             break;

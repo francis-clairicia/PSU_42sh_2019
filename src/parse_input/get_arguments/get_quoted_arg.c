@@ -21,7 +21,7 @@ void get_quoted_arg(cmd_list_t **head, const bool separator,
         last_arg = &((*head)->prev->args->prev->arg);
         *last_arg = my_strcat(*last_arg, tmp, true, true);
     } else {
-        ADD_PARSE_NODE(&(*head)->prev->args, arguments_t);
+        add_arg_list_node(&(*head)->prev->args);
         (*head)->prev->args->prev->arg = tmp;
     }
     *i += 1;

@@ -25,3 +25,22 @@ Test(create_env_list_from_array, basic_env_list_conception)
                             "PATH=/usr/bin/lib\n");
     free_env_list(list);
 }
+
+Test(create_env_list_from_array, null_env_ptr_sent)
+{
+    env_list_t *list = NULL;
+
+    list = create_env_list_from_array(NULL);
+    cr_expect_eq(list, NULL);
+    free_env_list(list);
+}
+
+Test(create_env_list_from_array, null_info_sent)
+{
+    env_list_t *list = NULL;
+    const char *envg[] = {NULL};
+
+    list = create_env_list_from_array(envg);
+    cr_expect_eq(list, NULL);
+    free_env_list(list);
+}
