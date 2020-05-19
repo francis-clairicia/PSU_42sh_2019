@@ -5,9 +5,26 @@
 ## Makefile used to compile the 42sh program.
 ##
 
-SRC_NO_TEST			=	src/main.c
+SRC_NO_TEST			=	src/main.c											\
+						src/mysh.c
 
-SRC_TEST			=	src/mysh.c											\
+SRC_TEST			=	src/minishell.c										\
+						src/exec_shell_commands.c							\
+						src/exec_piped_commands.c							\
+						src/print_command_prompt.c							\
+						src/get_path_to_executable.c						\
+						src/find_binary_in_path.c							\
+						src/find_var_env.c									\
+						src/get_var_value.c									\
+						src/create_variable.c								\
+						src/error.c											\
+						src/sigint_handler.c								\
+						src/builtin_functions.c								\
+						src/builtin/cd.c									\
+						src/builtin/env.c									\
+						src/builtin/exit.c									\
+						src/builtin/setenv.c								\
+						src/builtin/unsetenv.c								\
 						src/parse_input/parse_input.c						\
 						src/parse_input/get_enums.c							\
 						src/parse_input/free_parsed_input.c					\
@@ -16,6 +33,9 @@ SRC_TEST			=	src/mysh.c											\
 						src/parse_input/get_arguments/get_unquoted_arg.c	\
 						src/parse_input/get_arguments/get_splitter.c		\
 						src/parse_input/get_arguments/get_redirection.c		\
+						src/parse_input/commands/parse_cmd_list.c			\
+						src/parse_input/commands/command_struct.c			\
+						src/parse_input/commands/change_fd.c				\
 
 SRC					=	$(SRC_NO_TEST) $(SRC_TEST)
 
@@ -52,7 +72,7 @@ tests_run:	$(LDLIBS)
 
 debug:	CFLAGS += -g
 debug:	$(LDLIBS)
-	$(CC) -o $@ $(SRC) $(LDFLAGS) $(LDLIBS) $(CFLAGS) $(CPPFLAGS)
+	$(CC) -o $(NAME) $(SRC) $(LDFLAGS) $(LDLIBS) $(CFLAGS) $(CPPFLAGS)
 
 clean:
 	$(RM) $(OBJ)

@@ -21,6 +21,7 @@ SRC			=	my_put_nbr.c					\
 				my_str_isalpha.c				\
 				my_str_isalphanum.c				\
 				my_strcat.c						\
+				my_strcat_malloc.c				\
 				my_compute_square_root.c		\
 				my_is_prime.c					\
 				my_str_isnum.c					\
@@ -48,6 +49,7 @@ SRC			=	my_put_nbr.c					\
 				my_nbr_to_str.c					\
 				my_nbr_len.c					\
 				get_next_line.c					\
+				get_next_line_2.c				\
 				join_path.c						\
 				my_str_contains_only.c			\
 				my_memset.c						\
@@ -77,6 +79,7 @@ LINKED_LIST	=	list/my_list.c					\
 
 PRINTF		=	printf/my_printf.c					\
 				printf/my_dprintf.c					\
+				printf/my_vdprintf.c				\
 				printf/my_printf_number.c			\
 				printf/my_printf_str.c				\
 				printf/my_printf_pointer.c			\

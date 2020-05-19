@@ -158,7 +158,7 @@ void *add_parsing_node(void **head, const size_t size);
 // Directly giving, in parameters, a head and a type,
 // Redirect to add_parsing_node with a (void **) cast and sizeof(type).
 #define ADD_PARSE_NODE(head, type) \
-        (add_parsing_node((void **)head, sizeof(type)))
+        (add_parsing_node((void **)(head), sizeof(type)))
 
 /////////////////////////////////////////////////////////
 

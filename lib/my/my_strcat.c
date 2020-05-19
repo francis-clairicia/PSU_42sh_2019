@@ -1,42 +1,27 @@
 /*
 ** EPITECH PROJECT, 2019
-** Libmy
+** Mystrcat
 ** File description:
-** Concats two strings.
+** Append string into another
 */
 
-#include <stdlib.h>
-#include "my.h"
+#include <stddef.h>
 
-static char *compute_concat(const char *restrict first,
-                            const char *restrict second,
-                            const int len_fir,
-                            const int len_sec)
+int my_strlen(char const *str);
+
+char *my_strcat(char *dest, char const *src)
 {
-    char *result = NULL;
+    int i = 0;
+    int len = my_strlen(dest);
 
-    result = malloc(sizeof(char) * (len_fir + len_sec + 1));
-    if (!result)
+    if (src == NULL)
+        return (dest);
+    if (dest == NULL)
         return (NULL);
-    my_strcpy(result, first);
-    my_strcpy(&result[my_strlen(result)], second);
-    return (result);
-}
-
-char *my_strcat(char *restrict first, char *restrict second,
-                const bool free_first, const bool free_second)
-{
-    int len_fir = my_strlen(first);
-    int len_sec = my_strlen(second);
-    char *result = NULL;
-
-    if (len_fir <= 0 || len_sec <= 0)
-        result = (len_fir <= 0) ? my_strdup(second) : my_strdup(first);
-    else
-        result = compute_concat(first, second, len_fir, len_sec);
-    if (first && free_first)
-        free(first);
-    if (second && free_second)
-        free(second);
-    return (result);
+    while (src[i] != '\0') {
+        dest[len + i] = src[i];
+        i += 1;
+    }
+    dest[len + i] = '\0';
+    return (dest);
 }
