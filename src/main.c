@@ -11,7 +11,8 @@
 
 int mysh(void);
 
-int main(const int ac, const char * const av[], const char * const env[])
+int main(const int ac, const char * const av[],
+    const char * const env[] UNUSED)
 {
     if (ac < 1 || !av || !av[0])
         return (84);
@@ -22,5 +23,5 @@ int main(const int ac, const char * const av[], const char * const env[])
         }
         return (84);
     }
-    return (setup_mysh(env));
+    return (mysh());
 }
