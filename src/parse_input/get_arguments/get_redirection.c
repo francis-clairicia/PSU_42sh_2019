@@ -6,19 +6,29 @@
 */
 
 #include "my.h"
-#include "parsing.h"
+#include "mysh_parsing.h"
 
 static void redir_file(cmd_list_t **head, const char *input, size_t *i)
 {
-    char **redir_name = &((*head)->prev->redir_name);
-    char quote = is_char_backtick(input[(*i)]);
+    char **redir_name = NULL;
+    char quote = '\0';
+    bool separator = false;
+    char *tmp = NULL;
 
-    if (quote) {
-        *i += 1;
-        *redir_name = my_strdup_char_i(&input[(*i)], quote, i);
-        *i += 1;
-    } else
-        *redir_name = my_strdup_list_i(&input[(*i)], all_splitters, i);
+    while (!separator && input[(*i)]) {
+        redir_name = &((*head)->prev->redir_name);
+        quote = is_char_backstick(input[(*i)]);
+        if (quote) {
+            *i += 1;
+            tmp = my_strdup_char_i(&input[(*i)], quote, i);
+            *redir_name = my_strcat_malloc(*redir_name, tmp, 1, 1);
+            *i += 1;
+        } else {
+            tmp = my_strdup_list_i(&input[(*i)], all_splitters, i);
+            *redir_name = my_strcat_malloc(*redir_name, tmp, 1, 1);
+        }
+        separator = loop_while_spaces(input, i);
+    }
 }
 
 static bool check_pipe_error(cmd_list_t **head, const char c,
@@ -77,7 +87,7 @@ void get_redirection(cmd_list_t **head, error_parse_t *error,
         return;
     (*head)->prev->redir_type = redir_type;
     if (redir_type == PIPE)
-        ADD_PARSE_NODE(head, cmd_list_t);
+        add_cmd_list_node(head);
     else
         redir_file(head, input, i);
     check_direct_redir_error(head, redir_type, input[(*i)], error);

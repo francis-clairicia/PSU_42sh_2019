@@ -6,6 +6,7 @@
 ##
 
 SRC_NO_TEST			=	src/main.c											\
+						src/setup_mysh.c									\
 						src/mysh.c
 
 SRC_TEST			=	src/minishell.c										\
@@ -25,6 +26,14 @@ SRC_TEST			=	src/minishell.c										\
 						src/builtin/exit.c									\
 						src/builtin/setenv.c								\
 						src/builtin/unsetenv.c								\
+						src/environment/add_new_env_var.c					\
+						src/environment/create_array_from_env_list.c		\
+						src/environment/create_env_list_from_array.c		\
+						src/environment/free_env_list.c						\
+						src/environment/get_env_list_size.c					\
+						src/environment/get_var_in_env_list.c				\
+						src/environment/remove_env_var.c					\
+						src/environment/show_env.c							\
 						src/parse_input/parse_input.c						\
 						src/parse_input/get_enums.c							\
 						src/parse_input/free_parsed_input.c					\
@@ -41,7 +50,7 @@ SRC					=	$(SRC_NO_TEST) $(SRC_TEST)
 
 CFLAGS				=	-Werror -Wextra
 
-CPPFLAGS			=	-I./include/
+CPPFLAGS			=	-I./include -I./include/lib -I./include/mysh
 
 override LDFLAGS	+=	-L./lib
 
@@ -70,6 +79,10 @@ tests_run:	$(LDLIBS)
 	mkdir -p coverage
 	mv *.gc* coverage/
 
+coverage:
+	gcovr --exclude tests/
+	gcovr --exclude tests/ --branches
+
 debug:	CFLAGS += -g
 debug:	$(LDLIBS)
 	$(CC) -o $(NAME) $(SRC) $(LDFLAGS) $(LDLIBS) $(CFLAGS) $(CPPFLAGS)
@@ -79,9 +92,9 @@ clean:
 	$(RM) unit_tests *.gc*
 
 fclean:	clean
-	rm -f $(NAME)
-	rm -f debug
+	$(RM) $(NAME)
+	$(RM) debug
 
 re:	fclean all
 
-.PHONY:	all -lmy tests_run debug clean fclean re
+.PHONY:	all -lmy tests_run coverage debug clean fclean re

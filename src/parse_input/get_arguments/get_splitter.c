@@ -6,7 +6,7 @@
 */
 
 #include "my.h"
-#include "parsing.h"
+#include "mysh_parsing.h"
 
 bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i)
 {
@@ -19,8 +19,8 @@ bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i)
     if (!((*head)->cmd_list->args) || !input[(*i)]
         || is_char_splitter(input[*i]))
         return (true);
-    ADD_PARSE_NODE(head, parsed_input_list_t);
-    ADD_PARSE_NODE(&((*head)->prev->cmd_list), cmd_list_t);
+    add_parsed_list_node(head);
+    add_cmd_list_node(&((*head)->prev->cmd_list));
     (*head)->prev->splitter = splitter_type;
     return (true);
 }

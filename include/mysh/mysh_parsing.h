@@ -1,12 +1,12 @@
 /*
 ** EPITECH PROJECT, 2019
-** 42sh
+** PSU_42sh_2019
 ** File description:
 ** Parsing Header.
 */
 
-#ifndef MYSH_PARSER_H_
-#define MYSH_PARSER_H_
+#ifndef MYSH_PARSING_H_
+#define MYSH_PARSING_H_
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -80,7 +80,7 @@ typedef struct parsed_input_list {
 
 
 static const char spaces[] = " \t";
-static const char backticks[] = "\"'";
+static const char backsticks[] = "\"'";
 
 static const char all_splitters[] = " \t\"';&|><";
 static const char all_stoppers[] = ";&|><";
@@ -106,13 +106,13 @@ static inline bool is_char_redirection(const char c)
     return (my_is_char_in_str(first_chars_redirections, c));
 }
 
-static inline char is_char_backtick(const char c)
+static inline char is_char_backstick(const char c)
 {
     char match = '\0';
     size_t i = 0;
 
-    for (; match == '\0' && backticks[i]; i += 1) {
-        if (c == backticks[i])
+    for (; match == '\0' && backsticks[i]; i += 1) {
+        if (c == backsticks[i])
             match = c;
     }
     return (match);
@@ -154,6 +154,17 @@ parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
 
 // Adds a node to a doubly linked list.
 void *add_parsing_node(void **head, const size_t size);
+
+
+// Adds an argument node to an argument list.
+void add_arg_list_node(arguments_t **head);
+
+// Adds a cmd_node to a cmd_list.
+void add_cmd_list_node(cmd_list_t **head);
+
+// Adds a parsed_list_node to a parsed_list.
+void add_parsed_list_node(parsed_input_list_t **head);
+
 
 // Directly giving, in parameters, a head and a type,
 // Redirect to add_parsing_node with a (void **) cast and sizeof(type).

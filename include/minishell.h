@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include "my.h"
 #include "mylist.h"
-#include "parsing.h"
+#include "mysh_parsing.h"
 
 int kill(pid_t pid, int sig);
 

@@ -6,7 +6,73 @@
 */
 
 #include <stdlib.h>
-#include "parsing.h"
+#include "mysh_parsing.h"
+
+void add_arg_list_node(arguments_t **head)
+{
+    arguments_t *node = NULL;
+
+    if (!head)
+        return;
+    node = malloc(sizeof(arguments_t));
+    if (!node)
+        return;
+    node->arg = NULL;
+    if (!(*head)) {
+        *head = node;
+        node->next = *head;
+        node->prev = *head;
+    } else {
+        node->next = (*head);
+        node->prev = (*head)->prev;
+        (*head)->prev->next = node;
+        (*head)->prev = node;
+    }
+}
+
+void add_cmd_list_node(cmd_list_t **head)
+{
+    cmd_list_t *node = NULL;
+
+    if (!head)
+        return;
+    node = malloc(sizeof(cmd_list_t));
+    if (!node)
+        return;
+    *node = (cmd_list_t){.args = NULL, .redir_name = NULL, .redir_type = NONE};
+    if (!(*head)) {
+        *head = node;
+        node->next = *head;
+        node->prev = *head;
+    } else {
+        node->next = (*head);
+        node->prev = (*head)->prev;
+        (*head)->prev->next = node;
+        (*head)->prev = node;
+    }
+}
+
+void add_parsed_list_node(parsed_input_list_t **head)
+{
+    parsed_input_list_t *node = NULL;
+
+    if (!head)
+        return;
+    node = malloc(sizeof(parsed_input_list_t));
+    if (!node)
+        return;
+    *node = (parsed_input_list_t){.cmd_list = NULL, .splitter = NONE};
+    if (!(*head)) {
+        node->next = node;
+        node->prev = node;
+        *head = node;
+    } else {
+        node->next = (*head);
+        node->prev = (*head)->prev;
+        (*head)->prev->next = node;
+        (*head)->prev = node;
+    }
+}
 
 void *add_parsing_node(void **head, const size_t size)
 {

@@ -37,6 +37,7 @@ int my_find_prime_sup(int nb);
 char **my_str_to_word_array(char const *str, char const *separators);
 int my_array_len(const void *array);
 char **my_array_dup(char * const * src);
+bool my_arrcmp(char **first, char **second);
 int my_array_contains(char * const *array, char const *to_find);
 void my_show_word_array(char * const *array);
 char *my_strcpy(char *dest, char const *src);
@@ -45,6 +46,7 @@ char *my_revstr(char *str);
 char *my_strstr(char *str, char const *to_find);
 int my_strstr_index(char const *str, char const *to_find);
 int my_strcmp(char const *s1, char const *s2);
+bool my_mass_strcmp(const char *template, ...);
 int my_strncmp(char const *s1, char const *s2, int n);
 char *my_strupcase(char *str);
 char *my_strlowcase(char *str);
@@ -66,6 +68,7 @@ char *my_strdup(char const *src);
 char *my_strndup(char const *src, int n);
 char *my_strdup_char_i(const char *template, const char c, size_t *index);
 char *my_strdup_list_i(const char *template, const char list[], size_t *index);
+char *my_strdup_until_list_c(const char *template, const char list[]);
 char *my_nbr_to_str(int nb);
 int my_nbr_len(long nb);
 char *my_strchr(char *str, int c);
@@ -85,5 +88,7 @@ int my_dprintf(int fd, char const *format, ...);
 
 int my_vprintf(char const *format, va_list ap);
 int my_vdprintf(int fd, char const *format, va_list ap);
+
+bool match(const char *first, const char *second);
 
 #endif
