@@ -20,6 +20,7 @@ int exit_builtin_command(char * const *av, shell_t *shell)
             print_error("exit", "Expression Syntax");
             return (-1);
         }
+        my_putstr("exit\n");
         shell->exit_status = (unsigned char)my_absolute_getnbr(av[1]);
         return (1);
     }
