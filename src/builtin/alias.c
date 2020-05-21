@@ -8,7 +8,7 @@
 #include "minishell.h"
 #include <stdio.h>
 
-int alias_builtin_command(char * const *av, shell_t *shell)
+int alias_builtin_command(char * const *av, shell_t *shell UNUSED)
 {
     int ac = my_array_len(av);
 
@@ -18,4 +18,5 @@ int alias_builtin_command(char * const *av, shell_t *shell)
         printf("print cmd of %s\n", av[1]);
     if (ac >= 3)
         printf("add alias %s for all the arg\n", av[1]);
+    return (0);
 }
