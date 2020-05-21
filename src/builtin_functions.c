@@ -13,6 +13,8 @@ static const struct builtin builtin_functions_list[] = {
     {"exit", exit_builtin_command},
     {"setenv", setenv_builtin_command},
     {"unsetenv", unsetenv_builtin_command},
+    {"alias", alias_builtin_command},
+    {"unalias", unalias_builtin_command},
     {NULL, NULL}
 };
 
