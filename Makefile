@@ -6,7 +6,6 @@
 ##
 
 SRC_NO_TEST			=	src/main.c											\
-						src/setup_mysh.c									\
 						src/mysh.c
 
 SRC_TEST			=	src/minishell.c										\

@@ -12,13 +12,13 @@
 Test(get_path_to_executable, find_out_the_path_of_a_binary)
 {
     char *path = get_path_to_executable("ls", DEFAULT_ENVIRONMENT);
-    char *path_2 = get_path_to_executable("./42sh", DEFAULT_ENVIRONMENT);
+    char *path_2 = get_path_to_executable("/bin/ls", DEFAULT_ENVIRONMENT);
 
     cr_assert_not_null(path);
     cr_assert_not_null(path_2);
     cr_expect(my_strcmp(path, "/usr/bin/ls") == 0
-        || my_strcmp(path, "/bin/ls") == 0);
-    cr_expect_str_eq(path_2, "./42sh");
+            || my_strcmp(path, "/bin/ls") == 0);
+    cr_expect_str_eq(path_2, "/bin/ls");
     free(path);
     free(path_2);
 }

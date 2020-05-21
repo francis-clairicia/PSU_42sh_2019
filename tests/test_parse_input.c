@@ -45,11 +45,11 @@ Test(parse_input, hard_input)
         cr_assert(0);
     cr_expect_eq(my_strcmp(list->cmd_list->args->arg, "ls"), 0);
     cr_expect_eq(my_strcmp(list->cmd_list->args->prev->arg, "-a"), 0);
-    cr_expect_eq(list->cmd_list->redir_type, PIPE);
+    cr_expect_eq(list->cmd_list->redir_output_type, PIPE);
     cr_expect_eq(my_strcmp(list->cmd_list->next->args->arg, "cat"), 0);
     cr_expect_eq(my_strcmp(list->cmd_list->next->args->prev->arg, "-e"), 0);
-    cr_expect_eq(list->cmd_list->next->redir_type, REDIR_IN_FILE);
-    cr_expect_str_eq(list->cmd_list->next->redir_name, "txta");
+    cr_expect_eq(list->cmd_list->next->redir_output_type, REDIR_IN_FILE);
+    cr_expect_str_eq(list->cmd_list->next->redir_output, "txta");
     free_parsed_input_list(list);
     cr_assert_eq(error, NONE);
 }

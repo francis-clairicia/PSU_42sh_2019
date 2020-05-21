@@ -83,6 +83,8 @@ void *my_memset(void *buffer, int c, size_t size);
 void *my_malloc_array(size_t width, size_t height, size_t size);
 void my_free_array(void *array);
 
+size_t my_get_bitshift(const void *variable);
+
 int my_printf(char const *format, ...);
 int my_dprintf(int fd, char const *format, ...);
 

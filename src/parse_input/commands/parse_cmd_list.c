@@ -22,8 +22,9 @@ static void init_new_command(cmd_list_t *node, list_t *list)
 {
     command_t command = init_command_struct();
 
-    command.input_fd = get_input_fd(node->redir_name, node->redir_type);
-    command.output_fd = get_output_fd(node->redir_name, node->redir_type);
+    command.input_fd = get_input_fd(node->redir_input, node->redir_input_type);
+    command.output_fd = get_output_fd(node->redir_output,
+                                    node->redir_output_type);
     command.argv = make_argv_from_arg_list(node->args);
     my_append_to_list(list, command, command_t);
 }

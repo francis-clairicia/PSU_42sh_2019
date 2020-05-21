@@ -16,12 +16,22 @@
 
 //Redirections Input Characters Comparisons.
 typedef enum redirection_type {
-    PIPE = 1,
-    APPEND_TO_FILE = 2,
-    REDIR_IN_FILE = 3,
-    READ_FROM_STDIN_AS_INPUT = 4,
-    READ_FROM_FILE_AS_INPUT = 5,
+    PIPE = 0b1,
+    APPEND_TO_FILE = 0b10,
+    REDIR_IN_FILE = 0b100,
+    READ_FROM_STDIN_AS_INPUT = 0b1000,
+    READ_FROM_FILE_AS_INPUT = 0b10000,
 } redirection_type_t;
+
+/////////////////////////////////////////////////////////////////////////////
+
+#define IS_OUTPUT(var) (var & \
+                        (APPEND_TO_FILE | REDIR_IN_FILE | PIPE))
+
+#define IS_INPUT(var) (var & \
+                        (READ_FROM_STDIN_AS_INPUT | READ_FROM_FILE_AS_INPUT))
+
+/////////////////////////////////////////////////////////////////////////////
 
 static const char first_chars_redirections[] = "|><";
 
@@ -63,8 +73,10 @@ typedef struct arguments {
 
 typedef struct command_list {
     arguments_t *args;
-    char *redir_name;
-    redirection_type_t redir_type;
+    char *redir_input;
+    redirection_type_t redir_input_type;
+    char *redir_output;
+    redirection_type_t redir_output_type;
     struct command_list *next;
     struct command_list *prev;
 } cmd_list_t;
@@ -125,12 +137,14 @@ static inline bool is_char_stopper(const char c)
 
 typedef enum error_parse {
     MISSING_NAME_FOR_REDIRECT = 1,
-    AMBIGUOUS_OUTPUT_REDIRECT = 2,
-    INVALID_NULL_COMMAND = 3,
+    AMBIGUOUS_INPUT_REDIRECT,
+    AMBIGUOUS_OUTPUT_REDIRECT,
+    INVALID_NULL_COMMAND,
 } error_parse_t;
 
 static const char *parsing_errors[] = {
     "Missing name for redirect.\n",
+    "Ambiguous input redirect.\n",
     "Ambiguous output redirect.\n",
     "Invalid null command.\n"
 };
@@ -139,7 +153,7 @@ static inline void print_parsing_error(const error_parse_t error)
 {
     if (error <= 0)
         return;
-    my_putstr(parsing_errors[error - 1]);
+    my_putstr_error(parsing_errors[error - 1]);
 };
 
 
@@ -188,10 +202,12 @@ void add_parsed_list_node(parsed_input_list_t **head);
 /////////////////////////////////////////////////////////
 
 //Returns the enum matching the next redirection in shifted_input.
-ssize_t get_redirection_enum(const char *restrict shifted_input);
+redirection_type_t get_redirection_enum(const char *restrict shifted_input,
+                                        int *size);
 
 //Returns the enum matching the next splitter in shifted_input.
-ssize_t get_splitter_enum(const char *restrict shifted_input);
+splitter_type_t get_splitter_enum(const char *restrict shifted_input,
+                                    int *size);
 
 void free_parsed_input_node(parsed_input_list_t *node);
 void free_parsed_input_list(parsed_input_list_t *head);

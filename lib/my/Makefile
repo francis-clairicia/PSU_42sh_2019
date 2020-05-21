@@ -65,6 +65,7 @@ SRC			=	my_put_nbr.c					\
 				my_strdup_until_list_c.c		\
 				my_arrcmp.c						\
 				match.c							\
+				my_get_bitshift.c				\
 
 LINKED_LIST	=	list/my_list.c					\
 				list/my_create_node.c			\
@@ -98,7 +99,7 @@ PRINTF		=	printf/my_printf.c					\
 				printf/my_printf_modifier.c			\
 				printf/my_putnbr_for_printf.c		\
 				printf/my_nbr_len_u.c				\
-				printf/convert_base_for_printf.c
+				printf/convert_base_for_printf.c	\
 
 CFLAGS		=	-Wall -Wextra
 

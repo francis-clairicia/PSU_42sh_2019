@@ -32,8 +32,10 @@ static void free_cmd_node(cmd_list_t *node)
     if (!node)
         return;
     free_args_list(node->args);
-    if (node->redir_name)
-        free(node->redir_name);
+    if (node->redir_input)
+        free(node->redir_input);
+    if (node->redir_output)
+        free(node->redir_output);
     free(node);
 }
 

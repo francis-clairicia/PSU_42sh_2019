@@ -10,9 +10,10 @@
 
 bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i)
 {
-    ssize_t splitter_type = get_splitter_enum(&input[(*i)]);
+    int size = 0;
+    splitter_type_t splitter_type = get_splitter_enum(&input[(*i)], &size);
 
-    if (splitter_type <= 0)
+    if (splitter_type == 0)
         return (false);
     *i += my_strlen(splitters[splitter_type - 1]);
     loop_while_spaces(input, i);

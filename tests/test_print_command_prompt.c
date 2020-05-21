@@ -56,5 +56,5 @@ Test(print_command_prompt, handle_null_env_value)
 {
     cr_redirect_stdout();
     print_command_prompt("/usr/bin", NULL);
-    cr_expect_stdout_eq_str("[ /usr/bin]$ ");
+    cr_expect_stdout_eq_str("[/usr/bin]$ ");
 }
