@@ -91,9 +91,9 @@ typedef struct parsed_input_list {
 //end -> Parsing list
 
 //Alias Struct
-typedef struct alias_s {
-    
-} alias_t;
+//typedef struct alias_s {
+//    
+//} alias_t;
 
 //end -> Alias Struct
 

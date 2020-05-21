@@ -8,7 +8,7 @@
 #include "minishell.h"
 #include <stdio.h>
 
-int unalias_builtin_command(char * const *av, char ***envp)
+int unalias_builtin_command(char * const *av, shell_t *shell)
 {
     int ac = my_array_len(av);
 
