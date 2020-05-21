@@ -14,6 +14,13 @@
 
 #define NONE (0)
 
+//////////////////////////////
+
+#define UNMATCHED_SINGLE (1)
+#define UNMATCHED_DOUBLE (2)
+
+//////////////////////////////
+
 //Redirections Input Characters Comparisons.
 typedef enum redirection_type {
     PIPE = 0b1,
@@ -156,12 +163,22 @@ static const char *parsing_errors[] = {
     "Invalid null command.\n"
 };
 
+/////////////////////////////////////////////////////////////////////////
+
 static inline void print_parsing_error(const error_parse_t error)
 {
     if (error <= 0)
         return;
     my_putstr_error(parsing_errors[error - 1]);
 };
+
+//Checks and prints if need if a matching quotation error is within cmd.
+//
+//Returns True (1) if not.
+//Returns False (0) otherwise.
+bool check_unmatched_backsticks(const char *cmd);
+
+/////////////////////////////////////////////////////////////////////////
 
 
 /*

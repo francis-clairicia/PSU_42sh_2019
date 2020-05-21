@@ -6,7 +6,6 @@
 */
 
 #include "my.h"
-#include "mysh.h"
 #include "mysh_usage.h"
 
 int mysh(void);

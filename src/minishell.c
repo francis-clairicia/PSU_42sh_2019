@@ -51,6 +51,10 @@ int minishell(char const *command_line, shell_t *shell)
     error_parse_t error = NONE;
     int status = 0;
 
+    if (!check_unmatched_backsticks(command_line)) {
+        shell->exit_status = 1;
+        return (-1);
+    }
     list = parse_input(command_line, &error);
     if (!list)
         return (1);

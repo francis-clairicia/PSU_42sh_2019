@@ -39,6 +39,7 @@ SRC_TEST			=	src/minishell.c										\
 						src/parse_input/parse_input.c						\
 						src/parse_input/get_enums.c							\
 						src/parse_input/free_parsed_input.c					\
+						src/parse_input/check_unmatched_backsticks.c		\
 						src/parse_input/add_nodes_to_list.c					\
 						src/parse_input/get_arguments/get_quoted_arg.c		\
 						src/parse_input/get_arguments/get_unquoted_arg.c	\
