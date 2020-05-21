@@ -20,7 +20,9 @@ static int handle_status(int child_pid, int status_pipe)
         }
         my_putstr_error("\n");
     }
-    return (status_pipe);
+    if (status_pipe != 0)
+        return (status_pipe);
+    return ((WEXITSTATUS(wstatus) != 0) ? -1 : 0);
 }
 
 static int launch_process(char const *binary, command_t commands[],
