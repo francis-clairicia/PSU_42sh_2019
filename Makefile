@@ -96,6 +96,7 @@ clean:
 fclean:	clean
 	$(RM) $(NAME)
 	$(RM) debug
+	make fclean -C lib/my
 
 re:	fclean all
 
