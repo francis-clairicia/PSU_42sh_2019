@@ -12,7 +12,10 @@ static bool exec_next_command(parsed_input_list_t **node,
 {
     if (index == 0)
         return (true);
-    if (*node == list || status == 1)
+    if (status == 1)
+        return (false);
+    (*node) = (*node)->next;
+    if (*node == list)
         return (false);
     if ((*node)->splitter == AND) {
         if (status < 0) {
@@ -23,7 +26,6 @@ static bool exec_next_command(parsed_input_list_t **node,
             return (false);
         }
     }
-    (*node) = (*node)->next;
     return (true);
 }
 
@@ -34,10 +36,11 @@ static int launch_all_commands(parsed_input_list_t *list, shell_t *shell)
     int error = 0;
     parsed_input_list_t *node = list;
 
-    for (; exec_next_command(&node, list, i, status); i += 1) {
+    while (exec_next_command(&node, list, i, status)) {
         status = exec_piped_commands(node->cmd_list, shell);
         if (status < 0)
             error = 1;
+        i += 1;
     }
     return ((!error || status == 1) ? status : -1);
 }
