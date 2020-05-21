@@ -96,6 +96,7 @@ void my_rev_list(list_t list);
 char *my_list_to_str(list_t list);
 char *my_concat_str_list(list_t list, char separator, int *len);
 void *my_list_to_2d_array(list_t *list, int free_list);
+list_t my_2d_array_to_list(void *array);
 ////////////////////////////////////////////
 
 

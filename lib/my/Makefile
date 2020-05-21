@@ -73,6 +73,7 @@ LINKED_LIST	=	list/my_list.c					\
 				list/my_insert_in_list.c		\
 				list/my_list_to_str.c			\
 				list/my_list_to_2d_array.c		\
+				list/my_2d_array_to_list.c		\
 				list/my_concat_str_list.c		\
 				list/my_free_list.c				\
 				list/my_concat_list.c			\
