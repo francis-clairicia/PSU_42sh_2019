@@ -26,6 +26,8 @@ SRC_TEST			=	src/minishell.c										\
 						src/builtin/exit.c									\
 						src/builtin/setenv.c								\
 						src/builtin/unsetenv.c								\
+						src/builtin/alias.c									\
+						src/builtin/unalias.c								\
 						src/environment/add_new_env_var.c					\
 						src/environment/create_array_from_env_list.c		\
 						src/environment/create_env_list_from_array.c		\

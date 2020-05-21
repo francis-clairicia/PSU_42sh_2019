@@ -77,6 +77,8 @@ int env_builtin_command(char * const *av, char ***envp);
 int exit_builtin_command(char * const *av, char ***envp);
 int setenv_builtin_command(char * const *av, char ***envp);
 int unsetenv_builtin_command( char * const *av, char ***envp);
+int alias_builtin_command(char * const *av, char ***envp);
+int unalias_builtin_command(char * const *av, char ***envp);
 
 sighandler_t bind_sigint_signal(int func);
 void sigint_handler_for_prompt(int signum);
