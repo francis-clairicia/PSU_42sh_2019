@@ -44,10 +44,11 @@ static int launch_all_commands(parsed_input_list_t *list, shell_t *shell)
 
 int minishell(char const *command_line, shell_t *shell)
 {
-    int status = 0;
+    parsed_input_list_t *list = NULL;
     error_parse_t error = NONE;
-    parsed_input_list_t *list = parse_input(command_line, &error);
+    int status = 0;
 
+    list = parse_input(command_line, &error);
     if (!list)
         return (1);
     if (error != NONE) {

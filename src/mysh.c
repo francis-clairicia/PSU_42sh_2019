@@ -55,7 +55,8 @@ int mysh(void)
 {
     char *cmd = NULL;
     shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
-    int stop_shell = 0;
+    int status = 0;
+    int final_status = 0;
 
     if (shell == NULL)
         return (84);
@@ -63,8 +64,9 @@ int mysh(void)
     if (!isatty(0))
         return (launch_given_commands(shell));
     increase_shlvl(shell);
-    while (command_prompt(&cmd, stop_shell))
-        stop_shell = minishell(cmd, shell);
+    while (command_prompt(&cmd, status))
+        status = minishell(cmd, shell);
+    final_status = shell->exit_status;
     destroy_shell_struct(shell);
-    return (0);
+    return (final_status);
 }

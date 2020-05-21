@@ -17,6 +17,7 @@ shell_t *init_shell_struct(char * const *envp)
         return (shell);
     my_memset(shell, 0, sizeof(*shell));
     shell->envp = my_array_dup(envp);
+    shell->exit_status = 0;
     return (shell);
 }
 

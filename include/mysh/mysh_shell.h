@@ -11,6 +11,7 @@
 typedef struct shell
 {
     char **envp;
+    int exit_status;
 } shell_t;
 
 shell_t *init_shell_struct(char * const *envp);

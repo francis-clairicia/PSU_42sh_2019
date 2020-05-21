@@ -5,10 +5,24 @@
 ** exit.c
 */
 
+#include "my.h"
 #include "minishell.h"
 
-int exit_builtin_command(char * const *av UNUSED, shell_t *shell UNUSED)
+int exit_builtin_command(char * const *av, shell_t *shell)
 {
-    my_putstr("exit\n");
-    return (1);
+    int ac = my_array_len(av);
+
+    if (ac == 1) {
+        my_putstr("exit\n");
+        return (1);
+    } else if (ac == 2) {
+        if (!my_str_isnum(av[1])) {
+            print_error("exit", "Expression Syntax");
+            return (-1);
+        }
+        shell->exit_status = (unsigned char)my_absolute_getnbr(av[1]);
+        return (1);
+    }
+    print_error("exit", "Expression Syntax");
+    return (-1);
 }
