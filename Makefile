@@ -10,6 +10,7 @@ SRC_NO_TEST			=	src/main.c											\
 						src/mysh.c
 
 SRC_TEST			=	src/minishell.c										\
+						src/shell.c											\
 						src/exec_shell_commands.c							\
 						src/exec_piped_commands.c							\
 						src/print_command_prompt.c							\
@@ -48,7 +49,7 @@ SRC_TEST			=	src/minishell.c										\
 
 SRC					=	$(SRC_NO_TEST) $(SRC_TEST)
 
-CFLAGS				=	-Werror -Wextra
+CFLAGS				=	-Wall -Wextra
 
 CPPFLAGS			=	-I./include -I./include/lib -I./include/mysh
 

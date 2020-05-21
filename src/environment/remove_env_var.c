@@ -10,7 +10,6 @@
 
 bool remove_env_var(env_list_t **env_list, const char *var_name)
 {
-    size_t size = get_env_list_size(*env_list);
     env_list_t *variable = NULL;
 
     if (!(*env_list) || !var_name)

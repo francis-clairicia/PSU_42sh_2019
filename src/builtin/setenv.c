@@ -26,43 +26,53 @@ static int valid_arguments(char const *variable)
     return (1);
 }
 
-static int add_variable(char ***envp, char const *variable, char const *value)
+static int add_variable(shell_t *shell, char const *variable, char const *value)
 {
     int i = 0;
-    char **new_envp = malloc(sizeof(char *) * (my_array_len(*envp) + 2));
+    char **new_envp = malloc(sizeof(char *) * (my_array_len(shell->envp) + 2));
 
     if (new_envp == NULL)
         return (-1);
-    if ((*envp) != NULL) {
-        while ((*envp)[i] != NULL) {
-            new_envp[i] = (*envp)[i];
+    if (shell->envp != NULL) {
+        while (shell->envp[i] != NULL) {
+            new_envp[i] = shell->envp[i];
             i += 1;
         }
     }
     new_envp[i] = create_variable(variable, value);
     new_envp[i + 1] = NULL;
-    free(*envp);
-    *envp = new_envp;
+    free(shell->envp);
+    shell->envp = new_envp;
     return (0);
 }
 
-int setenv_builtin_command(char * const *av, char ***envp)
+static int modify_variable(shell_t *shell, int var_index,
+    char const *variable, char const *value)
+{
+    char *new_var = create_variable(variable, value);
+
+    if (!new_var)
+        return (-1);
+    free(shell->envp[var_index]);
+    shell->envp[var_index] = new_var;
+    return (0);
+}
+
+int setenv_builtin_command(char * const *av, shell_t *shell)
 {
     int ac = my_array_len(av);
     int var_index = 0;
 
     if (ac < 2)
-        return (env_builtin_command((char *[]){"env", NULL}, envp));
+        return (env_builtin_command((char *[]){"env", NULL}, shell));
     else if (ac > 3) {
         print_error("setenv", "Too many arguments");
         return (-1);
     }
-    if (envp == NULL || !valid_arguments(av[1]))
+    if (shell == NULL || !valid_arguments(av[1]))
         return (-1);
-    var_index = find_var_env(*envp, av[1]);
+    var_index = find_var_env(shell->envp, av[1]);
     if (var_index < 0)
-        return (add_variable(envp, av[1], av[2]));
-    free((*envp)[var_index]);
-    (*envp)[var_index] = create_variable(av[1], av[2]);
-    return (0);
+        return (add_variable(shell, av[1], av[2]));
+    return (modify_variable(shell, var_index, av[1], av[2]));
 }

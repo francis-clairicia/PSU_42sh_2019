@@ -7,7 +7,7 @@
 
 #include "minishell.h"
 
-int env_builtin_command(char * const *av, char ***envp)
+int env_builtin_command(char * const *av, shell_t *shell)
 {
     int ac = my_array_len(av);
     int i = 0;
@@ -16,10 +16,10 @@ int env_builtin_command(char * const *av, char ***envp)
         print_error("env", "Too many arguments");
         return (-1);
     }
-    if (envp == NULL || *envp == NULL)
+    if (shell == NULL || shell->envp == NULL)
         return (-1);
-    while ((*envp)[i] != NULL) {
-        my_printf("%s\n", (*envp)[i]);
+    while (shell->envp[i] != NULL) {
+        my_printf("%s\n", shell->envp[i]);
         i += 1;
     }
     return (0);

@@ -12,14 +12,14 @@
 
 Test(stdin_redirection, read_a_file_as_standard_input)
 {
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
     int fd = open("tests/file_1.txt", O_CREAT | O_WRONLY, 0664);
 
     cr_redirect_stdout();
     my_putstr_fd(fd, "Yoo\n");
     close(fd);
-    cr_expect_eq(minishell("cat -e < tests/file_1.txt", &envp), 0);
-    my_free_array(envp);
+    cr_expect_eq(minishell("cat -e < tests/file_1.txt", shell), 0);
+    destroy_shell_struct(shell);
     remove("tests/file_1.txt");
     cr_expect_stdout_eq_str("Yoo$\n");
 }
@@ -34,7 +34,7 @@ static void print_on_fd_for_stdin_test(int fd)
 
 Test(stdin_redirection, handle_here_document_redirection)
 {
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
     int pipefd[2];
     int child = 0;
 
@@ -50,29 +50,29 @@ Test(stdin_redirection, handle_here_document_redirection)
     dup2(pipefd[0], 0);
     waitpid(child, NULL, 0);
     cr_redirect_stdout();
-    cr_expect_eq(minishell("cat << EOF", &envp), 0);
-    my_free_array(envp);
+    cr_expect_eq(minishell("cat << EOF", shell), 0);
+    destroy_shell_struct(shell);
     cr_expect_stdout_eq_str("? ? ? ? " "Bonjour\nC'est moi\nSans EOF\n");
     close(pipefd[0]);
 }
 
 Test(stdin_redirection, print_error_if_there_is_no_file)
 {
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
 
     cr_redirect_stderr();
-    cr_expect_eq(minishell("cat < ", &envp), -1);
-    my_free_array(envp);
+    cr_expect_eq(minishell("cat < ", shell), -1);
+    destroy_shell_struct(shell);
     cr_expect_stderr_eq_str("Missing name for redirect.\n");
 }
 
 Test(stdin_redirection, print_error_if_can_t_open_file)
 {
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
 
     cr_redirect_stderr();
-    cr_expect_eq(minishell("cat < unknown_file.unknown", &envp), -1);
-    my_free_array(envp);
+    cr_expect_eq(minishell("cat < unknown_file.unknown", shell), -1);
+    destroy_shell_struct(shell);
     cr_expect_stderr_eq_str("unknown_file.unknown: "
         "No such file or directory.\n");
 }

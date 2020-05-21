@@ -25,7 +25,7 @@ typedef enum redirection_type {
 
 static const char first_chars_redirections[] = "|><";
 
-static const char *redirections[] = {
+static const char * const redirections[] = {
     "|",
     ">>",
     ">",
@@ -45,7 +45,7 @@ typedef enum splitter_type {
 
 static const char first_chars_splitters[] = ";&|";
 
-static const char *splitters[] = {
+static const char * const splitters[] = {
     ";",
     "&&",
     "||",

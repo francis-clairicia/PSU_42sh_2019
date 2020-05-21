@@ -13,65 +13,63 @@ Test(cd_builtin_command, change_the_current_working_directory)
 {
     char save_actual_dir[4097];
     char current_dir[4097];
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
-    int old_pwd = 0;
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
 
     cr_redirect_stderr();
     cr_assert_not_null(getcwd(save_actual_dir, 4097));
-    cr_assert_not_null(envp);
-    minishell("cd /", &envp);
+    cr_assert_not_null(shell);
+    minishell("cd /", shell);
     cr_expect_str_eq(getcwd(current_dir, 4097), "/");
-    old_pwd = find_var_env(envp, "OLDPWD");
-    cr_expect_str_eq(get_var_value(envp, old_pwd), save_actual_dir);
+    cr_expect_str_eq(get_var_env(shell->envp, "OLDPWD"), save_actual_dir);
     chdir(save_actual_dir);
-    minishell("cd unknown_dir", &envp);
+    minishell("cd unknown_dir", shell);
     cr_expect_stderr_eq_str("unknown_dir: No such file or directory.\n");
+    destroy_shell_struct(shell);
 }
 
 Test(cd_builtin_command, move_to_home_path_when_no_args)
 {
     char save_actual_dir[4097];
     char current_dir[4097];
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
-    int home_index = find_var_env(envp, "HOME");
-    char *home_path = get_var_value(envp, home_index);
-    int old_pwd = 0;
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
+    char *home_path = NULL;
 
     cr_assert_not_null(getcwd(save_actual_dir, 4097));
-    cr_assert_not_null(envp);
-    cr_expect_eq(minishell("cd", &envp), 0);
+    cr_assert_not_null(shell);
+    cr_expect_eq(minishell("cd", shell), 0);
+    home_path = get_var_env(shell->envp, "HOME");
     cr_expect_str_eq(getcwd(current_dir, 4097), home_path);
-    old_pwd = find_var_env(envp, "OLDPWD");
-    cr_expect_str_eq(get_var_value(envp, old_pwd), save_actual_dir);
-    my_free_array(envp);
+    cr_expect_str_eq(get_var_env(shell->envp, "OLDPWD"), save_actual_dir);
+    destroy_shell_struct(shell);
     chdir(save_actual_dir);
 }
 
 Test(cd_builtin_command, print_error_when_too_many_arguments_are_given)
 {
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
 
     cr_redirect_stderr();
-    cr_expect_eq(minishell("cd / ~/Downloads", &envp), -1);
+    cr_expect_eq(minishell("cd / ~/Downloads", shell), -1);
     cr_expect_stderr_eq_str("cd: Too many arguments.\n");
-    my_free_array(envp);
+    destroy_shell_struct(shell);
 }
 
 Test(cd_builtin_command, handle_null_value)
 {
-    char **envp = NULL;
+    shell_t *shell = NULL;
 
     cr_expect_eq(minishell("cd", NULL), -1);
-    cr_expect_eq(minishell("cd", &envp), -1);
+    cr_expect_eq(minishell("cd", shell), -1);
 }
 
 Test(cd_builtin_command, handle_invalid_or_non_existing_home_folder)
 {
-    char **envp = NULL;
+    shell_t *shell = init_shell_struct(NULL);
 
     cr_redirect_stderr();
-    cr_expect_eq(minishell("cd", &envp), -1);
-    minishell("setenv HOME unknown_dir", &envp);
-    cr_expect_eq(minishell("cd", &envp), -1);
+    cr_expect_eq(minishell("cd", shell), -1);
+    minishell("setenv HOME unknown_dir", shell);
+    cr_expect_eq(minishell("cd", shell), -1);
     cr_expect_stderr_eq_str("unknown_dir: No such file or directory.\n");
+    destroy_shell_struct(shell);
 }

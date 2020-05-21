@@ -11,30 +11,29 @@
 
 Test(unsetenv_builtin_command, remove_var_form_environment)
 {
-    char **envp = NULL;
+    shell_t *shell = init_shell_struct(NULL);
 
-    minishell("setenv YO 2", &envp);
-    minishell("setenv USER user", &envp);
-    minishell("setenv DISPLAY :0.0", &envp);
-    cr_expect_neq(find_var_env(envp, "YO"), -1);
-    cr_expect_neq(find_var_env(envp, "USER"), -1);
-    cr_expect_neq(find_var_env(envp, "DISPLAY"), -1);
-    cr_expect_eq(minishell("unsetenv YO USER DISPLAY", &envp), 0);
-    cr_assert_not_null(envp);
-    cr_expect_null(envp[0]);
-    cr_expect_eq(find_var_env(envp, "YO"), -1);
-    cr_expect_eq(find_var_env(envp, "USER"), -1);
-    cr_expect_eq(find_var_env(envp, "DISPLAY"), -1);
-    cr_expect_eq(minishell("unsetenv DISPLAY", &envp), 0);
-    my_free_array(envp);
+    minishell("setenv YO 2", shell);
+    minishell("setenv USER user", shell);
+    minishell("setenv DISPLAY :0.0", shell);
+    cr_expect_neq(find_var_env(shell->envp, "YO"), -1);
+    cr_expect_neq(find_var_env(shell->envp, "USER"), -1);
+    cr_expect_neq(find_var_env(shell->envp, "DISPLAY"), -1);
+    cr_expect_eq(minishell("unsetenv YO USER DISPLAY", shell), 0);
+    cr_expect_eq(find_var_env(shell->envp, "YO"), -1);
+    cr_expect_eq(find_var_env(shell->envp, "USER"), -1);
+    cr_expect_eq(find_var_env(shell->envp, "DISPLAY"), -1);
+    cr_expect_eq(minishell("unsetenv UNKNOWN_VAR_IN_ENV", shell), 0);
+    destroy_shell_struct(shell);
 }
 
 Test(unsetenv_builtin_command, cant_remove_from_null_env)
 {
-    char **envp = NULL;
+    shell_t *shell = init_shell_struct(NULL);
 
     cr_expect_eq(minishell("unsetenv VAR", NULL), -1);
-    cr_expect_eq(minishell("unsetenv VAR", &envp), -1);
+    cr_expect_eq(minishell("unsetenv VAR", shell), -1);
+    destroy_shell_struct(shell);
 }
 
 Test(unsetenv_builtin_command, print_error_when_no_arg_is_given)

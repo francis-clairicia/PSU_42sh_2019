@@ -12,11 +12,11 @@
 
 Test(stdout_redirection, write_on_a_file_instead_of_terminal)
 {
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
     FILE *file = NULL;
 
-    cr_expect_eq(minishell("echo BONJOUR > tests/file_2.txt", &envp), 0);
-    my_free_array(envp);
+    cr_expect_eq(minishell("echo BONJOUR > tests/file_2.txt", shell), 0);
+    destroy_shell_struct(shell);
     file = fopen("tests/file_2.txt", "r");
     cr_expect_file_contents_eq_str(file, "BONJOUR\n");
     fclose(file);
@@ -25,12 +25,12 @@ Test(stdout_redirection, write_on_a_file_instead_of_terminal)
 
 Test(stdout_redirection, append_to_a_file)
 {
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
     FILE *file = NULL;
 
-    cr_expect_eq(minishell("echo BONJOUR >> tests/file_3.txt", &envp), 0);
-    cr_expect_eq(minishell("echo Au_Revoir >> tests/file_3.txt", &envp), 0);
-    my_free_array(envp);
+    cr_expect_eq(minishell("echo BONJOUR >> tests/file_3.txt", shell), 0);
+    cr_expect_eq(minishell("echo Au_Revoir >> tests/file_3.txt", shell), 0);
+    destroy_shell_struct(shell);
     file = fopen("tests/file_3.txt", "r");
     cr_expect_file_contents_eq_str(file, "BONJOUR\nAu_Revoir\n");
     fclose(file);
@@ -39,10 +39,10 @@ Test(stdout_redirection, append_to_a_file)
 
 Test(stdout_redirection, print_error_if_there_is_no_file)
 {
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
 
     cr_redirect_stderr();
-    cr_expect_eq(minishell("echo > ", &envp), -1);
-    my_free_array(envp);
+    cr_expect_eq(minishell("echo > ", shell), -1);
+    destroy_shell_struct(shell);
     cr_expect_stderr_eq_str("Missing name for redirect.\n");
 }

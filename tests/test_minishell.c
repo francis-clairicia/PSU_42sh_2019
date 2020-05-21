@@ -12,17 +12,17 @@
 Test(minishell, launch_command_like_an_another_shell)
 {
     int status = 0;
-    char **envp = my_array_dup(DEFAULT_ENVIRONMENT);
+    shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
 
     cr_redirect_stdout();
-    status = minishell("ls src/main.c", &envp);
+    status = minishell("ls src/main.c", shell);
     if (status == 1) {
         cr_expect_eq(kill(getpid(), SIGCHLD), 0);
     } else {
         cr_expect_eq(status, 0, "Expected 0, got %d", status);
         cr_expect_stdout_eq_str("src/main.c\n");
     }
-    my_free_array(envp);
+    destroy_shell_struct(shell);
 }
 
 Test(minishell, handle_null_command)

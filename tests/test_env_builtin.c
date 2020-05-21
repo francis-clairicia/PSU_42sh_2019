@@ -11,13 +11,13 @@
 
 Test(env_builtin_command, print_environment)
 {
-    char **envp = NULL;
+    shell_t *shell = init_shell_struct(NULL);
 
     cr_redirect_stdout();
-    minishell("setenv YO 2", &envp);
-    cr_expect_eq(minishell("env", &envp), 0);
+    minishell("setenv YO 2", shell);
+    cr_expect_eq(minishell("env", shell), 0);
     cr_expect_stdout_eq_str("YO=2\n");
-    my_free_array(envp);
+    destroy_shell_struct(shell);
 }
 
 Test(env_builtin_command, handle_args)
@@ -29,7 +29,8 @@ Test(env_builtin_command, handle_args)
 
 Test(env_builtin_command, handle_null_env)
 {
-    char **envp = NULL;
+    shell_t *shell = init_shell_struct(NULL);
 
-    cr_assert_eq(minishell("env", &envp), -1);
+    cr_expect_eq(minishell("env", shell), -1);
+    destroy_shell_struct(shell);
 }

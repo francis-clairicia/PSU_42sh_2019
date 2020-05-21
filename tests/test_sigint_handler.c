@@ -22,8 +22,8 @@ static char *fill_output(char *output, char const *user, char const *host,
 
 static char *get_print_output(char * const *envp)
 {
-    char *user = get_var_value(envp, find_var_env(envp, "USER"));
-    char *host = get_var_value(envp, find_var_env(envp, "HOSTNAME"));
+    char *user = get_var_env(envp, "USER");
+    char *host = get_var_env(envp, "HOSTNAME");
     char *output = NULL;
     int dot = my_strchr_index(host, '.');
     int size_host = (dot > 0) ? dot : my_strlen(host);

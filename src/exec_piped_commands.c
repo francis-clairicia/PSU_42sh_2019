@@ -32,7 +32,7 @@ static void destroy_all_commands(command_t commands[], int nb_commands)
     free(commands);
 }
 
-int exec_piped_commands(cmd_list_t *cmd_list, char ***envp)
+int exec_piped_commands(cmd_list_t *cmd_list, shell_t *shell)
 {
     int nb_commands = 0;
     command_t *commands = parse_cmd_list(cmd_list, &nb_commands);
@@ -43,7 +43,7 @@ int exec_piped_commands(cmd_list_t *cmd_list, char ***envp)
     if (status == 0 && !link_all_commands(commands, nb_commands))
         status = -1;
     if (status == 0)
-        status = exec_shell_commands(commands, envp);
+        status = exec_shell_commands(commands, shell);
     destroy_all_commands(commands, nb_commands);
     return (status);
 }

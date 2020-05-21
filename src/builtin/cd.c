@@ -9,7 +9,7 @@
 
 static int go_to_default_home_path(char * const *envp)
 {
-    char *home_path = get_var_value(envp, find_var_env(envp, "HOME"));
+    char *home_path = get_var_env(envp, "HOME");
 
     if (home_path == NULL)
         return (0);
@@ -22,7 +22,7 @@ static int go_to_default_home_path(char * const *envp)
 
 static int go_to_old_directory(char * const *envp)
 {
-    char *old_pwd = get_var_value(envp, find_var_env(envp, "OLDPWD"));
+    char *old_pwd = get_var_env(envp, "OLDPWD");
 
     if (old_pwd == NULL) {
         print_error("", strerror(ENOENT));
@@ -46,7 +46,7 @@ static int change_directory(char const *arg, char * const *envp)
     return (1);
 }
 
-int cd_builtin_command(char * const *av, char ***envp)
+int cd_builtin_command(char * const *av, shell_t *shell)
 {
     int ac = my_array_len(av);
     char actual_dir[4097];
@@ -57,14 +57,14 @@ int cd_builtin_command(char * const *av, char ***envp)
         print_error("cd", "Too many arguments");
         return (-1);
     }
-    if (envp == NULL || getcwd(actual_dir, 4097) == NULL)
+    if (!shell || !(shell->envp) || getcwd(actual_dir, 4097) == NULL)
         return (-1);
-    if (ac == 1 && !go_to_default_home_path(*envp))
+    if (ac == 1 && !go_to_default_home_path(shell->envp))
         return (-1);
-    if (ac > 1 && !change_directory(av[1], *envp))
+    if (ac > 1 && !change_directory(av[1], shell->envp))
         return (-1);
-    setenv_builtin_command(set_old_pwd, envp);
+    setenv_builtin_command(set_old_pwd, shell);
     getcwd(actual_dir, 4097);
-    setenv_builtin_command(set_new_pwd, envp);
+    setenv_builtin_command(set_new_pwd, shell);
     return (0);
 }

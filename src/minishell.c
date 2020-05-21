@@ -27,7 +27,7 @@ static bool exec_next_command(parsed_input_list_t **node,
     return (true);
 }
 
-static int launch_all_commands(parsed_input_list_t *list, char ***envp)
+static int launch_all_commands(parsed_input_list_t *list, shell_t *shell)
 {
     int i = 0;
     int status = 0;
@@ -35,14 +35,14 @@ static int launch_all_commands(parsed_input_list_t *list, char ***envp)
     parsed_input_list_t *node = list;
 
     for (; exec_next_command(&node, list, i, status); i += 1) {
-        status = exec_piped_commands(node->cmd_list, envp);
+        status = exec_piped_commands(node->cmd_list, shell);
         if (status < 0)
             error = 1;
     }
     return ((!error || status == 1) ? status : -1);
 }
 
-int minishell(char const *command_line, char ***envp)
+int minishell(char const *command_line, shell_t *shell)
 {
     int status = 0;
     error_parse_t error = NONE;
@@ -54,7 +54,7 @@ int minishell(char const *command_line, char ***envp)
         print_parsing_error(error);
         status = -1;
     } else {
-        status = launch_all_commands(list, envp);
+        status = launch_all_commands(list, shell);
     }
     free_parsed_input_list(list);
     return (status);

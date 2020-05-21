@@ -9,8 +9,8 @@
 
 static void print_user(char * const *envp)
 {
-    char *user = get_var_value(envp, find_var_env(envp, "USER"));
-    char *hostname = get_var_value(envp, find_var_env(envp, "HOSTNAME"));
+    char *user = get_var_env(envp, "USER");
+    char *hostname = get_var_env(envp, "HOSTNAME");
     int dot = my_strchr_index(hostname, '.');
 
     if (user == NULL || hostname == NULL)
@@ -25,7 +25,7 @@ static void print_user(char * const *envp)
 
 static void print_current_directory(char const *cwd, char * const *envp)
 {
-    char *home_path = get_var_value(envp, find_var_env(envp, "HOME"));
+    char *home_path = get_var_env(envp, "HOME");
     int len_home_path = my_strlen(home_path);
 
     if (cwd == NULL)
