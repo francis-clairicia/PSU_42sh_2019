@@ -43,7 +43,7 @@ void process_key(line_t *line)
     if (!line)
         return;
     redirect_index = get_redirect_key_idx(key);
-    if (redirect_index == -1 && isprint(key)) {
+    if (redirect_index == -1 && isprint(key) && line->index <= LINE_SIZE - 2) {
         shift_line_right(line, key);
     } else if (redirect_index != -1) {
         redirect_process_key[redirect_index](line);
