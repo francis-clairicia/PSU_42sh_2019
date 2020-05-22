@@ -117,6 +117,7 @@ $(NAME):	$(OBJ)
 	$(AR) rc $(NAME) $(OBJ)
 	cp -u $(NAME) ../
 	cp ./my.h ./list/mylist.h ../../include/lib
+	cp ./my_wildcards.h ./list/mylist.h ../../include/lib
 
 clean:
 	$(RM) $(OBJ)

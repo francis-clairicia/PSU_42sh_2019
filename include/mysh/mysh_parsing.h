@@ -12,14 +12,13 @@
 #include <stddef.h>
 #include "my.h"
 
+////////////////
 #define NONE (0)
+////////////////
 
-//////////////////////////////
-
-#define UNMATCHED_SINGLE (1)
-#define UNMATCHED_DOUBLE (2)
-
-//////////////////////////////
+///////////////////////
+//    Redirection    //
+///////////////////////
 
 //Redirections Input Characters Comparisons.
 typedef enum redirection_type {
@@ -51,9 +50,6 @@ static const char * const redirections[] = {
     NULL
 };
 
-//end -> Redirections
-
-//Splitters Input Characters Comparisons.
 typedef enum splitter_type {
     SEMI_COLUMN = 1,
     AND = 2,
@@ -68,43 +64,6 @@ static const char * const splitters[] = {
     "||",
     NULL
 };
-
-//end -> Splitters
-
-//Parsing Lists
-typedef struct arguments {
-    char *arg;
-    struct arguments *next;
-    struct arguments *prev;
-} arguments_t;
-
-typedef struct command_list {
-    arguments_t *args;
-    char *redir_input;
-    redirection_type_t redir_input_type;
-    char *redir_output;
-    redirection_type_t redir_output_type;
-    struct command_list *next;
-    struct command_list *prev;
-} cmd_list_t;
-
-typedef struct parse_list {
-    cmd_list_t *cmd_list;
-    bool in_bg;
-    splitter_type_t splitter;
-    struct parse_list *next;
-    struct parse_list *prev;
-} parse_list_t;
-
-//end -> Parsing list
-
-//Alias Struct
-//typedef struct alias_s {
-//
-//} alias_t;
-
-//end -> Alias Struct
-
 
 static const char spaces[] = " \t";
 static const char backticks[] = "\"'";
@@ -150,6 +109,42 @@ static inline bool is_char_stopper(const char c)
     return (my_is_char_in_str(all_stoppers, c));
 }
 
+////////////////////////////////////////////
+
+////////////////////////////////////
+//     Parsing List Identation    //
+////////////////////////////////////
+
+typedef struct arguments {
+    char *arg;
+    struct arguments *next;
+    struct arguments *prev;
+} arguments_t;
+
+typedef struct command_list {
+    arguments_t *args;
+    char *redir_input;
+    redirection_type_t redir_input_type;
+    char *redir_output;
+    redirection_type_t redir_output_type;
+    struct command_list *next;
+    struct command_list *prev;
+} cmd_list_t;
+
+typedef struct parse_list {
+    cmd_list_t *cmd_list;
+    bool in_bg;
+    splitter_type_t splitter;
+    struct parse_list *next;
+    struct parse_list *prev;
+} parse_list_t;
+
+//////////////////////////////////
+
+///////////////////////////////////////////////
+//         Parsing Error Handling            //
+///////////////////////////////////////////////
+
 typedef enum error_parse {
     UNMATCHED_BACKTICKS = -1,
     MISSING_NAME_FOR_REDIRECT = 1,
@@ -165,14 +160,23 @@ static const char *parsing_errors[] = {
     "Invalid null command.\n"
 };
 
-/////////////////////////////////////////////////////////////////////////
-
 static inline void print_parsing_error(const error_parse_t error)
 {
     if (error <= 0)
         return;
     my_putstr_error(parsing_errors[error - 1]);
 };
+
+/////////////////////////////////////////////
+//         Unmatched caracters             //
+/////////////////////////////////////////////
+
+//////////////////////////////
+
+#define UNMATCHED_SINGLE (1)
+#define UNMATCHED_DOUBLE (2)
+
+//////////////////////////////
 
 //Checks and prints if need if a matching quotation error is within cmd.
 //
@@ -183,14 +187,14 @@ bool check_unmatched_backticks(const char *cmd, error_parse_t *error);
 /////////////////////////////////////////////////////////////////////////
 
 
-/*
-** --> PARSING FUNCTIONS <--
-*/
+/* ////////////////////////////////////////////
+** //        PARSING FUNCTIONS               //
+*/ ////////////////////////////////////////////
 
 // Parses an input into a parse_list_t *list.
 parse_list_t *parse_input(const char *input, error_parse_t *error);
 
-/////////////////////////////////////////////////////////
+// ADD NODES TO LISTS //
 
 // Adds an argument node to an argument list.
 void add_arg_list_node(arguments_t **head);
@@ -198,38 +202,37 @@ void add_arg_list_node(arguments_t **head);
 arguments_t *add_arg_list_node_index(arguments_t **head,
                                     arguments_t *previous);
 
-bool remove_node_from_arg_list_index(arguments_t **head,
-                                    arguments_t *to_rm);
-
 // Adds a cmd_node to a cmd_list.
 void add_cmd_list_node(cmd_list_t **head);
 
 // Adds a parsed_list_node to a parsed_list.
 void add_parsed_list_node(parse_list_t **head);
 
+/////////////////////////
 
-/////////////////////////////////////////////////////////
+// RM NODES FROM LISTS //
 
-// Directly giving, in parameters, a head and a type,
-// Redirect to add_parsing_node with a (void **) cast and sizeof(type).
-#define ADD_PARSE_NODE(head, type) \
-        (add_parsing_node((void **)(head), sizeof(type)))
+bool remove_node_from_arg_list_index(arguments_t **head,
+                                    arguments_t *to_rm);
 
-/////////////////////////////////////////////////////////
+/////////////////////////
 
-/////////////////////////////////////////////////////////
+// FUNCTION LIKE METHODS FOR LISTS //
 
-//Gets, from a void *ptr, the address of the given nb_bytes
-//from the start of the ptr.
-#define GET_ELEM_BEGIN(ptr, bytes) \
-        (*(size_t *)(ptr + bytes))
+// Make an array with argument list
+char **get_array_from_arg_list(arguments_t *arg_list);
 
-//Gets, from a void *ptr, the address of the given nb_bytes
-//from the end of the ptr.
-#define GET_ELEM_END(ptr, size_of_type, bytes) \
-        (*(size_t *)(ptr + size_of_type - bytes))
+/////////////////////////////////////
 
-/////////////////////////////////////////////////////////
+// LISTS / NODES FREERS //
+
+void free_parse_list(parse_list_t *head);
+void free_args_list(arguments_t *head);
+void free_arg_node(arguments_t *node);
+
+//////////////////////////
+
+// ENUM RETURNS //
 
 //Returns the enum matching the next redirection in shifted_input.
 redirection_type_t get_redirection_enum(const char *restrict shifted_input,
@@ -239,12 +242,10 @@ redirection_type_t get_redirection_enum(const char *restrict shifted_input,
 splitter_type_t get_splitter_enum(const char *restrict shifted_input,
                                     int *size);
 
-void free_parse_list(parse_list_t *head);
-void free_args_list(arguments_t *head);
-void free_arg_node(arguments_t *node);
+/////////////////
 
 
-// Gets Arguments and enums.
+// Gets Arguments and enums. //
 
 //Gets a quoted arg, put it in a new-last node of the given cmd_list,
 //if separator is false, otherwise, concatenates it to the last arg
@@ -276,8 +277,9 @@ bool get_splitter(parse_list_t **head, error_parse_t *error,
 void get_redirection(cmd_list_t **head, error_parse_t *error,
                     const char *input, size_t *i);
 
-// Make an array with argument list
-char **get_array_from_arg_list(arguments_t *arg_list);
+/////////////////////////
+
+/////////////////////////////////////////////////////
 
 //////////////////////////////////////////
 //         Globbing Functions           //
@@ -323,10 +325,18 @@ typedef struct argument_globber_s {
 
 /////////////////////////////////////////////////////////
 
+//////////////////////////////
+//    Wildcards Handling    //
+//////////////////////////////
+
+/////////////////////////
+#include "my_wildcards.h"
+/////////////////////////
+
 ///////////////////////////////////////////////////////////////////
 
-#define WILDCARDS_IN_STR(str) (my_is_char_in_str(str, '*') \
-                                || my_is_char_in_str(str, '?'))
+#define WILDCARDS_IN_STR(str) (my_is_char_in_str(str, GLOBAL_WC) \
+                                || my_is_char_in_str(str, SOLO_WC))
 
 ///////////////////////////////////////////////////////////////////
 
@@ -345,6 +355,31 @@ void set_redir_type(cmd_list_t **head, error_parse_t *error,
                     const redirection_type_t redir_type);
 
 void apply_wildcards_changes(parse_list_t *cur_node);
+
+/////////////////////////////////////////////////////////
+
+#ifdef DCLL_H_
+
+////////////////////////
+// Inheritance Macros //
+////////////////////////
+
+//Gets, from a void *ptr, the address of the given nb_bytes
+//from the start of the ptr.
+#define GET_ELEM_BEGIN(ptr, bytes) \
+        (*(size_t *)(ptr + bytes))
+
+//Gets, from a void *ptr, the address of the given nb_bytes
+//from the end of the ptr.
+#define GET_ELEM_END(ptr, size_of_type, bytes) \
+        (*(size_t *)(ptr + size_of_type - bytes))
+
+// Directly giving, in parameters, a head and a type,
+// Redirect to add_parsing_node with a (void **) cast and sizeof(type).
+#define ADD_PARSE_NODE(head, type) \
+        (add_parsing_node((void **)(head), sizeof(type)))
+
+#endif
 
 /////////////////////////////////////////////////////////
 
