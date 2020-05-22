@@ -6,7 +6,7 @@
 */
 
 #include "minishell.h"
-#include <stdio.h>
+#include "my.h"
 
 int unalias_builtin_command(char * const *av, shell_t *shell UNUSED)
 {
@@ -15,6 +15,6 @@ int unalias_builtin_command(char * const *av, shell_t *shell UNUSED)
     if (ac == 1)
         print_error("unalias", "Too few arguments.");
     if (ac >= 2)
-        printf("delete alias arg\n");
+        my_printf("delete alias arg\n");
     return (0);
 }

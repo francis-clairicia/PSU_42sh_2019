@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
 ** minishell.h
 */
@@ -46,13 +46,13 @@ typedef struct command_line
 } command_t;
 
 int mysh(void);
-int minishell(char const *command_line, shell_t *shell);
+int eval_exec_cmd(char const *command_line, shell_t *shell);
 int exec_shell_commands(command_t commands[], shell_t *shell);
 int exec_piped_commands(cmd_list_t *cmd_list, shell_t *shell);
 void print_command_prompt(char const *cwd, char * const *envp);
-char *get_path_to_executable(char const *binary, char * const *envp);
+char *get_path_to_executable(char const *binary, char * const *path_list);
 char *join_path(char const *path_1, char const *path_2);
-char *find_binary_in_path(char const *binary, char * const *envp);
+char *find_binary_in_path(char const *binary, char * const *path_list);
 int find_var_env(char * const *envp, char const *var);
 char *get_var_value(char * const *envp, int index);
 char *create_variable(char const *variable, char const *value);
@@ -79,15 +79,25 @@ int env_builtin_command(char * const *av, shell_t *shell);
 int exit_builtin_command(char * const *av, shell_t *shell);
 int setenv_builtin_command(char * const *av, shell_t *shell);
 int unsetenv_builtin_command( char * const *av, shell_t *shell);
+int fg_builtin_command(char * const *av, shell_t *shell);
 int alias_builtin_command(char * const *av, shell_t *shell);
 int unalias_builtin_command(char * const *av, shell_t *shell);
+
+#define print_env(shell) \
+    env_builtin_command((char *[]){"env", NULL}, shell)
+#define set_var_to_env(variable, value, shell) \
+    setenv_builtin_command((char *[]){"setenv", \
+    (char *)variable, (char *)value, NULL}, shell)
+#define remove_var_from_env(variable, shell) \
+    unsetenv_builtin_command((char *[]){"unsetenv", \
+    (char *)variable, NULL}, shell)
 
 sighandler_t bind_sigint_signal(int func);
 void sigint_handler_for_prompt(int signum);
 void sigint_handler_for_process(int signum);
 
 void print_error(char const *filepath, char const *error);
-void print_signal(int signum, int core_dump);
+void print_signal(int signum, int core_dump, bool end_line);
 char *error_exec(int errnum);
 
 #endif

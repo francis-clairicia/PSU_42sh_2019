@@ -15,6 +15,5 @@ char *get_term_line(void)
     while (!(line.completed)) {
         process_key(&line);
     }
-    printf("\r%s\n", line.buffer);
     return (line.exit ? NULL : strdup(line.buffer));
 }

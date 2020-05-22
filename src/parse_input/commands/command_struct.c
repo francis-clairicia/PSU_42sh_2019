@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
-** parse_command_line.c
+** Parses a command_t.
 */
 
 #include "minishell.h"

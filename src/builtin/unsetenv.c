@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
 ** unsetenv.c
 */
@@ -27,7 +27,7 @@ int unsetenv_builtin_command(char * const *av, shell_t *shell)
 
     if (ac < 2) {
         print_error("unsetenv", "Too few arguments");
-        return (-1);
+        return (set_exit_status(shell, 1));
     }
     if (shell == NULL || shell->envp == NULL)
         return (-1);
@@ -35,5 +35,5 @@ int unsetenv_builtin_command(char * const *av, shell_t *shell)
         remove_var(shell->envp, find_var_env(shell->envp, av[i]));
         i += 1;
     }
-    return (0);
+    return (set_exit_status(shell, 0));
 }

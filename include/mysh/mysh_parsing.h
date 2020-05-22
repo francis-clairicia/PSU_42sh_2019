@@ -12,15 +12,21 @@
 #include <stddef.h>
 #include "my.h"
 
+#include "../dcll.h"
+
 #define NONE (0)
+
+///////////////////////
+//    Redirection    //
+///////////////////////
 
 //Redirections Input Characters Comparisons.
 typedef enum redirection_type {
-    PIPE = 0b1,
-    APPEND_TO_FILE = 0b10,
-    REDIR_IN_FILE = 0b100,
-    READ_FROM_STDIN_AS_INPUT = 0b1000,
-    READ_FROM_FILE_AS_INPUT = 0b10000,
+    PIPE = 1,
+    APPEND_TO_FILE = 1 << 1,
+    REDIR_IN_FILE = 1 << 2,
+    READ_FROM_STDIN_AS_INPUT = 1 << 3,
+    READ_FROM_FILE_AS_INPUT = 1 << 4,
 } redirection_type_t;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -44,9 +50,6 @@ static const char * const redirections[] = {
     NULL
 };
 
-//end -> Redirections
-
-//Splitters Input Characters Comparisons.
 typedef enum splitter_type {
     SEMI_COLUMN = 1,
     AND = 2,
@@ -62,44 +65,8 @@ static const char * const splitters[] = {
     NULL
 };
 
-//end -> Splitters
-
-//Parsing Lists
-typedef struct arguments {
-    char *arg;
-    struct arguments *next;
-    struct arguments *prev;
-} arguments_t;
-
-typedef struct command_list {
-    arguments_t *args;
-    char *redir_input;
-    redirection_type_t redir_input_type;
-    char *redir_output;
-    redirection_type_t redir_output_type;
-    struct command_list *next;
-    struct command_list *prev;
-} cmd_list_t;
-
-typedef struct parsed_input_list {
-    cmd_list_t *cmd_list;
-    splitter_type_t splitter;
-    struct parsed_input_list *next;
-    struct parsed_input_list *prev;
-} parsed_input_list_t;
-
-//end -> Parsing list
-
-//Alias Struct
-//typedef struct alias_s {
-//    
-//} alias_t;
-
-//end -> Alias Struct
-
-
 static const char spaces[] = " \t";
-static const char backsticks[] = "\"'";
+static const char backticks[] = "\"'";
 
 static const char all_splitters[] = " \t\"';&|><";
 static const char all_stoppers[] = ";&|><";
@@ -130,8 +97,8 @@ static inline char is_char_backstick(const char c)
     char match = '\0';
     size_t i = 0;
 
-    for (; match == '\0' && backsticks[i]; i += 1) {
-        if (c == backsticks[i])
+    for (; match == '\0' && backticks[i]; i += 1) {
+        if (c == backticks[i])
             match = c;
     }
     return (match);
@@ -142,7 +109,44 @@ static inline bool is_char_stopper(const char c)
     return (my_is_char_in_str(all_stoppers, c));
 }
 
+////////////////////////////////////////////
+
+////////////////////////////////////
+//     Parsing List Identation    //
+////////////////////////////////////
+
+typedef struct arguments {
+    char *arg;
+    struct arguments *next;
+    struct arguments *prev;
+} arguments_t;
+
+typedef struct command_list {
+    arguments_t *args;
+    char *redir_input;
+    redirection_type_t redir_input_type;
+    char *redir_output;
+    redirection_type_t redir_output_type;
+    struct command_list *next;
+    struct command_list *prev;
+} cmd_list_t;
+
+typedef struct parse_list {
+    cmd_list_t *cmd_list;
+    bool in_bg;
+    splitter_type_t splitter;
+    struct parse_list *next;
+    struct parse_list *prev;
+} parse_list_t;
+
+//////////////////////////////////
+
+///////////////////////////////////////////////
+//         Parsing Error Handling            //
+///////////////////////////////////////////////
+
 typedef enum error_parse {
+    UNMATCHED_BACKTICKS = -1,
     MISSING_NAME_FOR_REDIRECT = 1,
     AMBIGUOUS_INPUT_REDIRECT,
     AMBIGUOUS_OUTPUT_REDIRECT,
@@ -163,50 +167,72 @@ static inline void print_parsing_error(const error_parse_t error)
     my_putstr_error(parsing_errors[error - 1]);
 };
 
+/////////////////////////////////////////////
+//         Unmatched caracters             //
+/////////////////////////////////////////////
 
-/*
-** --> PARSING FUNCTIONS <--
-*/
+//////////////////////////////
 
-// Parses an input into a parsed_input_list_t *list.
-parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
+#define UNMATCHED_SINGLE (1)
+#define UNMATCHED_DOUBLE (2)
 
-/////////////////////////////////////////////////////////
+//////////////////////////////
 
-// Adds a node to a doubly linked list.
-void *add_parsing_node(void **head, const size_t size);
+//Checks and prints if need if a matching quotation error is within cmd.
+//
+//Returns True (1) if not.
+//Returns False (0) otherwise.
+bool check_unmatched_backticks(const char *cmd, error_parse_t *error);
 
+/////////////////////////////////////////////////////////////////////////
+
+
+/* ////////////////////////////////////////////
+** //        PARSING FUNCTIONS               //
+*/ ////////////////////////////////////////////
+
+// Parses an input into a parse_list_t *list.
+parse_list_t *parse_input(const char *input, error_parse_t *error);
+
+// ADD NODES TO LISTS //
 
 // Adds an argument node to an argument list.
 void add_arg_list_node(arguments_t **head);
+
+arguments_t *add_arg_list_node_index(arguments_t **head,
+                                    arguments_t *previous);
 
 // Adds a cmd_node to a cmd_list.
 void add_cmd_list_node(cmd_list_t **head);
 
 // Adds a parsed_list_node to a parsed_list.
-void add_parsed_list_node(parsed_input_list_t **head);
+void add_parsed_list_node(parse_list_t **head);
 
+/////////////////////////
 
-// Directly giving, in parameters, a head and a type,
-// Redirect to add_parsing_node with a (void **) cast and sizeof(type).
-#define ADD_PARSE_NODE(head, type) \
-        (add_parsing_node((void **)(head), sizeof(type)))
+// RM NODES FROM LISTS //
 
-/////////////////////////////////////////////////////////
+bool remove_node_from_arg_list_index(arguments_t **head,
+                                    arguments_t *to_rm);
 
-/////////////////////////////////////////////////////////
+/////////////////////////
 
-//Gets, from a void *ptr, the address of the given nb_bytes
-//from the start of the ptr.
-#define GET_ELEM_BEGIN(ptr, bytes) \
-        (*(size_t *)(ptr + bytes))
+// FUNCTION LIKE METHODS FOR LISTS //
 
-//Gets, from a void *ptr, the address of the given nb_bytes
-//from the end of the ptr.
-#define GET_ELEM_END(ptr, size_of_type, bytes) \
-        (*(size_t *)(ptr + size_of_type - bytes))
+// Make an array with argument list
+char **get_array_from_arg_list(arguments_t *arg_list);
 
-/////////////////////////////////////////////////////////
+/////////////////////////////////////
+
+// LISTS / NODES FREERS //
+
+void free_parse_list(parse_list_t *head);
+void free_args_list(arguments_t *head);
+void free_arg_node(arguments_t *node);
+
+//////////////////////////
+
+// ENUM RETURNS //
 
 //Returns the enum matching the next redirection in shifted_input.
 redirection_type_t get_redirection_enum(const char *restrict shifted_input,
@@ -215,10 +241,6 @@ redirection_type_t get_redirection_enum(const char *restrict shifted_input,
 //Returns the enum matching the next splitter in shifted_input.
 splitter_type_t get_splitter_enum(const char *restrict shifted_input,
                                     int *size);
-
-void free_parsed_input_node(parsed_input_list_t *node);
-void free_parsed_input_list(parsed_input_list_t *head);
-
 
 // Gets Arguments and enums.
 
@@ -242,7 +264,8 @@ void get_unquoted_arg(cmd_list_t **head, const bool separator,
 //sets it the newly-found splitter.
 //
 //Increases index to the new arg/splitter/space/end of input.
-bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
+bool get_splitter(parse_list_t **head, error_parse_t *error,
+                const char *input, size_t *i);
 
 //Gets a redirection, creates a new-last node in the given cmd_list,
 //
@@ -250,5 +273,111 @@ bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
 //Increases index to the new arg/splitter/space/end of input.
 void get_redirection(cmd_list_t **head, error_parse_t *error,
                     const char *input, size_t *i);
+
+/////////////////////////
+
+/////////////////////////////////////////////////////
+
+//////////////////////////////////////////
+//         Globbing Functions           //
+//////////////////////////////////////////
+///////////////////////////////////////////////////
+
+//Gets a path string from a given str.
+//For instance:
+//From str = "/bin/ls".
+//Will return : "/bin/".
+//
+//Returns the newly allocated string if success.
+//Returns NULL if str is NULL or no path was found.
+char *get_path_from_str(const char *str);
+
+//Gets a matching-use string from a given str.
+//For instance:
+//From str = "/dev/tty*".
+//Will return : "tty*".
+//
+//Returns the newly allocated string if success.
+//Returns NULL if str is NULL or no path was found.
+char *get_matching_from_str(const char *str);
+
+///////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////
+
+typedef struct file_extent_s {
+    char *path;
+    char *file;
+} file_extent_t;
+
+typedef struct globbing_match_s {
+    const char *str;
+    bool treated;
+} globbing_match_t;
+
+typedef struct argument_globber_s {
+    arguments_t **head;
+    arguments_t *cur_node;
+} argument_globber_t;
+
+/////////////////////////////////////////////////////////
+
+//////////////////////////////
+//    Wildcards Handling    //
+//////////////////////////////
+
+/////////////////////////
+#include "my_wildcards.h"
+/////////////////////////
+
+///////////////////////////////////////////////////////////////////
+
+#define WILDCARDS_IN_STR(str) (my_is_char_in_str(str, GLOBAL_WC) \
+                                || my_is_char_in_str(str, SOLO_WC))
+
+///////////////////////////////////////////////////////////////////
+
+//Add args to the given arg list from a given string where
+//add_args_for_matching() is going to try to find files from potential
+//paths hidden into match_str to do so.
+bool add_args_for_matching(arguments_t **head, arguments_t *tmp,
+                            const char *match_str);
+
+void check_redir_file_set(const cmd_list_t *cur_cmd,
+                        error_parse_t *error,
+                        const redirection_type_t redir_type,
+                        const char cur_char);
+
+void set_redir_type(cmd_list_t **head, error_parse_t *error,
+                    const redirection_type_t redir_type);
+
+void apply_wildcards_changes(parse_list_t *cur_node);
+
+/////////////////////////////////////////////////////////
+
+#ifdef DCLL_H_
+
+////////////////////////
+// Inheritance Macros //
+////////////////////////
+
+//Gets, from a void *ptr, the address of the given nb_bytes
+//from the start of the ptr.
+#define GET_ELEM_BEGIN(ptr, bytes) \
+        (*(size_t *)(ptr + bytes))
+
+//Gets, from a void *ptr, the address of the given nb_bytes
+//from the end of the ptr.
+#define GET_ELEM_END(ptr, size_of_type, bytes) \
+        (*(size_t *)(ptr + size_of_type - bytes))
+
+// Directly giving, in parameters, a head and a type,
+// Redirect to add_parsing_node with a (void **) cast and sizeof(type).
+#define ADD_PARSE_NODE(head, type) \
+        (add_parsing_node((void **)(head), sizeof(type)))
+
+#endif
+
+/////////////////////////////////////////////////////////
 
 #endif /* MYSH_PARSER_H_ */

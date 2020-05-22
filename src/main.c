@@ -1,18 +1,16 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
 ** main.c
 */
 
 #include "my.h"
-#include "mysh.h"
 #include "mysh_usage.h"
 
 int mysh(void);
 
-int main(const int ac, const char * const av[],
-    const char * const env[] UNUSED)
+int main(const int ac, const char * const av[])
 {
     if (ac < 1 || !av || !av[0])
         return (84);

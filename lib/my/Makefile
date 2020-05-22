@@ -67,12 +67,14 @@ SRC			=	my_put_nbr.c					\
 				my_arrcmp.c						\
 				match.c							\
 				my_get_bitshift.c				\
+				my_absolute_getnbr.c			\
 
 LINKED_LIST	=	list/my_list.c					\
 				list/my_create_node.c			\
 				list/my_insert_in_list.c		\
 				list/my_list_to_str.c			\
 				list/my_list_to_2d_array.c		\
+				list/my_2d_array_to_list.c		\
 				list/my_concat_str_list.c		\
 				list/my_free_list.c				\
 				list/my_concat_list.c			\
@@ -116,6 +118,7 @@ $(NAME):	$(OBJ)
 	$(AR) rc $(NAME) $(OBJ)
 	cp -u $(NAME) ../
 	cp ./my.h ./list/mylist.h ../../include/lib
+	cp ./my_wildcards.h ./list/mylist.h ../../include/lib
 
 clean:
 	$(RM) $(OBJ)

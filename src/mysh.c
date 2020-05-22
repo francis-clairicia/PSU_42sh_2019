@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
 ** mysh.c
 */
@@ -12,13 +12,15 @@ static void increase_shlvl(shell_t *shell)
 {
     char *actual_value = get_var_env(shell->envp, "SHLVL");
     int new_value = my_getnbr(actual_value) + 1;
-    char *setenv_cmd[] = {"setenv", "SHLVL", NULL, NULL};
+    char *str_value = NULL;
 
     if (actual_value == NULL)
         return;
-    setenv_cmd[2] = my_nbr_to_str(new_value);
-    setenv_builtin_command(setenv_cmd, shell);
-    free(setenv_cmd[2]);
+    str_value = my_nbr_to_str(new_value);
+    if (!str_value)
+        return;
+    set_var_to_env("SHLVL", str_value, shell);
+    free(str_value);
 }
 
 static int command_prompt(char **line, int stop_shell)
@@ -46,7 +48,7 @@ static int launch_given_commands(shell_t *shell)
     int stop_shell = 0;
 
     while (stop_shell <= 0 && get_next_line_2(&cmd, 0))
-        stop_shell = minishell(cmd, shell);
+        stop_shell = eval_exec_cmd(cmd, shell);
     if (cmd != NULL)
         free(cmd);
     destroy_shell_struct(shell);
@@ -57,19 +59,22 @@ int mysh(void)
 {
     char *cmd = NULL;
     shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
-    int stop_shell = 0;
+    int status = 0;
+    int final_status = 0;
 
     if (shell == NULL)
         return (84);
-    unsetenv_builtin_command((char *[]){"unsetenv", "OLDPWD", NULL}, shell);
+    remove_var_from_env("OLDPWD", shell);
     if (!isatty(0))
         return (launch_given_commands(shell));
     enable_raw_mode();
     atexit(disable_raw_mode);
     increase_shlvl(shell);
-    while (command_prompt(&cmd, stop_shell)) {
-        stop_shell = minishell(cmd, shell);
+    while (command_prompt(&cmd, status)) {
+        status = eval_exec_cmd(cmd, shell);
+        check_background_process(shell);
     }
+    final_status = shell->exit_status;
     destroy_shell_struct(shell);
-    return (0);
+    return (final_status);
 }
