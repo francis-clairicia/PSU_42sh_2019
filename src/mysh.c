@@ -34,8 +34,8 @@ static int command_prompt(char **line, int stop_shell)
     write(1, "\r", 1);
     print_command_prompt(getcwd(current_directory, 4097), DEFAULT_ENVIRONMENT);
     *line = get_term_line();
-    //if (!get_next_line_2(line, 0))
-    //    *line = my_strdup("exit");
+    if (!(*line))
+        *line = my_strdup("exit");
     if (my_strlen(*line) == 0)
         return (command_prompt(line, 0));
     return (1);

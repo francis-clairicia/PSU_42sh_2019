@@ -16,7 +16,7 @@ void shift_line_left(line_t *line)
     if (line->index <= 0)
         return;
     strncpy(cpy_buff, line->buffer + line->index, LINE_SIZE - line->index);
-    strncpy(line->buffer + line->index - 1, cpy_buff, LINE_SIZE - line->index);
+    strcpy(line->buffer + line->index - 1, cpy_buff);
     size = strlen(cpy_buff);
     printf("\b \b%s \x1b[%dD", cpy_buff, size + 1);
     line->index--;

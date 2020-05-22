@@ -9,6 +9,6 @@
 
 int exit_builtin_command(char * const *av UNUSED, shell_t *shell UNUSED)
 {
-    my_putstr("exit\n");
+    my_putstr("exit\r\n");
     return (1);
 }

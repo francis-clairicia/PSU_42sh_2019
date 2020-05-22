@@ -34,6 +34,7 @@ typedef struct line_s
     char buffer[LINE_SIZE];
     int index;
     bool completed;
+    bool exit;
 } line_t;
 
 //Save the actual terminal driver settings at the first function call
