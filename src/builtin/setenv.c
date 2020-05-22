@@ -32,7 +32,7 @@ static int add_variable(shell_t *shell, char const *variable, char const *value)
     char **new_envp = malloc(sizeof(char *) * (my_array_len(shell->envp) + 2));
 
     if (new_envp == NULL)
-        return (-1);
+        return (set_exit_status(shell, 1));
     if (shell->envp != NULL) {
         while (shell->envp[i] != NULL) {
             new_envp[i] = shell->envp[i];
@@ -43,7 +43,7 @@ static int add_variable(shell_t *shell, char const *variable, char const *value)
     new_envp[i + 1] = NULL;
     free(shell->envp);
     shell->envp = new_envp;
-    return (0);
+    return (set_exit_status(shell, 0));
 }
 
 static int modify_variable(shell_t *shell, int var_index,
@@ -52,10 +52,10 @@ static int modify_variable(shell_t *shell, int var_index,
     char *new_var = create_variable(variable, value);
 
     if (!new_var)
-        return (-1);
+        return (set_exit_status(shell, 1));
     free(shell->envp[var_index]);
     shell->envp[var_index] = new_var;
-    return (0);
+    return (set_exit_status(shell, 0));
 }
 
 int setenv_builtin_command(char * const *av, shell_t *shell)
@@ -64,13 +64,13 @@ int setenv_builtin_command(char * const *av, shell_t *shell)
     int var_index = 0;
 
     if (ac < 2)
-        return (env_builtin_command((char *[]){"env", NULL}, shell));
+        return (print_env(shell));
     else if (ac > 3) {
         print_error("setenv", "Too many arguments");
-        return (-1);
+        return (set_exit_status(shell, 1));
     }
     if (shell == NULL || !valid_arguments(av[1]))
-        return (-1);
+        return (set_exit_status(shell, 1));
     var_index = find_var_env(shell->envp, av[1]);
     if (var_index < 0)
         return (add_variable(shell, av[1], av[2]));

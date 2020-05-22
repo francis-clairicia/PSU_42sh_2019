@@ -82,6 +82,15 @@ int unsetenv_builtin_command( char * const *av, shell_t *shell);
 int alias_builtin_command(char * const *av, shell_t *shell);
 int unalias_builtin_command(char * const *av, shell_t *shell);
 
+#define print_env(shell) \
+    env_builtin_command((char *[]){"env", NULL}, shell)
+#define set_var_to_env(variable, value, shell) \
+    setenv_builtin_command((char *[]){"setenv", \
+    (char *)variable, (char *)value, NULL}, shell)
+#define remove_var_from_env(variable, shell) \
+    unsetenv_builtin_command((char *[]){"unsetenv", \
+    (char *)variable, NULL}, shell)
+
 sighandler_t bind_sigint_signal(int func);
 void sigint_handler_for_prompt(int signum);
 void sigint_handler_for_process(int signum);

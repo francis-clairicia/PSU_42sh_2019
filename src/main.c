@@ -10,8 +10,7 @@
 
 int mysh(void);
 
-int main(const int ac, const char * const av[],
-    const char * const env[] UNUSED)
+int main(const int ac, const char * const av[])
 {
     if (ac < 1 || !av || !av[0])
         return (84);

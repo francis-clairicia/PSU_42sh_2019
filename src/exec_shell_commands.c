@@ -8,7 +8,7 @@
 #include <string.h>
 #include "minishell.h"
 
-static int handle_status(int child_pid, int status_pipe)
+static int handle_status(int child_pid, int status_pipe, shell_t *shell)
 {
     int wstatus = 0;
 
@@ -22,7 +22,7 @@ static int handle_status(int child_pid, int status_pipe)
     }
     if (status_pipe != 0)
         return (status_pipe);
-    return ((WEXITSTATUS(wstatus) != 0) ? -1 : 0);
+    return (set_exit_status(shell, (unsigned char)WEXITSTATUS(wstatus)));
 }
 
 static int launch_process(char const *binary, command_t commands[],
@@ -46,7 +46,7 @@ static int launch_process(char const *binary, command_t commands[],
     destroy_command(command);
     if (commands[1].argv != NULL)
         status_pipe = exec_shell_commands(&commands[1], shell);
-    return (handle_status(child_pid, status_pipe));
+    return (handle_status(child_pid, status_pipe, shell));
 }
 
 int exec_shell_commands(command_t commands[], shell_t *shell)

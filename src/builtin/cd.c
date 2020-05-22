@@ -7,9 +7,9 @@
 
 #include "minishell.h"
 
-static int go_to_default_home_path(char * const *envp)
+static int go_to_default_home_path(shell_t *shell)
 {
-    char *home_path = get_var_env(envp, "HOME");
+    char *home_path = get_var_env(shell->envp, "HOME");
 
     if (home_path == NULL)
         return (0);
@@ -20,9 +20,9 @@ static int go_to_default_home_path(char * const *envp)
     return (1);
 }
 
-static int go_to_old_directory(char * const *envp)
+static int go_to_old_directory(shell_t *shell)
 {
-    char *old_pwd = get_var_env(envp, "OLDPWD");
+    char *old_pwd = get_var_env(shell->envp, "OLDPWD");
 
     if (old_pwd == NULL) {
         print_error("", strerror(ENOENT));
@@ -35,36 +35,41 @@ static int go_to_old_directory(char * const *envp)
     return (1);
 }
 
-static int change_directory(char const *arg, char * const *envp)
+static int change_directory(char const *arg, shell_t *shell)
 {
     if (my_strcmp(arg, "-") == 0)
-        return (go_to_old_directory(envp));
+        return (go_to_old_directory(shell));
     if (chdir(arg) < 0) {
         print_error(arg, strerror(errno));
+        shell->exit_status = 1;
         return (0);
     }
     return (1);
 }
 
+static int set_oldpwd_var(char const *old_pwd, shell_t *shell)
+{
+    if (set_var_to_env("OLDPWD", old_pwd, shell) == -1)
+        return (-1);
+    if (set_var_to_env("PWD", getcwd(NULL, 0), shell))
+        return (-1);
+    return (set_exit_status(shell, 0));
+}
+
 int cd_builtin_command(char * const *av, shell_t *shell)
 {
     int ac = my_array_len(av);
-    char actual_dir[4097];
-    char *set_old_pwd[] = {"setenv", "OLDPWD", actual_dir, NULL};
-    char *set_new_pwd[] = {"setenv", "PWD", actual_dir, NULL};
+    char old_pwd[4097];
 
     if (ac > 2) {
         print_error("cd", "Too many arguments");
-        return (-1);
+        return (set_exit_status(shell, 1));
     }
-    if (!shell || !(shell->envp) || getcwd(actual_dir, 4097) == NULL)
+    if (!shell || !(shell->envp) || getcwd(old_pwd, 4097) == NULL)
         return (-1);
-    if (ac == 1 && !go_to_default_home_path(shell->envp))
-        return (-1);
-    if (ac > 1 && !change_directory(av[1], shell->envp))
-        return (-1);
-    setenv_builtin_command(set_old_pwd, shell);
-    getcwd(actual_dir, 4097);
-    setenv_builtin_command(set_new_pwd, shell);
-    return (0);
+    if (ac == 1 && !go_to_default_home_path(shell))
+        return (set_exit_status(shell, 1));
+    if (ac > 1 && !change_directory(av[1], shell))
+        return (set_exit_status(shell, 1));
+    return (set_oldpwd_var(old_pwd, shell));
 }
