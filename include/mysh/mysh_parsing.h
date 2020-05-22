@@ -100,7 +100,7 @@ typedef struct parsed_input_list {
 
 //Alias Struct
 //typedef struct alias_s {
-//    
+//
 //} alias_t;
 
 //end -> Alias Struct

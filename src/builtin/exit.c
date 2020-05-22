@@ -12,7 +12,7 @@ int exit_builtin_command(char * const *av, shell_t *shell)
 {
     int ac = my_array_len(av);
 
-     if (ac >= 2) {
+    if (ac >= 2) {
         if (ac > 2 || !my_str_isnum(av[1])) {
             print_error("exit", "Expression Syntax");
             return (-1);
