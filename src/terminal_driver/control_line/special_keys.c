@@ -20,11 +20,18 @@ void process_backspace(line_t *line)
 
 void process_ctrl_backspace(line_t *line)
 {
-    if (!line)
+    if (!line || line->index <= 0)
         return;
-    while (line->index > 0 && !isblank(line->buffer[line->index - 1]) &&
-        line->buffer[line->index - 1]) {
-        shift_line_left(line);
+    if (isblank(line->buffer[line->index - 1])) {
+        while (line->index > 0 && isblank(line->buffer[line->index - 1]) &&
+            line->buffer[line->index - 1]) {
+            shift_line_left(line);
+        }
+    } else {
+        while (line->index > 0 && !isblank(line->buffer[line->index - 1]) &&
+            line->buffer[line->index - 1]) {
+            shift_line_left(line);
+        }
     }
 }
 
