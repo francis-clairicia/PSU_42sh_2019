@@ -11,7 +11,7 @@
 
 Test(setenv_builtin_command, add_var_to_environment_and_can_modify_it)
 {
-    shell_t *shell = init_shell_struct(NULL);
+    shell_t *shell = init_shell_struct((char *[]){"USER=", NULL});
 
     cr_expect_eq(minishell("setenv USER user", shell), 0);
     cr_expect_eq(minishell("setenv HOSTNAME localhost", shell), 0);
@@ -50,10 +50,9 @@ Test(setenv_builtin_command, print_error_if_var_is_non_alphanumeric_string)
 
 Test(setenv_builtin_command, print_environment_when_no_args_is_given)
 {
-    shell_t *shell = init_shell_struct(NULL);
+    shell_t *shell = init_shell_struct((char *[]){"YO=2", NULL});
 
     cr_redirect_stdout();
-    cr_expect_eq(minishell("setenv YO 2", shell), 0);
     cr_expect_eq(minishell("setenv", shell), 0);
     cr_expect_stdout_eq_str("YO=2\n");
     destroy_shell_struct(shell);

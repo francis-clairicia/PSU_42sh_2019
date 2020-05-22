@@ -6,8 +6,22 @@
 */
 
 #include <stdlib.h>
-#include "mysh_shell.h"
-#include "my.h"
+#include "minishell.h"
+
+static void set_default_path(shell_t *shell, char * const *envp)
+{
+    int index = find_var_env(envp, "PATH");
+    char  *default_path[] = {
+        "/usr/bin",
+        "/bin",
+        NULL
+    };
+
+    if (index >= 0)
+        shell->path = my_str_to_word_array(get_var_value(envp, index), ":");
+    else
+        shell->path = my_array_dup(default_path);
+}
 
 shell_t *init_shell_struct(char * const *envp)
 {
@@ -18,6 +32,7 @@ shell_t *init_shell_struct(char * const *envp)
     my_memset(shell, 0, sizeof(*shell));
     shell->envp = my_array_dup(envp);
     shell->exit_status = 0;
+    set_default_path(shell, envp);
     return (shell);
 }
 
@@ -26,6 +41,7 @@ void destroy_shell_struct(shell_t *shell)
     if (!shell)
         return;
     my_free_array(shell->envp);
+    my_free_array(shell->path);
     my_free_list(&(shell->process), &destroy_process_struct);
     free(shell);
 }

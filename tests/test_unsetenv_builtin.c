@@ -27,15 +27,6 @@ Test(unsetenv_builtin_command, remove_var_form_environment)
     destroy_shell_struct(shell);
 }
 
-Test(unsetenv_builtin_command, cant_remove_from_null_env)
-{
-    shell_t *shell = init_shell_struct(NULL);
-
-    cr_expect_eq(minishell("unsetenv VAR", NULL), -1);
-    cr_expect_eq(minishell("unsetenv VAR", shell), -1);
-    destroy_shell_struct(shell);
-}
-
 Test(unsetenv_builtin_command, print_error_when_no_arg_is_given)
 {
     cr_redirect_stderr();

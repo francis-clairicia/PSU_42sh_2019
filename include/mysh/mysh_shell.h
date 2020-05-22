@@ -23,6 +23,7 @@ void destroy_process_struct(process_t *process);
 typedef struct shell
 {
     char **envp;
+    char **path;
     int exit_status;
     list_t process;
 } shell_t;
