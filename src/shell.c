@@ -6,8 +6,16 @@
 */
 
 #include <stdlib.h>
-#include "mysh_shell.h"
-#include "my.h"
+#include "minishell.h"
+
+static void set_default_path(shell_t *shell)
+{
+    char const default_path[] = {
+        "/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin"
+    };
+
+    set_var_to_env("PATH", default_path, shell);
+}
 
 shell_t *init_shell_struct(char * const *envp)
 {
@@ -18,6 +26,8 @@ shell_t *init_shell_struct(char * const *envp)
     my_memset(shell, 0, sizeof(*shell));
     shell->envp = my_array_dup(envp);
     shell->exit_status = 0;
+    if (my_array_len(shell->envp) == 0)
+        set_default_path(shell);
     return (shell);
 }
 
