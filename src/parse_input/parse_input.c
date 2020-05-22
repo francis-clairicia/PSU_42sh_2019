@@ -10,22 +10,28 @@
 #include "my.h"
 #include "mysh_parsing.h"
 
+static void apply_globbing_to_node(parsed_input_list_t *cur_node,
+                                    arguments_t **tmp)
+{
+    arguments_t *save_tmp = (*tmp)->next;
+
+    if (add_args_for_matching(&cur_node->cmd_list->args, *tmp, (*tmp)->arg)) {
+        remove_node_from_arg_list_index(&cur_node->cmd_list->args, *tmp);
+        (*tmp) = save_tmp;
+    }
+}
+
 static void apply_globbing_wild_card(parsed_input_list_t *cur_node)
 {
     arguments_t *tmp = NULL;
-    arguments_t *save_tmp = NULL;
 
     if (!cur_node || !(cur_node->cmd_list || !(cur_node->cmd_list->args))
         || (cur_node->cmd_list->args->prev) == (cur_node->cmd_list->args))
         return;
     tmp = cur_node->cmd_list->args->next;
     do {
-        if (my_strchr(tmp->arg, '*')) {
-            save_tmp = tmp->next;
-            add_args_for_matching(&cur_node->cmd_list->args, tmp, tmp->arg);
-            remove_node_from_arg_list_index(&cur_node->cmd_list->args, tmp);
-            tmp = save_tmp;
-        }
+        if (my_strchr(tmp->arg, '*'))
+            apply_globbing_to_node(cur_node, &tmp);
         tmp = tmp->next;
     } while (tmp != cur_node->cmd_list->args);
 }

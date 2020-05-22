@@ -299,11 +299,38 @@ char *get_path_from_str(const char *str);
 //Returns NULL if str is NULL or no path was found.
 char *get_matching_from_str(const char *str);
 
+///////////////////////////////////////////////////
+
+typedef struct file_extent_s {
+    char *path;
+    char *file;
+} file_extent_t;
+
+typedef struct globbing_match_s {
+    const char *str;
+    bool treated;
+} globbing_match_t;
+
+typedef struct argument_globber_s {
+    arguments_t **head;
+    arguments_t *cur_node;
+} argument_globber_t;
+
+///////////////////////////////////////////////////
+
 //Add args to the given arg list from a given string where
 //add_args_for_matching() is going to try to find files from potential
 //paths hidden into match_str to do so.
-void add_args_for_matching(arguments_t **head, arguments_t *tmp,
+bool add_args_for_matching(arguments_t **head, arguments_t *tmp,
                             const char *match_str);
+
+void check_redir_file_set(const cmd_list_t *cur_cmd,
+                        error_parse_t *error,
+                        const redirection_type_t redir_type,
+                        const char cur_char);
+
+void set_redir_type(cmd_list_t **head, error_parse_t *error,
+                    const redirection_type_t redir_type);
 
 /////////////////////////////////////////////////////////
 
