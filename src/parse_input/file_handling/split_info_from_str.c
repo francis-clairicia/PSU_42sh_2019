@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2019
 ** PSU_42sh_2019
 ** File description:
-** get_path_from_str.c
+** Gets info from a given file whether with its indicated path or not.
 */
 
 #include "my.h"

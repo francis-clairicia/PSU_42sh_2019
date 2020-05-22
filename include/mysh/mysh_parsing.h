@@ -88,13 +88,13 @@ typedef struct command_list {
     struct command_list *prev;
 } cmd_list_t;
 
-typedef struct parsed_input_list {
+typedef struct parse_list {
     cmd_list_t *cmd_list;
     bool in_bg;
     splitter_type_t splitter;
-    struct parsed_input_list *next;
-    struct parsed_input_list *prev;
-} parsed_input_list_t;
+    struct parse_list *next;
+    struct parse_list *prev;
+} parse_list_t;
 
 //end -> Parsing list
 
@@ -187,8 +187,8 @@ bool check_unmatched_backticks(const char *cmd, error_parse_t *error);
 ** --> PARSING FUNCTIONS <--
 */
 
-// Parses an input into a parsed_input_list_t *list.
-parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
+// Parses an input into a parse_list_t *list.
+parse_list_t *parse_input(const char *input, error_parse_t *error);
 
 /////////////////////////////////////////////////////////
 
@@ -198,14 +198,14 @@ void add_arg_list_node(arguments_t **head);
 arguments_t *add_arg_list_node_index(arguments_t **head,
                                     arguments_t *previous);
 
-void remove_node_from_arg_list_index(arguments_t **head,
+bool remove_node_from_arg_list_index(arguments_t **head,
                                     arguments_t *to_rm);
 
 // Adds a cmd_node to a cmd_list.
 void add_cmd_list_node(cmd_list_t **head);
 
 // Adds a parsed_list_node to a parsed_list.
-void add_parsed_list_node(parsed_input_list_t **head);
+void add_parsed_list_node(parse_list_t **head);
 
 
 /////////////////////////////////////////////////////////
@@ -239,7 +239,7 @@ redirection_type_t get_redirection_enum(const char *restrict shifted_input,
 splitter_type_t get_splitter_enum(const char *restrict shifted_input,
                                     int *size);
 
-void free_parsed_input_list(parsed_input_list_t *head);
+void free_parse_list(parse_list_t *head);
 void free_args_list(arguments_t *head);
 void free_arg_node(arguments_t *node);
 
@@ -266,7 +266,7 @@ void get_unquoted_arg(cmd_list_t **head, const bool separator,
 //sets it the newly-found splitter.
 //
 //Increases index to the new arg/splitter/space/end of input.
-bool get_splitter(parsed_input_list_t **head, error_parse_t *error,
+bool get_splitter(parse_list_t **head, error_parse_t *error,
                 const char *input, size_t *i);
 
 //Gets a redirection, creates a new-last node in the given cmd_list,
@@ -343,6 +343,8 @@ void check_redir_file_set(const cmd_list_t *cur_cmd,
 
 void set_redir_type(cmd_list_t **head, error_parse_t *error,
                     const redirection_type_t redir_type);
+
+void apply_wildcards_changes(parse_list_t *cur_node);
 
 /////////////////////////////////////////////////////////
 

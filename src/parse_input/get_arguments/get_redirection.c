@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2019
-** 42sh
+** PSU_42sh_2019
 ** File description:
-** Gets a redirection.
+** Gets a redirection and its arguments.
 */
 
 #include "my.h"

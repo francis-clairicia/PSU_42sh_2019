@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2019
 ** PSU_42sh_2019
 ** File description:
-** add_args_for_matching.c
+** Adds arguments to a list from a matching string containing wildcards.
 */
 
 #include <stdlib.h>

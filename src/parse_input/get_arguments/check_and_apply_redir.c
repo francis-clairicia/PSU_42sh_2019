@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2019
 ** PSU_42sh_2019
 ** File description:
-** check_and_apply_redir.c
+** Checks for errors due to redirections.
 */
 
 #include "mysh_parsing.h"

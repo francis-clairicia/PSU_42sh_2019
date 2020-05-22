@@ -18,7 +18,7 @@ static bool shift_to_next_arg(const splitter_type_t splitter_type,
     return (true);
 }
 
-static bool set_splitter_alterations(parsed_input_list_t **head,
+static bool set_splitter_alterations(parse_list_t **head,
                                     const splitter_type_t splitter_type,
                                     const char c)
 {
@@ -30,7 +30,7 @@ static bool set_splitter_alterations(parsed_input_list_t **head,
     return (true);
 }
 
-static bool inv_null_checker(parsed_input_list_t *cur_node,
+static bool inv_null_checker(parse_list_t *cur_node,
                             error_parse_t *error,
                             const splitter_type_t splitter_type,
                             const char c)
@@ -48,7 +48,7 @@ static bool inv_null_checker(parsed_input_list_t *cur_node,
     return (false);
 }
 
-bool get_splitter(parsed_input_list_t **head, error_parse_t *error,
+bool get_splitter(parse_list_t **head, error_parse_t *error,
                     const char *input, size_t *i)
 {
     int size = 0;
