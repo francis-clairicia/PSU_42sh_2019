@@ -12,6 +12,8 @@
 
 void process_arrow_left(line_t *line);
 void process_arrow_right(line_t *line);
+void process_ctrl_arrow_left(line_t *line);
+void process_ctrl_arrow_right(line_t *line);
 void process_backspace(line_t *line);
 void process_ctrl_q(line_t *line);
 void process_enter(line_t *line);
@@ -19,6 +21,8 @@ void process_enter(line_t *line);
 static void (*redirect_process_key[])(line_t *) = {
     process_arrow_left,
     process_arrow_right,
+    process_ctrl_arrow_left,
+    process_ctrl_arrow_right,
     process_backspace,
     process_ctrl_q,
     process_enter
@@ -29,8 +33,10 @@ static const int redirect_key_template[] =
 {
     ARROW_LEFT,
     ARROW_RIGHT,
+    CTRL_ARROW_LEFT,
+    CTRL_ARROW_RIGHT,
     BACKSPACE,
-    CTRL('q'),
+    CTRL_KEY('q'),
     '\r'
 };
 

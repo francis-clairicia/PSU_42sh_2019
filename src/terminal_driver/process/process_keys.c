@@ -11,13 +11,15 @@
 
 static int sequence_key(void)
 {
-    char seq_read[2] = {0};
+    char seq_read[5] = {0};
+    int n_read = 0;
 
-    if (read(STDIN_FILENO, seq_read, 2) != 2)
-        return ('\x1b');
-    if (seq_read[0] != '[')
-        return ('\x1b');
-    return (find_seq_key(seq_read[1]));
+    n_read = read(STDIN_FILENO, seq_read, sizeof(seq_read));
+    if (seq_read[0] == '[' && n_read == 2)
+        return (find_template_key(seq_template, seq_read[1]));
+    if (!strncmp("[1;5", seq_read, 4) && n_read == 5)
+        return (find_template_key(ctrl_seq_template, seq_read[4]));
+    return ('\x1b');
 }
 
 static int read_key(void)

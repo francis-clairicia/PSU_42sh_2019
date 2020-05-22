@@ -22,19 +22,34 @@ static const key_template_t seq_template[] =
     {'B', ARROW_DOWN},
     {'C', ARROW_RIGHT},
     {'D', ARROW_LEFT},
+    {'1', CTRL_ARROW_UP},
+    {'2', CTRL_ARROW_DOWN},
+    {'3', CTRL_ARROW_RIGHT},
+    {'4', CTRL_ARROW_LEFT},
     {'H', HOME_KEY},
     {'F', END_KEY},
     {0, 0}
 };
 
+static const key_template_t ctrl_seq_template[] =
+{
+    {'A', CTRL_ARROW_UP},
+    {'B', CTRL_ARROW_DOWN},
+    {'C', CTRL_ARROW_RIGHT},
+    {'D', CTRL_ARROW_LEFT},
+    {0, 0}
+};
+
 //Translates the given char key into an corresponding enum
-static inline int find_seq_key(char key)
+static inline int find_template_key(const key_template_t template[], char key)
 {
     register size_t index = 0;
 
-    while (seq_template[index].key && seq_template[index].value) {
-        if (seq_template[index].key == key)
-            return (seq_template[index].value);
+    if (!template)
+        return ('\x1b');
+    while (template[index].key && template[index].value) {
+        if (template[index].key == key)
+            return (template[index].value);
         index += 1;
     }
     return ('\x1b');
