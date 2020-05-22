@@ -19,17 +19,18 @@ void process_arrow_left(line_t *line)
 
 void process_ctrl_arrow_left(line_t *line)
 {
-    register int offset = 0;
+    bool blank_save = false;
 
     if (!line)
         return;
     if (line->index <= 0)
         return;
-    for (; !isblank(line->buffer[line->index + offset]) &&
-                    line->index + offset > 0; offset -= 1);
-    printf("\x1b[%dD", -offset);
-    fflush(stdout);
-    line->index += offset;
+    blank_save = isblank(line->buffer[line->index - 1]) ? true : false;
+    while ((!isblank(line->buffer[line->index - 1]) ^ blank_save) &&
+        line->index > 0) {
+        write(1, "\x1b[1D", 4);
+        line->index--;
+    }
 }
 
 void process_arrow_right(line_t *line)
@@ -45,17 +46,17 @@ void process_arrow_right(line_t *line)
 
 void process_ctrl_arrow_right(line_t *line)
 {
-    register int offset = 0;
+    bool blank_save = false;
 
     if (!line)
         return;
     if (line->index >= LINE_SIZE - 2 ||
         !(line->buffer[line->index]))
         return;
-    for (; !isblank(line->buffer[line->index + offset]) &&
-        line->index + offset < LINE_SIZE - 1 &&
-        line->buffer[line->index + offset]; offset += 1);
-    printf("\x1b[%dC", offset);
-    fflush(stdout);
-    line->index += offset;
+    blank_save = isblank(line->buffer[line->index]) ? true : false;
+    while ((!isblank(line->buffer[line->index]) ^ blank_save) &&
+        line->index < LINE_SIZE - 2 && line->buffer[line->index]) {
+        write(1, "\x1b[1C", 4);
+        line->index++;
+    }
 }
