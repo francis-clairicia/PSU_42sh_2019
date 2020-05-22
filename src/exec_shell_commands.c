@@ -16,7 +16,7 @@ static int handle_status(int child_pid, int status_pipe, shell_t *shell)
     if (WIFSIGNALED(wstatus)) {
         if (WTERMSIG(wstatus) != SIGINT) {
             print_signal(WTERMSIG(wstatus), WCOREDUMP(wstatus), true);
-            return (-1);
+            return (set_exit_status(shell, 127 + WTERMSIG(wstatus)));
         }
         my_putstr_error("\n");
     }

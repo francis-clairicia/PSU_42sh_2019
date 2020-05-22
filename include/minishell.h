@@ -79,6 +79,7 @@ int env_builtin_command(char * const *av, shell_t *shell);
 int exit_builtin_command(char * const *av, shell_t *shell);
 int setenv_builtin_command(char * const *av, shell_t *shell);
 int unsetenv_builtin_command( char * const *av, shell_t *shell);
+int fg_builtin_command(char * const *av, shell_t *shell);
 int alias_builtin_command(char * const *av, shell_t *shell);
 int unalias_builtin_command(char * const *av, shell_t *shell);
 
