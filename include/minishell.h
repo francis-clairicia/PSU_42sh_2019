@@ -96,7 +96,7 @@ void sigint_handler_for_prompt(int signum);
 void sigint_handler_for_process(int signum);
 
 void print_error(char const *filepath, char const *error);
-void print_signal(int signum, int core_dump);
+void print_signal(int signum, int core_dump, bool end_line);
 char *error_exec(int errnum);
 
 #endif

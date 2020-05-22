@@ -91,6 +91,7 @@ typedef struct command_list {
 
 typedef struct parsed_input_list {
     cmd_list_t *cmd_list;
+    bool in_bg;
     splitter_type_t splitter;
     struct parsed_input_list *next;
     struct parsed_input_list *prev;
@@ -275,6 +276,8 @@ bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
 void get_redirection(cmd_list_t **head, error_parse_t *error,
                     const char *input, size_t *i);
 
+// Make an array with argument list
+char **get_array_from_arg_list(arguments_t *arg_list);
 
 //////////////////////////////////////////
 //         Globbing Functions            //

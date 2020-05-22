@@ -66,8 +66,10 @@ int mysh(void)
     if (!isatty(0))
         return (launch_given_commands(shell));
     increase_shlvl(shell);
-    while (command_prompt(&cmd, status))
+    while (command_prompt(&cmd, status)) {
         status = minishell(cmd, shell);
+        check_background_process(shell);
+    }
     final_status = shell->exit_status;
     destroy_shell_struct(shell);
     return (final_status);

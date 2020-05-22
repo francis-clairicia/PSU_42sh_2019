@@ -10,6 +10,8 @@ SRC_NO_TEST			=	src/main.c											\
 
 SRC_TEST			=	src/minishell.c										\
 						src/shell.c											\
+						src/process.c										\
+						src/check_process.c									\
 						src/exec_shell_commands.c							\
 						src/exec_piped_commands.c							\
 						src/print_command_prompt.c							\
@@ -37,6 +39,7 @@ SRC_TEST			=	src/minishell.c										\
 						src/parse_input/free_arguments.c					\
 						src/parse_input/remove_nodes_from_list.c			\
 						src/parse_input/add_nodes_to_list.c					\
+						src/parse_input/get_array_from_arg_list.c			\
 						src/parse_input/get_arguments/get_quoted_arg.c		\
 						src/parse_input/get_arguments/get_unquoted_arg.c	\
 						src/parse_input/get_arguments/get_splitter.c		\

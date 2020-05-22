@@ -8,10 +8,23 @@
 #ifndef MYSH_SHELL_H_
 #define MYSH_SHELL_H_
 
+#include "mysh_parsing.h"
+#include "mylist.h"
+
+typedef struct process
+{
+    pid_t pid;
+    char *cmd;
+} process_t;
+
+process_t *init_process_struct(pid_t pid, cmd_list_t *cmd_list);
+void destroy_process_struct(process_t *process);
+
 typedef struct shell
 {
     char **envp;
     int exit_status;
+    list_t process;
 } shell_t;
 
 shell_t *init_shell_struct(char * const *envp);
@@ -24,5 +37,7 @@ static inline int set_exit_status(shell_t *shell, unsigned char exit_status)
     shell->exit_status = exit_status;
     return ((shell->exit_status == 0) ? 0 : -1);
 }
+
+void check_background_process(shell_t *shell);
 
 #endif

@@ -26,5 +26,6 @@ void destroy_shell_struct(shell_t *shell)
     if (!shell)
         return;
     my_free_array(shell->envp);
+    my_free_list(&(shell->process), &destroy_process_struct);
     free(shell);
 }

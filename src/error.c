@@ -19,7 +19,7 @@ char *error_exec(int errnum)
     return (strerror(errnum));
 }
 
-void print_signal(int signum, int core_dump)
+void print_signal(int signum, int core_dump, bool end_line)
 {
     if (signum == SIGFPE)
         my_putstr_error("Floating exception");
@@ -27,5 +27,6 @@ void print_signal(int signum, int core_dump)
         my_putstr_error(strsignal(signum));
     if (core_dump)
         my_putstr_error(" (core dumped)");
-    my_putstr_error("\n");
+    if (end_line)
+        my_putstr_error("\n");
 }

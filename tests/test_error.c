@@ -19,11 +19,11 @@ Test(print_error, print_in_stderr)
 Test(print_signal, print_caught_signal)
 {
     cr_redirect_stderr();
-    print_signal(SIGSEGV, 1);
-    print_signal(SIGFPE, 0);
+    print_signal(SIGSEGV, 1, true);
+    print_signal(SIGFPE, 0, false);
     cr_expect_stderr_eq_str(
         "Segmentation fault (core dumped)\n"
-        "Floating exception\n"
+        "Floating exception"
     );
 }
 

@@ -29,6 +29,23 @@ static bool exec_next_command(parsed_input_list_t **node,
     return (true);
 }
 
+static int exec_command(cmd_list_t *cmd_list, shell_t *shell)
+{
+    int child_pid = 0;
+
+    if (cmd_list->in_bg == false)
+        return (exec_piped_commands(cmd_list, shell));
+    child_pid = fork();
+    if (child_pid == 0) {
+        exec_piped_commands(cmd_list, shell);
+        return (1);
+    }
+    my_append_to_list(&(shell->process),
+        init_process_struct(child_pid, cmd_list), process_t *);
+    my_printf("[%d] %d\n", shell->process.size, child_pid);
+    return (0);
+}
+
 static int launch_all_commands(parsed_input_list_t *list, shell_t *shell)
 {
     int i = 0;
@@ -37,7 +54,7 @@ static int launch_all_commands(parsed_input_list_t *list, shell_t *shell)
     parsed_input_list_t *node = list;
 
     while (exec_next_command(&node, list, i, status)) {
-        status = exec_piped_commands(node->cmd_list, shell);
+        status = exec_command(node->cmd_list, shell);
         if (status < 0)
             error = 1;
         i += 1;
