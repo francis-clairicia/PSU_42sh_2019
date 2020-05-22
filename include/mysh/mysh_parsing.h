@@ -84,7 +84,6 @@ typedef struct command_list {
     redirection_type_t redir_input_type;
     char *redir_output;
     redirection_type_t redir_output_type;
-    bool in_bg;
     struct command_list *next;
     struct command_list *prev;
 } cmd_list_t;
@@ -267,7 +266,8 @@ void get_unquoted_arg(cmd_list_t **head, const bool separator,
 //sets it the newly-found splitter.
 //
 //Increases index to the new arg/splitter/space/end of input.
-bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
+bool get_splitter(parsed_input_list_t **head, error_parse_t *error,
+                const char *input, size_t *i);
 
 //Gets a redirection, creates a new-last node in the given cmd_list,
 //

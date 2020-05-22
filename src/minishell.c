@@ -33,7 +33,7 @@ static int exec_command(cmd_list_t *cmd_list, shell_t *shell)
 {
     int child_pid = 0;
 
-    if (cmd_list->in_bg == false)
+    if (1)
         return (exec_piped_commands(cmd_list, shell));
     child_pid = fork();
     if (child_pid == 0) {

@@ -50,7 +50,7 @@ static bool parse_each_argument(parsed_input_list_t **head,
         return (true);
     }
     if (is_char_splitter(input[(*i)])) {
-        if (get_splitter(head, input, i))
+        if (get_splitter(head, error, input, i))
             return (true);
     }
     if (is_char_redirection(input[(*i)]))
