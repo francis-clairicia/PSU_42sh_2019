@@ -23,6 +23,7 @@ SRC			=	my_put_nbr.c					\
 				my_strcat.c						\
 				my_strcat_malloc.c				\
 				my_compute_square_root.c		\
+				my_find_char.c					\
 				my_is_prime.c					\
 				my_str_isnum.c					\
 				my_getnbr.c						\

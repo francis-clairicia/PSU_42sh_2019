@@ -58,6 +58,8 @@ int my_str_isupper(char const *str);
 int my_str_isprintable(char const *str);
 int my_str_isalphanum(char const *str);
 int my_str_contains_only(char const *str, char const *valid);
+int my_find_char(const char *str, char to_find);
+int my_find_char_tempate(const char *str, const int *template, char to_find);
 int my_showstr(char const *str);
 int my_showmem(char const *str, int size);
 char *my_strcat(char *dest, char const *src);
