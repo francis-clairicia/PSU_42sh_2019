@@ -16,7 +16,6 @@ void process_backspace(line_t *line)
     if (line->index <= 0)
         return;
     shift_line_left(line);
-    write(1, "\b \b", 3);
 }
 
 void process_ctrl_q(line_t *line)

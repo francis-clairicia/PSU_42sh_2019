@@ -11,12 +11,16 @@
 void shift_line_left(line_t *line)
 {
     char cpy_buff[LINE_SIZE] = {0};
+    register int size = 0;
 
     if (line->index <= 0)
         return;
-    memcpy(cpy_buff, line->buffer + line->index, LINE_SIZE - line->index);
-    memcpy(line->buffer + line->index - 1, cpy_buff, LINE_SIZE - line->index);
+    strncpy(cpy_buff, line->buffer + line->index, LINE_SIZE - line->index);
+    strncpy(line->buffer + line->index - 1, cpy_buff, LINE_SIZE - line->index);
+    size = strlen(cpy_buff);
+    printf("\b \b%s \x1b[%dD", cpy_buff, size + 1);
     line->index--;
+    fflush(stdout);
 }
 
 void shift_line_right(line_t *line, int key)
