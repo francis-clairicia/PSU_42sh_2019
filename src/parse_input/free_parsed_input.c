@@ -8,25 +8,6 @@
 #include <stdlib.h>
 #include "mysh_parsing.h"
 
-static void free_args_list(arguments_t *head)
-{
-    arguments_t *final = NULL;
-    arguments_t *tmp = NULL;
-
-    if (!head)
-        return;
-    final = head;
-    tmp = head;
-    do {
-        head = head->next;
-        if (tmp->arg)
-            free(tmp->arg);
-        if (tmp)
-            free(tmp);
-        tmp = head;
-    } while (tmp != final);
-}
-
 static void free_cmd_node(cmd_list_t *node)
 {
     if (!node)
@@ -55,7 +36,7 @@ static void free_cmd_list(cmd_list_t *head)
     } while (tmp != final);
 }
 
-void free_parsed_input_node(parsed_input_list_t *node)
+static void free_parsed_input_node(parsed_input_list_t *node)
 {
     if (!node)
         return;

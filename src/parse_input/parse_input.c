@@ -10,6 +10,26 @@
 #include "my.h"
 #include "mysh_parsing.h"
 
+static void apply_globbing_wild_card(parsed_input_list_t *cur_node)
+{
+    arguments_t *tmp = NULL;
+    arguments_t *save_tmp = NULL;
+
+    if (!cur_node || !(cur_node->cmd_list || !(cur_node->cmd_list->args))
+        || (cur_node->cmd_list->args->prev) == (cur_node->cmd_list->args))
+        return;
+    tmp = cur_node->cmd_list->args->next;
+    do {
+        if (my_strchr(tmp->arg, '*')) {
+            save_tmp = tmp->next;
+            add_args_for_matching(&cur_node->cmd_list->args, tmp, tmp->arg);
+            remove_node_from_arg_list_index(&cur_node->cmd_list->args, tmp);
+            tmp = save_tmp;
+        }
+        tmp = tmp->next;
+    } while (tmp != cur_node->cmd_list->args);
+}
+
 static bool parse_each_argument(parsed_input_list_t **head,
                                 error_parse_t *error,
                                 const char *input, size_t *i)
@@ -31,6 +51,7 @@ static bool parse_each_argument(parsed_input_list_t **head,
         get_redirection(&((*cur)->cmd_list), error, input, i);
     else
         get_unquoted_arg(&((*cur)->cmd_list), separator, input, i);
+    apply_globbing_wild_card((*head)->prev);
     return (true);
 }
 

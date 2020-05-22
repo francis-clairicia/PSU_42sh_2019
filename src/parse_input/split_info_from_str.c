@@ -15,7 +15,7 @@ char *get_matching_from_str(const char *str)
         return (NULL);
     index = my_strlen(str) - 1;
     for (; index >= 0 && str[index] != '/'; index -= 1);
-    return (my_strndup(str, (int)(index + 1)));
+    return (my_strdup(&str[(int)(index + 1)]));
 }
 
 char *get_path_from_str(const char *str)

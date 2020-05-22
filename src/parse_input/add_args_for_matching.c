@@ -21,28 +21,15 @@ static void free_args_match_resources(char *path, char *matching,
         closedir(directory);
 }
 
-static void check_to_add_arg(arguments_t **args, const char *match_str,
-                            const char *path, const char *cur_file_name)
-{
-    char *path_cur_file = NULL;
-
-    path_cur_file = my_strcat_malloc((char *)path,
-                                    (char *)cur_file_name, 0, 0);
-    if (match(match_str, path_cur_file)) {
-        add_arg_list_node(args);
-        (*args)->prev->arg = path_cur_file;
-    } else {
-        if (path_cur_file)
-            free(path_cur_file);
-    }
-}
-
-void add_args_for_matching(arguments_t **args, const char *match_str)
+void add_args_for_matching(arguments_t **head, arguments_t *tmp,
+                            const char *match_str)
 {
     DIR *directory = NULL;
     struct dirent *stat = NULL;
     char *path = NULL;
     char *matching = NULL;
+    char *path_cur_file = NULL;
+    arguments_t *new_arg = NULL;
 
     if (!match_str)
         return;
@@ -51,10 +38,19 @@ void add_args_for_matching(arguments_t **args, const char *match_str)
         path = my_strdup("./");
     matching = get_matching_from_str(match_str);
     directory = opendir(path);
+    if (!directory)
+        return;
     for (stat = readdir(directory); stat; stat = readdir(directory)) {
         if (!stat->d_name)
             continue;
-        check_to_add_arg(args, match_str, path, stat->d_name);
+        path_cur_file = my_strcat_malloc((char *)path, stat->d_name, 0, 0);
+        if (match(match_str, path_cur_file)) {
+            new_arg = add_arg_list_node_index(head, tmp);
+            new_arg->arg = path_cur_file;
+        } else {
+            if (path_cur_file)
+                free(path_cur_file);
+        }
     }
     free_args_match_resources(path, matching, directory);
 }

@@ -195,11 +195,18 @@ parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
 // Adds an argument node to an argument list.
 void add_arg_list_node(arguments_t **head);
 
+arguments_t *add_arg_list_node_index(arguments_t **head,
+                                    arguments_t *previous);
+
+void remove_node_from_arg_list_index(arguments_t **head,
+                                    arguments_t *to_rm);
+
 // Adds a cmd_node to a cmd_list.
 void add_cmd_list_node(cmd_list_t **head);
 
 // Adds a parsed_list_node to a parsed_list.
 void add_parsed_list_node(parsed_input_list_t **head);
+
 
 /////////////////////////////////////////////////////////
 
@@ -232,8 +239,9 @@ redirection_type_t get_redirection_enum(const char *restrict shifted_input,
 splitter_type_t get_splitter_enum(const char *restrict shifted_input,
                                     int *size);
 
-void free_parsed_input_node(parsed_input_list_t *node);
 void free_parsed_input_list(parsed_input_list_t *head);
+void free_args_list(arguments_t *head);
+void free_arg_node(arguments_t *node);
 
 
 // Gets Arguments and enums.
@@ -294,7 +302,8 @@ char *get_matching_from_str(const char *str);
 //Add args to the given arg list from a given string where
 //add_args_for_matching() is going to try to find files from potential
 //paths hidden into match_str to do so.
-void add_args_for_matching(arguments_t **args, const char *match_str);
+void add_args_for_matching(arguments_t **head, arguments_t *tmp,
+                            const char *match_str);
 
 /////////////////////////////////////////////////////////
 

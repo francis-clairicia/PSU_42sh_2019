@@ -9,6 +9,30 @@
 #include <stdlib.h>
 #include "mysh_parsing.h"
 
+arguments_t *add_arg_list_node_index(arguments_t **head,
+                                    arguments_t *previous)
+{
+    arguments_t *node = NULL;
+
+    if (!head || !previous)
+        return (NULL);
+    node = malloc(sizeof(arguments_t));
+    if (!node)
+        return (NULL);
+    memset(node, 0, sizeof(arguments_t));
+    if (!(*head)) {
+        *head = node;
+        node->next = *head;
+        node->prev = *head;
+    } else {
+        node->next = previous->next;
+        node->prev = previous;
+        previous->next->prev = node;
+        previous->next = node;
+    }
+    return (node);
+}
+
 void add_arg_list_node(arguments_t **head)
 {
     arguments_t *node = NULL;
