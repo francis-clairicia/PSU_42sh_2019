@@ -53,6 +53,7 @@ SRC_PARSE_INPUT		=	src/parse_input/parse_input.c						\
 						src/parse_input/commands/change_fd.c				\
 
 SRC_TERMINAL_DRIVER	=	src/terminal_driver/control_line/arrow_keys.c		\
+						src/terminal_driver/control_line/process_ctrl_keys.c\
 						src/terminal_driver/control_line/shift_line.c		\
 						src/terminal_driver/control_line/special_keys.c		\
 						src/terminal_driver/init/init_term_driver.c			\

@@ -31,7 +31,6 @@ static int command_prompt(char **line, int stop_shell)
         return (0);
     }
     bind_sigint_signal(PROMPT);
-    write(1, "\r", 1);
     print_command_prompt(getcwd(current_directory, 4097), DEFAULT_ENVIRONMENT);
     *line = get_term_line();
     if (!(*line))

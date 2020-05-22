@@ -35,21 +35,6 @@ void process_ctrl_backspace(line_t *line)
     }
 }
 
-void process_ctrl_q(line_t *line)
-{
-    if (!line)
-        return;
-    exit(0);
-}
-
-void process_ctrl_d(line_t *line)
-{
-    if (!line)
-        return;
-    line->completed = true;
-    line->exit = true;
-}
-
 void process_enter(line_t *line)
 {
     if (!line)
