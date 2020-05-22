@@ -98,7 +98,7 @@ $(NAME):	$(LDLIBS) $(OBJ)
 	$(MAKE) -s -C ./lib/my
 
 tests_run:	CFLAGS += --coverage
-tests_run:	LDLIBS += -lcriterion
+tests_run:	LDLIBS += -lcriterion -lncurses
 tests_run:	$(LDLIBS)
 	@find -name "*.gc*" -delete
 	$(CC) -o unit_tests $(SRC) tests/*.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)

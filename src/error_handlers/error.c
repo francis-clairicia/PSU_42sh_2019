@@ -9,7 +9,7 @@
 
 void print_error(char const *filepath, char const *error)
 {
-    my_dprintf(2, "%s: %s.\r\n", filepath, error);
+    my_dprintf(2, "%s: %s.\n", filepath, error);
 }
 
 char *error_exec(int errnum)

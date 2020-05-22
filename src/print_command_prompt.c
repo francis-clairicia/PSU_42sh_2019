@@ -48,7 +48,7 @@ static void print_current_directory(char const *cwd, char * const *envp)
 
 void print_command_prompt(char const *cwd, char * const *envp)
 {
-    my_putstr("\r[");
+    my_putstr("[");
     if (print_user(envp))
         my_putchar(' ');
     print_current_directory(cwd, envp);

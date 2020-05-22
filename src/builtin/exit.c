@@ -19,6 +19,6 @@ int exit_builtin_command(char * const *av, shell_t *shell)
         }
         shell->exit_status = (unsigned char)my_absolute_getnbr(av[1]);
     }
-    my_putstr("exit\r\n");
+    my_putstr("exit\n");
     return (1);
 }

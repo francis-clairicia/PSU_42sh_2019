@@ -39,7 +39,7 @@ typedef struct line_s
 
 //Save the actual terminal driver settings at the first function call
 //Loads the save from the second function call
-void disable_raw_mode(void) __attribute__((constructor, destructor));
+void disable_raw_mode(void) __attribute__((constructor));
 
 void enable_raw_mode(void);
 
