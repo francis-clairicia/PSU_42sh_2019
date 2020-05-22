@@ -39,7 +39,7 @@ parsed_input_list_t *parse_input(const char *input, error_parse_t *error)
     parsed_input_list_t *parsing_list = NULL;
     size_t i = 0;
 
-    if (!input)
+    if (!input || !check_unmatched_backsticks(input, error))
         return (NULL);
     add_parsed_list_node(&parsing_list);
     add_cmd_list_node(&(parsing_list)->cmd_list);

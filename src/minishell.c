@@ -51,13 +51,9 @@ int minishell(char const *command_line, shell_t *shell)
     error_parse_t error = NONE;
     int status = 0;
 
-    if (!check_unmatched_backticks(command_line)) {
-        shell->exit_status = 1;
-        return (-1);
-    }
     list = parse_input(command_line, &error);
     if (!list)
-        return (1);
+        return ((error == UNMATCHED_BACKTICKS) ? -1 : 1);
     if (error != NONE) {
         print_parsing_error(error);
         status = -1;

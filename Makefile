@@ -28,14 +28,6 @@ SRC_TEST			=	src/minishell.c										\
 						src/builtin/unsetenv.c								\
 						src/builtin/alias.c									\
 						src/builtin/unalias.c								\
-						src/environment/add_new_env_var.c					\
-						src/environment/create_array_from_env_list.c		\
-						src/environment/create_env_list_from_array.c		\
-						src/environment/free_env_list.c						\
-						src/environment/get_env_list_size.c					\
-						src/environment/get_var_in_env_list.c				\
-						src/environment/remove_env_var.c					\
-						src/environment/show_env.c							\
 						src/parse_input/parse_input.c						\
 						src/parse_input/add_args_for_matching.c				\
 						src/parse_input/check_unmatched_backticks.c			\

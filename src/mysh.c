@@ -11,13 +11,15 @@ static void increase_shlvl(shell_t *shell)
 {
     char *actual_value = get_var_env(shell->envp, "SHLVL");
     int new_value = my_getnbr(actual_value) + 1;
-    char *setenv_cmd[] = {"setenv", "SHLVL", NULL, NULL};
+    char *str_value = NULL;
 
     if (actual_value == NULL)
         return;
-    setenv_cmd[2] = my_nbr_to_str(new_value);
-    setenv_builtin_command(setenv_cmd, shell);
-    free(setenv_cmd[2]);
+    str_value = my_nbr_to_str(new_value);
+    if (!str_value)
+        return;
+    set_var_to_env("SHLVL", str_value, shell);
+    free(str_value);
 }
 
 static int command_prompt(char **line, int stop_shell)
@@ -60,7 +62,7 @@ int mysh(void)
 
     if (shell == NULL)
         return (84);
-    unsetenv_builtin_command((char *[]){"unsetenv", "OLDPWD", NULL}, shell);
+    remove_var_from_env("OLDPWD", shell);
     if (!isatty(0))
         return (launch_given_commands(shell));
     increase_shlvl(shell);

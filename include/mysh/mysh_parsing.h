@@ -150,6 +150,7 @@ static inline bool is_char_stopper(const char c)
 }
 
 typedef enum error_parse {
+    UNMATCHED_BACKTICKS = -1,
     MISSING_NAME_FOR_REDIRECT = 1,
     AMBIGUOUS_INPUT_REDIRECT,
     AMBIGUOUS_OUTPUT_REDIRECT,
@@ -176,7 +177,7 @@ static inline void print_parsing_error(const error_parse_t error)
 //
 //Returns True (1) if not.
 //Returns False (0) otherwise.
-bool check_unmatched_backticks(const char *cmd);
+bool check_unmatched_backticks(const char *cmd, error_parse_t *error);
 
 /////////////////////////////////////////////////////////////////////////
 

@@ -24,7 +24,7 @@ static int shift_to_next_backstick(const char *cmd, const char c,
     return (unmatched);
 }
 
-bool check_unmatched_backticks(const char *cmd)
+bool check_unmatched_backticks(const char *cmd, error_parse_t *error)
 {
     size_t index = 0;
     int unmatched = NONE;
@@ -39,6 +39,7 @@ bool check_unmatched_backticks(const char *cmd)
     }
     if (unmatched == NONE)
         return (true);
+    *error = UNMATCHED_BACKTICKS;
     my_printf("Unmatched '%c'.\n", (unmatched == UNMATCHED_SINGLE) ? '\'': '"');
     return (false);
 }
