@@ -51,7 +51,7 @@ int minishell(char const *command_line, shell_t *shell)
     error_parse_t error = NONE;
     int status = 0;
 
-    if (!check_unmatched_backsticks(command_line)) {
+    if (!check_unmatched_backticks(command_line)) {
         shell->exit_status = 1;
         return (-1);
     }

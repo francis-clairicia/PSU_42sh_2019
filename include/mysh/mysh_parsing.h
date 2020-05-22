@@ -106,7 +106,7 @@ typedef struct parsed_input_list {
 
 
 static const char spaces[] = " \t";
-static const char backsticks[] = "\"'";
+static const char backticks[] = "\"'";
 
 static const char all_splitters[] = " \t\"';&|><";
 static const char all_stoppers[] = ";&|><";
@@ -137,8 +137,8 @@ static inline char is_char_backstick(const char c)
     char match = '\0';
     size_t i = 0;
 
-    for (; match == '\0' && backsticks[i]; i += 1) {
-        if (c == backsticks[i])
+    for (; match == '\0' && backticks[i]; i += 1) {
+        if (c == backticks[i])
             match = c;
     }
     return (match);
@@ -176,7 +176,7 @@ static inline void print_parsing_error(const error_parse_t error)
 //
 //Returns True (1) if not.
 //Returns False (0) otherwise.
-bool check_unmatched_backsticks(const char *cmd);
+bool check_unmatched_backticks(const char *cmd);
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -190,10 +190,6 @@ parsed_input_list_t *parse_input(const char *input, error_parse_t *error);
 
 /////////////////////////////////////////////////////////
 
-// Adds a node to a doubly linked list.
-void *add_parsing_node(void **head, const size_t size);
-
-
 // Adds an argument node to an argument list.
 void add_arg_list_node(arguments_t **head);
 
@@ -203,6 +199,7 @@ void add_cmd_list_node(cmd_list_t **head);
 // Adds a parsed_list_node to a parsed_list.
 void add_parsed_list_node(parsed_input_list_t **head);
 
+/////////////////////////////////////////////////////////
 
 // Directly giving, in parameters, a head and a type,
 // Redirect to add_parsing_node with a (void **) cast and sizeof(type).
@@ -267,5 +264,36 @@ bool get_splitter(parsed_input_list_t **head, const char *input, size_t *i);
 //Increases index to the new arg/splitter/space/end of input.
 void get_redirection(cmd_list_t **head, error_parse_t *error,
                     const char *input, size_t *i);
+
+
+//////////////////////////////////////////
+//         Globbing Functions            //
+//////////////////////////////////////////
+/////////////////////////////////////////////////////////
+
+//Gets a path string from a given str.
+//For instance:
+//From str = "/bin/ls".
+//Will return : "/bin/".
+//
+//Returns the newly allocated string if success.
+//Returns NULL if str is NULL or no path was found.
+char *get_path_from_str(const char *str);
+
+//Gets a matching-use string from a given str.
+//For instance:
+//From str = "/dev/tty*".
+//Will return : "tty*".
+//
+//Returns the newly allocated string if success.
+//Returns NULL if str is NULL or no path was found.
+char *get_matching_from_str(const char *str);
+
+//Add args to the given arg list from a given string where
+//add_args_for_matching() is going to try to find files from potential
+//paths hidden into match_str to do so.
+void add_args_for_matching(arguments_t **args, const char *match_str);
+
+/////////////////////////////////////////////////////////
 
 #endif /* MYSH_PARSER_H_ */

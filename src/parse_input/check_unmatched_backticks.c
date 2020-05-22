@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2019
 ** PSU_42sh_2019
 ** File description:
-** check_unmatched_backsticks.c
+** check_unmatched_backticks.c
 */
 
 #include <stdbool.h>
@@ -24,7 +24,7 @@ static int shift_to_next_backstick(const char *cmd, const char c,
     return (unmatched);
 }
 
-bool check_unmatched_backsticks(const char *cmd)
+bool check_unmatched_backticks(const char *cmd)
 {
     size_t index = 0;
     int unmatched = NONE;

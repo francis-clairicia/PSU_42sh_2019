@@ -37,9 +37,11 @@ SRC_TEST			=	src/minishell.c										\
 						src/environment/remove_env_var.c					\
 						src/environment/show_env.c							\
 						src/parse_input/parse_input.c						\
+						src/parse_input/add_args_for_matching.c				\
+						src/parse_input/check_unmatched_backticks.c			\
+						src/parse_input/split_info_from_str.c				\
 						src/parse_input/get_enums.c							\
 						src/parse_input/free_parsed_input.c					\
-						src/parse_input/check_unmatched_backsticks.c		\
 						src/parse_input/add_nodes_to_list.c					\
 						src/parse_input/get_arguments/get_quoted_arg.c		\
 						src/parse_input/get_arguments/get_unquoted_arg.c	\
