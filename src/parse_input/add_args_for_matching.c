@@ -26,7 +26,8 @@ static void check_to_add_arg(arguments_t **args, const char *match_str,
 {
     char *path_cur_file = NULL;
 
-    path_cur_file = my_strcat_malloc(path, cur_file_name, 0, 0);
+    path_cur_file = my_strcat_malloc((char *)path,
+                                    (char *)cur_file_name, 0, 0);
     if (match(match_str, path_cur_file)) {
         add_arg_list_node(args);
         (*args)->prev->arg = path_cur_file;
