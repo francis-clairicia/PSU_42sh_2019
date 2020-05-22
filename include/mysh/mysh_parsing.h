@@ -23,11 +23,11 @@
 
 //Redirections Input Characters Comparisons.
 typedef enum redirection_type {
-    PIPE = 0b1,
-    APPEND_TO_FILE = 0b10,
-    REDIR_IN_FILE = 0b100,
-    READ_FROM_STDIN_AS_INPUT = 0b1000,
-    READ_FROM_FILE_AS_INPUT = 0b10000,
+    PIPE = 1,
+    APPEND_TO_FILE = 1 << 1,
+    REDIR_IN_FILE = 1 << 2,
+    READ_FROM_STDIN_AS_INPUT = 1 << 3,
+    READ_FROM_FILE_AS_INPUT = 1 << 4,
 } redirection_type_t;
 
 /////////////////////////////////////////////////////////////////////////////

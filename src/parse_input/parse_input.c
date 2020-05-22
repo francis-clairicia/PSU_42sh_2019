@@ -26,7 +26,7 @@ static void apply_globbing_wild_card(parsed_input_list_t *cur_node)
     arguments_t *tmp = NULL;
 
     if (!cur_node || !(cur_node->cmd_list || !(cur_node->cmd_list->args))
-        || (cur_node->cmd_list->args->prev) == (cur_node->cmd_list->args))
+        || (!cur_node->cmd_list->args || (cur_node->cmd_list->args->prev == cur_node->cmd_list->args)))
         return;
     tmp = cur_node->cmd_list->args->next;
     do {
