@@ -18,18 +18,22 @@ SRC_ENV				=	src/environment/add_new_env_var.c					\
 						src/environment/remove_env_var.c					\
 						src/environment/show_env.c							\
 
-SRC_PARSE_INPUT		=	src/parse_input/parse_input.c						\
-						src/parse_input/get_enums.c							\
-						src/parse_input/free_parsed_input.c					\
-						src/parse_input/get_arguments/get_quoted_arg.c		\
-						src/parse_input/get_arguments/get_unquoted_arg.c	\
-						src/parse_input/get_arguments/get_splitter.c		\
+SRC_PARSE_INPUT		=	src/parse_input/get_arguments/get_quoted_arg.c		\
 						src/parse_input/get_arguments/get_redirection.c		\
+						src/parse_input/get_arguments/get_splitter.c		\
+						src/parse_input/get_arguments/get_unquoted_arg.c	\
+						src/parse_input/free_parsed_input.c					\
+						src/parse_input/get_enums.c							\
+						src/parse_input/parse_input.c						\
+						src/parse_input/split_info_from_str.c				\
 
 SRC_DCLL			=	src/dcll/add_dcll.c									\
 						src/dcll/free_dcll.c								\
 
-SRC					=	$(SRC_CORE) $(SRC_ENV) $(SRC_PARSE_INPUT) $(SRC_DCLL)
+SRC_AUTO_COMPLETION	=	src/auto_completion/find_completion.c				\
+						src/auto_completion/free_completion.c				\
+
+SRC					=	$(SRC_CORE) $(SRC_ENV) $(SRC_PARSE_INPUT) $(SRC_DCLL) $(SRC_AUTO_COMPLETION)
 
 CFLAGS				=	-Werror -Wextra
 
@@ -66,7 +70,7 @@ coverage:
 
 debug:	CFLAGS += -g
 debug:	$(LDLIBS)
-	$(CC) -o $@ $(SRC) $(LDFLAGS) $(LDLIBS) $(CFLAGS) $(CPPFLAGS)
+	$(CC) -o $(NAME) $(SRC) $(SRC_MAIN) $(LDFLAGS) $(LDLIBS) $(CFLAGS) $(CPPFLAGS)
 
 clean:
 	$(RM) $(OBJ)

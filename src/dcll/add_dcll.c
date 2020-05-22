@@ -15,6 +15,7 @@ static void * add_first_dcll(dcll_t **head, dcll_t *new_dcll)
     new_dcll->next = new_dcll;
     new_dcll->prev = new_dcll;
     *head = new_dcll;
+    return (new_dcll);
 }
 
 static void * add_new_dcll(dcll_t **head, dcll_t *new_dcll)
