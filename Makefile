@@ -26,6 +26,7 @@ SRC_TEST			=	src/minishell.c											\
 						src/builtin/cd.c										\
 						src/builtin/env.c										\
 						src/builtin/exit.c										\
+						src/builtin/fg.c										\
 						src/builtin/setenv.c									\
 						src/builtin/unsetenv.c									\
 						src/builtin/alias.c										\
