@@ -26,10 +26,8 @@ static bool setup_matching(const char *match_str, DIR **directory,
     if (!match_str)
         return (false);
     file->path = get_path_from_str(match_str);
-    if (!file->path)
-        file->path = my_strdup("./");
     file->file = get_matching_from_str(match_str);
-    (*directory) = opendir(file->path);
+    (*directory) = opendir((file->path) ? file->path : "./");
     if (!(*directory))
         return (false);
     return (true);
@@ -45,7 +43,7 @@ static void examinate_directory_files(DIR **directory, file_extent_t root_file,
 
     stat = readdir(*directory);
     for (; stat; stat = readdir(*directory)) {
-        if (!stat->d_name)
+        if (!stat->d_name || stat->d_name[0] == '.')
             continue;
         path_cur_file = my_strcat_malloc(root_file.path, stat->d_name, 0, 0);
         if (match(matching->str, path_cur_file)) {

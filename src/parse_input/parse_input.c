@@ -30,7 +30,7 @@ static void apply_globbing_wild_card(parsed_input_list_t *cur_node)
         return;
     tmp = cur_node->cmd_list->args->next;
     do {
-        if (my_strchr(tmp->arg, '*'))
+        if (WILDCARDS_IN_STR(tmp->arg))
             apply_globbing_to_node(cur_node, &tmp);
         tmp = tmp->next;
     } while (tmp != cur_node->cmd_list->args);

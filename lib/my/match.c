@@ -6,25 +6,40 @@
 */
 
 #include <stdbool.h>
-#include <stddef.h>
-
-static bool is_only_wild_cards(const char *str)
-{
-    register size_t i = 0;
-
-    if (!str)
-        return (false);
-    for (; str[i] && str[i] == '*'; i += 1);
-    return (i > 0) ? (str[i] ? false : true) : false;
-}
+#include <unistd.h>
 
 static bool check_for_null_except(const char *first, const char *second)
 {
-    if (is_only_wild_cards(first))
-        return (true);
+    register size_t i = 0;
+
     if (first == second)
         return (true);
+    if (first) {
+        for (; first[i] && first[i] == '*'; i += 1);
+        return (i > 0) ? (first[i] ? false : true) : false;
+    }
     return (false);
+}
+
+static ssize_t my_strlen(const char *str)
+{
+    ssize_t i = -1;
+
+    if (str)
+        while (str[++i]);
+    return (i);
+}
+
+static bool get_second_anchor(const char anchor, char **tmp)
+{
+    ssize_t size = my_strlen(*tmp);
+
+    if (size < 0)
+        return (0);
+    *tmp += size;
+    for (; (**tmp) != anchor && size > 0; *tmp -= 1)
+        size -= 1;
+    return ((**tmp) == anchor);
 }
 
 bool match(const char *first, const char *second)
@@ -34,15 +49,15 @@ bool match(const char *first, const char *second)
 
     if (!first || !second)
         return (check_for_null_except(first, second));
-    if (!(*first) && !(*second))
-        return (true);
     if ((*first) == (*second))
-        return (match((first + 1), (second + 1)));
+        return (!(*first) && !(*second)) ? true : match(first + 1, second + 1);
+    if ((*anchor) == '?')
+        return (match(first + 1, second + 1));
     if ((*anchor) == '*') {
-        while ((*anchor) == '*' && (*(anchor + 1)) == '*' && (*(anchor + 1)))
-            anchor += 1;
-        for (; (*tmp) && (*tmp) != (*(anchor + 1)); tmp += 1);
-        return (match(anchor + 1, tmp));
+        for (; (*anchor == '*' || *anchor == '?') && *anchor; anchor += 1);
+        if (!get_second_anchor(*anchor, &tmp))
+            return (false);
+        return (match(anchor, tmp));
     }
     return (false);
 }
