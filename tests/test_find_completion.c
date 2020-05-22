@@ -33,6 +33,6 @@ Test(find_completion, success_2)
 
     if (!find_completion("./tests/test_completion/", &list))
         cr_assert(0);
-    cr_assert(list && !strcmp(list->completion, "patate") ||
-    !strcmp(DCLL_NEXT_C(list, auto_completion_t *)->completion, "patate"));
+    cr_assert(list && (!strcmp(list->completion, "patate") ||
+    !strcmp(DCLL_NEXT_C(list, auto_completion_t *)->completion, "patate")));
 }

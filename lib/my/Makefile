@@ -21,6 +21,7 @@ SRC			=	my_put_nbr.c					\
 				my_str_isalpha.c				\
 				my_str_isalphanum.c				\
 				my_strcat.c						\
+				my_strcat_malloc.c				\
 				my_compute_square_root.c		\
 				my_is_prime.c					\
 				my_str_isnum.c					\
@@ -48,6 +49,7 @@ SRC			=	my_put_nbr.c					\
 				my_nbr_to_str.c					\
 				my_nbr_len.c					\
 				get_next_line.c					\
+				get_next_line_2.c				\
 				join_path.c						\
 				my_str_contains_only.c			\
 				my_memset.c						\
@@ -62,12 +64,16 @@ SRC			=	my_put_nbr.c					\
 				my_mass_strcmp.c				\
 				my_strdup_until_list_c.c		\
 				my_arrcmp.c						\
+				match.c							\
+				my_get_bitshift.c				\
+				my_absolute_getnbr.c			\
 
 LINKED_LIST	=	list/my_list.c					\
 				list/my_create_node.c			\
 				list/my_insert_in_list.c		\
 				list/my_list_to_str.c			\
 				list/my_list_to_2d_array.c		\
+				list/my_2d_array_to_list.c		\
 				list/my_concat_str_list.c		\
 				list/my_free_list.c				\
 				list/my_concat_list.c			\
@@ -80,6 +86,7 @@ LINKED_LIST	=	list/my_list.c					\
 
 PRINTF		=	printf/my_printf.c					\
 				printf/my_dprintf.c					\
+				printf/my_vdprintf.c				\
 				printf/my_printf_number.c			\
 				printf/my_printf_str.c				\
 				printf/my_printf_pointer.c			\
@@ -94,7 +101,7 @@ PRINTF		=	printf/my_printf.c					\
 				printf/my_printf_modifier.c			\
 				printf/my_putnbr_for_printf.c		\
 				printf/my_nbr_len_u.c				\
-				printf/convert_base_for_printf.c
+				printf/convert_base_for_printf.c	\
 
 CFLAGS		=	-Wall -Wextra
 
@@ -110,6 +117,7 @@ $(NAME):	$(OBJ)
 	$(AR) rc $(NAME) $(OBJ)
 	cp -u $(NAME) ../
 	cp ./my.h ./list/mylist.h ../../include/lib
+	cp ./my_wildcards.h ./list/mylist.h ../../include/lib
 
 clean:
 	$(RM) $(OBJ)

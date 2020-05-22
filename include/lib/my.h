@@ -27,6 +27,7 @@ ssize_t my_strlen_until_c(const char *str, const char c);
 ssize_t my_strlen_until_list_c(const char *str, const char list[]);
 bool my_is_char_in_str(const char *str, const char c);
 int my_getnbr(char const *str);
+long my_getnbr_long(char const *str);
 int my_getnbr_base(char const *str, char const *base);
 void my_sort_int_array(int *array, int size);
 int my_pow(int nb, int p);
@@ -34,7 +35,7 @@ int my_sqrt(int nb);
 int my_is_prime(int nb);
 int my_find_prime_sup(int nb);
 char **my_str_to_word_array(char const *str, char const *separators);
-int my_array_len(char * const *array);
+int my_array_len(const void *array);
 char **my_array_dup(char * const * src);
 bool my_arrcmp(char **first, char **second);
 int my_array_contains(char * const *array, char const *to_find);
@@ -59,7 +60,8 @@ int my_str_isalphanum(char const *str);
 int my_str_contains_only(char const *str, char const *valid);
 int my_showstr(char const *str);
 int my_showmem(char const *str, int size);
-char *my_strcat(char *restrict first, char *restrict second,
+char *my_strcat(char *dest, char const *src);
+char *my_strcat_malloc(char *restrict first, char *restrict second,
                 const bool free_first, const bool free_second);
 char *my_strncat(char *dest, char const *src, int nb);
 char *my_strdup(char const *src);
@@ -74,16 +76,22 @@ int my_strchr_index(char const *str, int c);
 bool my_loop_in_str_while_list_c(const char *str, const char *list, size_t *i);
 char *convert_base(char const *nbr, char const *base_from, char const *base_to);
 char *convert_to_base(int nbr, char const *base);
-int get_next_line(char **line, int fd);
+char *get_next_line(int fd);
+int get_next_line_2(char **line, int fd);
 char *join_path(char const *path_1, char const *path_2);
 void *my_memset(void *buffer, int c, size_t size);
 void *my_malloc_array(size_t width, size_t height, size_t size);
 void my_free_array(void *array);
+
+size_t my_get_bitshift(const void *variable);
+ssize_t my_absolute_getnbr(const char *str);
 
 int my_printf(char const *format, ...);
 int my_dprintf(int fd, char const *format, ...);
 
 int my_vprintf(char const *format, va_list ap);
 int my_vdprintf(int fd, char const *format, va_list ap);
+
+bool match(const char *first, const char *second);
 
 #endif
