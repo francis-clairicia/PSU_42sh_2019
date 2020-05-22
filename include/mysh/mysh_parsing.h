@@ -84,6 +84,7 @@ typedef struct command_list {
     redirection_type_t redir_input_type;
     char *redir_output;
     redirection_type_t redir_output_type;
+    bool in_bg;
     struct command_list *next;
     struct command_list *prev;
 } cmd_list_t;
