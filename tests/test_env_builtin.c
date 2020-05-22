@@ -32,6 +32,6 @@ Test(env_builtin_command, handle_null_env)
     shell_t *shell = init_shell_struct(NULL);
 
     cr_redirect_stdout();
-    cr_expect_eq(minishell("env", shell), 0);
+    cr_expect_eq(minishell("env", shell), -1);
     destroy_shell_struct(shell);
 }
