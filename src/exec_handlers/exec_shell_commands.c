@@ -58,7 +58,6 @@ int exec_shell_commands(command_t commands[], shell_t *shell)
 
     if (commands == NULL || commands[0].argv == NULL)
         return (-1);
-    bind_sigint_signal(PROCESS);
     command = &commands[0];
     builtin = is_builtin(command->argv);
     if (builtin != NULL) {

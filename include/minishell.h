@@ -21,21 +21,11 @@
 #include "mysh_parsing.h"
 #include "mysh_shell.h"
 
-int kill(pid_t pid, int sig);
-
-typedef __sighandler_t sighandler_t;
-
 #define DEFAULT_ENVIRONMENT __environ
 
 #ifndef WCOREDUMP
 #define WCOREDUMP(wstatus) __WCOREDUMP(wstatus)
 #endif
-
-enum SIGINT_HANDLER_FUNCTION
-{
-    PROMPT,
-    PROCESS
-};
 
 typedef struct command_line
 {
@@ -92,9 +82,7 @@ int unalias_builtin_command(char * const *av, shell_t *shell);
     unsetenv_builtin_command((char *[]){"unsetenv", \
     (char *)variable, NULL}, shell)
 
-sighandler_t bind_sigint_signal(int func);
-void sigint_handler_for_prompt(int signum);
-void sigint_handler_for_process(int signum);
+void bind_sigint_signal(void);
 
 void print_error(char const *filepath, char const *error);
 void print_signal(int signum, int core_dump, bool end_line);
