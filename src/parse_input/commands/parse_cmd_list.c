@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell2_2019
+** PSU_42sh_2019
 ** File description:
 ** parse_input.c
 */

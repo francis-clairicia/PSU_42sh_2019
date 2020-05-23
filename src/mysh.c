@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
 ** mysh.c
 */
@@ -46,7 +46,7 @@ static int launch_given_commands(shell_t *shell)
     int stop_shell = 0;
 
     while (stop_shell <= 0 && get_next_line_2(&cmd, 0))
-        stop_shell = minishell(cmd, shell);
+        stop_shell = eval_exec_cmd(cmd, shell);
     if (cmd != NULL)
         free(cmd);
     destroy_shell_struct(shell);
@@ -67,7 +67,7 @@ int mysh(void)
         return (launch_given_commands(shell));
     increase_shlvl(shell);
     while (command_prompt(&cmd, status)) {
-        status = minishell(cmd, shell);
+        status = eval_exec_cmd(cmd, shell);
         check_background_process(shell);
     }
     final_status = shell->exit_status;

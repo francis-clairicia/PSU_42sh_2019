@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2019
-** 42sh
+** PSU_42sh_2019
 ** File description:
-** Gets enum values.
+** Gets enum values to match characters.
 */
 
 #include "my.h"

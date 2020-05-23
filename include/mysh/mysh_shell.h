@@ -32,6 +32,7 @@ typedef struct alias_s {
 typedef struct shell
 {
     char **envp;
+    char **path;
     int exit_status;
     list_t process;
     alias_t *alias_list;

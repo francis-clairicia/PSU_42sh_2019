@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
 ** get_path_to_executable.c
 */
@@ -27,7 +27,7 @@ static int check_access(char const *filepath)
     return (1);
 }
 
-char *get_path_to_executable(char const *binary, char * const *envp)
+char *get_path_to_executable(char const *binary, char * const *path_list)
 {
     char *filepath = NULL;
 
@@ -36,7 +36,7 @@ char *get_path_to_executable(char const *binary, char * const *envp)
             return (NULL);
         return (my_strdup(binary));
     }
-    filepath = find_binary_in_path(binary, envp);
+    filepath = find_binary_in_path(binary, path_list);
     if (!check_access(filepath)) {
         free(filepath);
         return (NULL);

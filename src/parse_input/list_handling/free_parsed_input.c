@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** 42sh
+** PSU_42sh_2019
 ** File description:
 ** Frees the parsed input nodes and lists.
 */
@@ -36,7 +36,7 @@ static void free_cmd_list(cmd_list_t *head)
     } while (tmp != final);
 }
 
-static void free_parsed_input_node(parsed_input_list_t *node)
+static void free_parsed_input_node(parse_list_t *node)
 {
     if (!node)
         return;
@@ -44,10 +44,10 @@ static void free_parsed_input_node(parsed_input_list_t *node)
     free(node);
 }
 
-void free_parsed_input_list(parsed_input_list_t *head)
+void free_parse_list(parse_list_t *head)
 {
-    parsed_input_list_t *final = NULL;
-    parsed_input_list_t *tmp = NULL;
+    parse_list_t *final = NULL;
+    parse_list_t *tmp = NULL;
 
     if (!head)
         return;

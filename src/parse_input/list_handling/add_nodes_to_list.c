@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2019
-** 42sh
+** PSU_42sh_2019
 ** File description:
-** Adds nodes to certain lists.
+** Adds nodes to parsing lists.
 */
 
 #include <string.h>
@@ -77,16 +77,16 @@ void add_cmd_list_node(cmd_list_t **head)
     }
 }
 
-void add_parsed_list_node(parsed_input_list_t **head)
+void add_parsed_list_node(parse_list_t **head)
 {
-    parsed_input_list_t *node = NULL;
+    parse_list_t *node = NULL;
 
     if (!head)
         return;
-    node = malloc(sizeof(parsed_input_list_t));
+    node = malloc(sizeof(parse_list_t));
     if (!node)
         return;
-    memset(node, 0, sizeof(parsed_input_list_t));
+    memset(node, 0, sizeof(parse_list_t));
     if (!(*head)) {
         node->next = node;
         node->prev = node;

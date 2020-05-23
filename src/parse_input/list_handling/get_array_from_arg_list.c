@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2019
 ** PSU_42sh_2019
 ** File description:
-** get_array_from_arg_list.c
+** Allocates and fill an array from an argument list.
 */
 
 #include <stdlib.h>

@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include <unistd.h>
+#include "my_wildcards.h"
 
 static bool check_for_null_except(const char *first, const char *second)
 {
@@ -15,7 +16,7 @@ static bool check_for_null_except(const char *first, const char *second)
     if (first == second)
         return (true);
     if (first) {
-        for (; first[i] && first[i] == '*'; i += 1);
+        for (; first[i] && first[i] == GLOBAL_WC; i += 1);
         return (i > 0) ? (first[i] ? false : true) : false;
     }
     return (false);
@@ -51,10 +52,11 @@ bool match(const char *first, const char *second)
         return (check_for_null_except(first, second));
     if ((*first) == (*second))
         return (!(*first) && !(*second)) ? true : match(first + 1, second + 1);
-    if ((*anchor) == '?')
+    if ((*anchor) == SOLO_WC)
         return (match(first + 1, second + 1));
-    if ((*anchor) == '*') {
-        for (; (*anchor == '*' || *anchor == '?') && *anchor; anchor += 1);
+    if ((*anchor) == GLOBAL_WC) {
+        while ((*anchor == GLOBAL_WC || *anchor == SOLO_WC) && *anchor)
+            anchor += 1;
         if (!get_second_anchor(*anchor, &tmp))
             return (false);
         return (match(anchor, tmp));

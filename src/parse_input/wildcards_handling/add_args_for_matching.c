@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2019
 ** PSU_42sh_2019
 ** File description:
-** add_args_for_matching.c
+** Adds arguments to a list from a matching string containing wildcards.
 */
 
 #include <stdlib.h>
@@ -57,14 +57,16 @@ static void examinate_directory_files(DIR **directory, file_extent_t root_file,
     }
 }
 
-bool add_args_for_matching(arguments_t **head, arguments_t *tmp,
-                            const char *match_str)
+bool add_args_for_matching(arguments_t **head, arguments_t *tmp)
 {
     file_extent_t root_file = {.path = NULL, .file = NULL};
-    globbing_match_t matching = {.str = match_str, .treated = false};
+    globbing_match_t matching;
     argument_globber_t globber = {.head = head, .cur_node = tmp};
     DIR *directory = NULL;
 
+    if (!head || !tmp)
+        return (false);
+    matching = (globbing_match_t){.str = tmp->arg, .treated = false};
     if (!setup_matching(matching.str, &directory, &root_file))
         return (false);
     examinate_directory_files(&directory, root_file, &matching, globber);

@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
 ** exec_shell_commands.c
 */
@@ -64,7 +64,7 @@ int exec_shell_commands(command_t commands[], shell_t *shell)
     if (builtin != NULL) {
         status = launch_builtin(builtin, commands, shell);
     } else {
-        path = get_path_to_executable(command->argv[0], shell->envp);
+        path = get_path_to_executable(command->argv[0], shell->path);
         status = launch_process(path, commands, shell);
         free(path);
     }

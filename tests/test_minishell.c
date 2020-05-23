@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** PSU_42sh_2019
 ** File description:
 ** test_minishell.c
 */
@@ -15,7 +15,7 @@ Test(minishell, launch_command_like_an_another_shell)
     shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
 
     cr_redirect_stdout();
-    status = minishell("ls src/main.c", shell);
+    status = eval_exec_cmd("ls src/main.c", shell);
     if (status == 1) {
         cr_expect_eq(kill(getpid(), SIGCHLD), 0);
     } else {
@@ -27,5 +27,5 @@ Test(minishell, launch_command_like_an_another_shell)
 
 Test(minishell, handle_null_command)
 {
-    cr_assert_eq(minishell(NULL, NULL), 1);
+    cr_assert_eq(eval_exec_cmd(NULL, NULL), 1);
 }

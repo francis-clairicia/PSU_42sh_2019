@@ -10,16 +10,16 @@
 
 Test(parse_input, null_sent)
 {
-    parsed_input_list_t *list = NULL;
+    parse_list_t *list = NULL;
 
     list = parse_input(NULL, NULL);
     cr_expect_eq(list, NULL);
-    free_parsed_input_list(list);
+    free_parse_list(list);
 }
 
 Test(parse_input, easy_input)
 {
-    parsed_input_list_t *list = NULL;
+    parse_list_t *list = NULL;
     const char input[] = "ls -a";
     error_parse_t error = NONE;
 
@@ -30,13 +30,13 @@ Test(parse_input, easy_input)
     cr_expect_eq(list->cmd_list->args->next->arg,
                 list->cmd_list->args->prev->arg);
     cr_expect_eq(my_strcmp(list->cmd_list->args->prev->arg, "-a"), 0);
-    free_parsed_input_list(list);
+    free_parse_list(list);
     cr_assert_eq(error, NONE);
 }
 
 Test(parse_input, hard_input)
 {
-    parsed_input_list_t *list = NULL;
+    parse_list_t *list = NULL;
     const char input[] = "ls \"-a\"|\t cat '-e' > 'txt'\"a\"";
     error_parse_t error = NONE;
 
@@ -50,6 +50,6 @@ Test(parse_input, hard_input)
     cr_expect_eq(my_strcmp(list->cmd_list->next->args->prev->arg, "-e"), 0);
     cr_expect_eq(list->cmd_list->next->redir_output_type, REDIR_IN_FILE);
     cr_expect_str_eq(list->cmd_list->next->redir_output, "txta");
-    free_parsed_input_list(list);
+    free_parse_list(list);
     cr_assert_eq(error, NONE);
 }
