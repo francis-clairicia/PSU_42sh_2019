@@ -291,6 +291,10 @@ bool get_splitter(parse_list_t **head, indicator_t *indic,
 void get_redirection(cmd_list_t **head, indicator_t *indic,
                     error_parse_t *error);
 
+//Get argument from the output of a command which was between magic quotes
+void get_args_from_output(arguments_t **args, char const *command_line,
+    shell_t *shell);
+
 bool check_for_backtick_elem(cmd_list_t **cur_cmd_list, indicator_t *indic);
 
 bool check_for_splitter_elem(parse_list_t **head, indicator_t *indic,
