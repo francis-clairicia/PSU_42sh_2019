@@ -12,6 +12,8 @@ int echo_builtin_command(char * const *av, shell_t *shell)
     int i = 1;
     bool newline = true;
 
+    if (!av || !av[0])
+        return (0);
     if (my_strcmp(av[1], "-n") == 0) {
         newline = false;
         i += 1;
