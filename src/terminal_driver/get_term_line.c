@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include "terminal_driver.h"
 
-char *get_term_line(shell_t *shell)
+char *get_term_line(shell_t *shell UNUSED)
 {
     line_t line = {0};
 

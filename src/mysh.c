@@ -32,7 +32,6 @@ static int command_prompt(char **line, int stop_shell, shell_t *shell)
             free(*line);
         return (0);
     }
-    bind_sigint_signal(PROMPT);
     print_command_prompt(getcwd(current_directory, 4097), DEFAULT_ENVIRONMENT);
     *line = get_term_line(shell);
     if (!(*line))
@@ -59,8 +58,7 @@ int mysh(void)
 {
     char *cmd = NULL;
     shell_t *shell = init_shell_struct(DEFAULT_ENVIRONMENT);
-    int status = 0;
-    int final_status = 0;
+    int stop_shell = 0;
 
     if (shell == NULL)
         return (84);
@@ -68,12 +66,13 @@ int mysh(void)
     if (!isatty(0))
         return (launch_given_commands(shell));
     atexit(disable_raw_mode);
+    bind_sigint_signal();
     increase_shlvl(shell);
-    while (command_prompt(&cmd, status, shell)) {
-        status = eval_exec_cmd(cmd, shell);
+    while (command_prompt(&cmd, stop_shell, shell)) {
+        stop_shell = eval_exec_cmd(cmd, shell);
         check_background_process(shell);
     }
-    final_status = shell->exit_status;
+    stop_shell = shell->exit_status;
     destroy_shell_struct(shell);
-    return (final_status);
+    return (stop_shell);
 }
