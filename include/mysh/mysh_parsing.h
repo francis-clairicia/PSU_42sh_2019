@@ -52,8 +52,9 @@ static const char * const redirections[] = {
 
 typedef enum splitter_type {
     SEMI_COLUMN = 1,
-    AND = 2,
-    OR = 3
+    AND,
+    OR,
+    BG,
 } splitter_type_t;
 
 static const char first_chars_splitters[] = ";&|";
@@ -62,6 +63,7 @@ static const char * const splitters[] = {
     ";",
     "&&",
     "||",
+    "&",
     NULL
 };
 

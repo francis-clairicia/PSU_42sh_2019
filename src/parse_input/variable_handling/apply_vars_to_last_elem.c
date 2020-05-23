@@ -61,7 +61,7 @@ void apply_vars_to_last_elem(parse_list_t *cur_node, shell_t *shell,
 {
     cmd_list_t *last_list = NULL;
 
-    if (!cur_node)
+    if (!cur_node || !(cur_node->cmd_list)|| !(cur_node->cmd_list->prev))
         return;
     last_list = cur_node->cmd_list->prev;
     get_vars_from_to(shell, error, &last_list->redir_input);
