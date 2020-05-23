@@ -6,10 +6,9 @@
 ##
 
 SRC_MAIN			=	src/main.c														\
-
-SRC_CORE 			=	src/construct_destroy_shell_t.c									\
 						src/mysh.c														\
-						src/print_command_prompt.c										\
+
+SRC_CORE 			=	src/print_command_prompt.c										\
 						src/sigint_handler.c											\
 
 SRC_AUTO_COMPLETION	=	src/auto_completion/find_completion.c							\
@@ -66,10 +65,19 @@ SRC_PARSE_INPUT		=	src/parse_input/commands/change_fd.c							\
 						src/parse_input/list_handling/get_array_from_arg_list.c			\
 						src/parse_input/list_handling/remove_nodes_from_list.c			\
 						src/parse_input/unmatched_handling/check_unmatched_backticks.c	\
+						src/parse_input/variable_handling/add_var_to_var_list.c			\
 						src/parse_input/variable_handling/apply_vars_to_last_elem.c		\
+						src/parse_input/variable_handling/free_var_list.c				\
+						src/parse_input/variable_handling/get_var_in_var_list.c			\
+						src/parse_input/variable_handling/remove_var_from_var_list.c	\
 						src/parse_input/variable_handling/replace_var_call_by_var.c		\
+						src/parse_input/variable_handling/show_var_list.c				\
 						src/parse_input/wildcards_handling/add_args_for_matching.c		\
 						src/parse_input/wildcards_handling/alter_parse_by_wildcards.c	\
+
+SRC_SHELL			=	src/shell_struct/init_shell.c									\
+						src/shell_struct/destroy_shell.c								\
+						src/shell_struct/default_variables/path.c						\
 
 SRC_TERM_DRIVER		=	src/terminal_driver/control_line/arrows/down.c					\
 						src/terminal_driver/control_line/arrows/left.c					\
@@ -83,8 +91,18 @@ SRC_TERM_DRIVER		=	src/terminal_driver/control_line/arrows/down.c					\
 						src/terminal_driver/die.c										\
 						src/terminal_driver/get_term_line.c								\
 
-SRC					=	$(SRC_CORE) $(SRC_AUTO_COMPLETION) $(SRC_BUILTIN) $(SRC_DCLL) $(SRC_ENV) \
-						$(SRC_ERROR) $(SRC_EXEC) $(SRC_FILE) $(SRC_JOB) $(SRC_PARSE_INPUT) $(SRC_TERM_DRIVER)
+SRC					=	$(SRC_CORE)														\
+						$(SRC_AUTO_COMPLETION)											\
+						$(SRC_BUILTIN)													\
+						$(SRC_DCLL)														\
+						$(SRC_ENV)														\
+						$(SRC_ERROR)													\
+						$(SRC_EXEC)														\
+						$(SRC_FILE)														\
+						$(SRC_JOB)														\
+						$(SRC_PARSE_INPUT)												\
+						$(SRC_SHELL)													\
+						$(SRC_TERM_DRIVER)
 
 CFLAGS				=	-Wall -Wextra
 
