@@ -20,11 +20,21 @@ typedef struct process
 process_t *init_process_struct(pid_t pid, cmd_list_t *cmd_list);
 void destroy_process_struct(process_t *process);
 
+// Alias Struct
+typedef struct alias_s {
+    char *alias;
+    char **cmd;
+    struct alias_s *next;
+} alias_t;
+
+// end -> Alias Struct
+
 typedef struct shell
 {
     char **envp;
     int exit_status;
     list_t process;
+    alias_t *alias_list;
 } shell_t;
 
 shell_t *init_shell_struct(char * const *envp);
