@@ -9,11 +9,15 @@
 #define HEADER_MY_H
 
 #include <sys/types.h>
-#include <stddef.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <stdarg.h>
 
 #define UNUSED __attribute__((unused))
+
+#define FREE_PTR(ptr) \
+    if (ptr) \
+        free(ptr); \
 
 int my_putchar(char c);
 int my_put_nbr(long nb);

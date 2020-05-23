@@ -49,10 +49,11 @@ static void get_vars_from_to(shell_t *shell, error_parse_t *error,
     }
     var_call = my_strdup_until_list_c(&(*str)[index - 1], VAR_STOPPERS);
     var_value = find_variable_value(shell, error, &var_call[1]);
-    if ((*error) != NONE)
+    if (*error != NONE || !replace_var_call_by_var(str, var_call, var_value)) {
+        FREE_PTR(var_call);
         return;
-    if (!replace_var_call_by_var(str, var_call, var_value))
-        return;
+    }
+    FREE_PTR(var_call);
     get_vars_from_to(shell, error, str);
 }
 

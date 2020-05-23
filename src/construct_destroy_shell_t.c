@@ -44,5 +44,6 @@ void destroy_shell_struct(shell_t *shell)
     my_free_array(shell->envp);
     my_free_array(shell->path);
     my_free_list(&(shell->process), &destroy_process_struct);
+    my_free_list(&(shell->history), &free);
     free(shell);
 }
