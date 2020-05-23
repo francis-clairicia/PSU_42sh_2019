@@ -41,7 +41,7 @@ static void check_process_status(node_t *node, list_t *node_to_delete)
         return;
     my_printf("[%lu]\t", node->index);
     print_process_status(process);
-    my_put_in_list(node_to_delete, node->index, size_t);
+    my_put_in_list(node_to_delete, node, node_t *);
 }
 
 void check_background_process(shell_t *shell)
@@ -54,7 +54,7 @@ void check_background_process(shell_t *shell)
         check_process_status(node, &node_to_delete);
     }
     for (node_t *node = node_to_delete.start; node; node = node->next) {
-        my_delete_node(&(shell->process), NODE_DATA(node, size_t), NULL);
+        my_delete_node(&(shell->process), NODE_DATA(node, node_t *), NULL);
     }
     my_free_list(&node_to_delete, NULL);
 }

@@ -12,5 +12,5 @@ void my_free_list(list_t *list, void (*free_function)())
     if (list == NULL)
         return;
     while (list->size > 0)
-        my_delete_node(list, -1, free_function);
+        my_delete_node(list, list->end, free_function);
 }

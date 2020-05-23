@@ -17,12 +17,12 @@ static int handle_status(node_t *node, shell_t *shell)
     if (WIFSIGNALED(wstatus)) {
         if (WTERMSIG(wstatus) != SIGINT) {
             print_signal(WTERMSIG(wstatus), WCOREDUMP(wstatus), true);
-            my_delete_node_from_node(&shell->process, node, destroy);
+            my_delete_node(&shell->process, node, destroy);
             return (-1);
         }
         my_putstr_error("\n");
     }
-    my_delete_node_from_node(&shell->process, node, destroy);
+    my_delete_node(&shell->process, node, destroy);
     return (set_exit_status(shell, (unsigned char)WEXITSTATUS(wstatus)));
 }
 
