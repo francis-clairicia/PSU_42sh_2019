@@ -27,6 +27,7 @@
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 #define LINE_SIZE 4096
+#define HISTORY_SIZE 128
 
 //Usefull struct for handling stdin input
 //
@@ -38,7 +39,7 @@ typedef struct line_s
     int index;
     bool completed;
     bool exit;
-    list_t *history;
+    node_t *hist_node;
 } line_t;
 
 //Save the actual terminal driver settings at the first function call

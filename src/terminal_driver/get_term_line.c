@@ -8,21 +8,28 @@
 #include <stdbool.h>
 #include "terminal_driver.h"
 
-char *get_term_line(shell_t *shell UNUSED)
+static void update_history(list_t *history, char *buffer)
+{
+    if (!history || !buffer || !strlen(buffer))
+        return;
+    my_put_in_list(history, strdup(buffer), char *);
+    while (history->size > HISTORY_SIZE) {
+        my_delete_node_from_index(history, -1, free);
+    }
+}
+
+char *get_term_line(shell_t *shell)
 {
     line_t line = {0};
 
     if (!shell)
         return (NULL);
-    line.history = &(shell->history);
+    line.hist_node = shell->history.start;
     enable_raw_mode();
     while (!(line.completed)) {
         process_key(&line);
     }
-    my_put_in_list(&(shell->history), strdup(line.buffer), char *);
     disable_raw_mode();
-    //for (node_t *node = shell->history.start; node; node = node->next) {
-    //    printf("%s\n", NODE_DATA(node, char *));
-    //}
+    update_history(&(shell->history), line.buffer);
     return (line.exit ? NULL : strdup(line.buffer));
 }
