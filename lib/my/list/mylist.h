@@ -44,16 +44,19 @@ list_t my_list(void);
 // Free the whole linked list
 void my_free_list(list_t *list, void (*free_function)());
 //
-// Delete the node at a certain index
-// (If 'index' is negative the search will begin at the end)
-void my_delete_node(list_t *list, int index, void (*free_function)());
+// Remove a node pointer from a list
+int my_remove_node(list_t *list, node_t *node);
+//
+// Remove a node pointer from a list and free it
+void my_delete_node(list_t *list, node_t *node, void (*free_function)());
 //
 // Delete the first occurence of a node according to a data
 #define my_delete_node_from_data(list, data, type, func) \
     _DEL_DATA(list, data, type, func)
 //
-// Remove a node pointer from a list and free it
-void my_delete_node_from_node(list_t *list, node_t *node, void (*free_func)());
+// Delete the node at a certain index
+// (If 'index' is negative the search will begin at the end)
+void my_delete_node_from_index(list_t *list, int index, void (*free_func)());
 ///////////////////////////////////////////////////////////////
 
 
@@ -91,12 +94,22 @@ int my_find_node(list_t list, const node_t *to_find);
 
 
 ///////////// Useful functions /////////////
+// Concatenate two list, make the list2 empty
 void my_concat_list(list_t *list1, list_t *list2);
+// Reverse a list
 void my_rev_list(list_t list);
+// Concatenate a list of char to an allocated str
 char *my_list_to_str(list_t list);
+// Concatenate a list of string to an allocated str
 char *my_concat_str_list(list_t list, char separator, int *len);
+// Create a 2d array from a list of pointers
 void *my_list_to_2d_array(list_t *list, int free_list);
+// Create a a list of pointers from a 2d array
 list_t my_2d_array_to_list(void *array);
+// Put the first node of the list at the end
+void rotate_begin_list(list_t *list);
+// Put the last node of the list at the start
+void rotate_end_list(list_t *list);
 ////////////////////////////////////////////
 
 

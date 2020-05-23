@@ -6,6 +6,7 @@
 */
 
 #include "minishell.h"
+#include "terminal_driver.h"
 
 static void increase_shlvl(shell_t *shell)
 {
@@ -22,7 +23,7 @@ static void increase_shlvl(shell_t *shell)
     free(str_value);
 }
 
-static int command_prompt(char **line, int stop_shell)
+static int command_prompt(char **line, int stop_shell, shell_t *shell)
 {
     char current_directory[4097];
 
@@ -33,10 +34,11 @@ static int command_prompt(char **line, int stop_shell)
     }
     bind_sigint_signal(PROMPT);
     print_command_prompt(getcwd(current_directory, 4097), DEFAULT_ENVIRONMENT);
-    if (!get_next_line_2(line, 0))
+    *line = get_term_line(shell);
+    if (!(*line))
         *line = my_strdup("exit");
     if (my_strlen(*line) == 0)
-        return (command_prompt(line, 0));
+        return (command_prompt(line, 0, shell));
     return (1);
 }
 
@@ -65,8 +67,9 @@ int mysh(void)
     remove_var_from_env("OLDPWD", shell);
     if (!isatty(0))
         return (launch_given_commands(shell));
+    atexit(disable_raw_mode);
     increase_shlvl(shell);
-    while (command_prompt(&cmd, status)) {
+    while (command_prompt(&cmd, status, shell)) {
         status = eval_exec_cmd(cmd, shell);
         check_background_process(shell);
     }

@@ -19,6 +19,8 @@
 
 #include <termios.h>
 
+#include "mysh_shell.h"
+#include "dcll.h"
 #include "keys.h"
 
 #define CTRL_KEY(k) ((k) & 0x1f)
@@ -39,7 +41,7 @@ typedef struct line_s
 
 //Save the actual terminal driver settings at the first function call
 //Loads the save from the second function call
-void disable_raw_mode(void) __attribute__((constructor, destructor));
+void disable_raw_mode(void) __attribute__((constructor));
 
 void enable_raw_mode(void);
 
@@ -52,7 +54,7 @@ void process_key(line_t *line);
 //Prints given error message and exits the program
 void die(char *str);
 
-char *get_term_line(void);
+char *get_term_line(shell_t *shell);
 
 void shift_line_right(line_t *line, int key);
 

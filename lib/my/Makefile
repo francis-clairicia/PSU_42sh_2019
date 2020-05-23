@@ -82,8 +82,10 @@ LINKED_LIST	=	list/my_list.c					\
 				list/my_node.c					\
 				list/my_node_from.c				\
 				list/my_find_node.c				\
+				list/my_remove_node.c			\
 				list/my_delete_node.c			\
-				list/my_delete_node_from.c
+				list/my_delete_node_from.c		\
+				list/rotate_list.c
 
 PRINTF		=	printf/my_printf.c					\
 				printf/my_dprintf.c					\

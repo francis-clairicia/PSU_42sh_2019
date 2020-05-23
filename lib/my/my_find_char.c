@@ -21,7 +21,7 @@ int my_find_char(const char *str, char to_find)
     return (-1);
 }
 
-int my_find_char_tempate(const char *str, const int *template, char to_find)
+int my_find_char_template(const char *str, const int *template, char to_find)
 {
     int index = 0;
 

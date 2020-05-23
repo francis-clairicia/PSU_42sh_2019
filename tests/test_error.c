@@ -8,6 +8,7 @@
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 #include "minishell.h"
+#include "terminal_driver.h"
 
 Test(print_error, print_in_stderr)
 {
