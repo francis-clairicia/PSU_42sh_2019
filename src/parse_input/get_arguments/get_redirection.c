@@ -47,12 +47,26 @@ static void redir_file(cmd_list_t **head, indicator_t *indic,
     }
 }
 
+static void apply_redir_to_last_arg(cmd_list_t **head, indicator_t *indic,
+                                    error_parse_t *error,
+                                    const redirection_type_t redir_type)
+{
+    char c = '\0';
+
+    if (!(redir_type & PIPE))
+        redir_file(head, indic, redir_type);
+    loop_while_spaces(indic->input, &indic->i);
+    c = indic->input[indic->i];
+    check_redir_file_set((*head)->prev, error, redir_type, c);
+    if (!(*error) && (redir_type & PIPE))
+        add_cmd_list_node(head);
+}
+
 void get_redirection(cmd_list_t **head, indicator_t *indic,
                         error_parse_t *error)
 {
     redirection_type_t redir_type = NONE;
     int size = 0;
-    char c = '\0';
 
     redir_type = get_redirection_enum(&indic->input[indic->i], &size);
     if (redir_type == NONE) {
@@ -64,11 +78,5 @@ void get_redirection(cmd_list_t **head, indicator_t *indic,
     set_redir_type(head, error, redir_type);
     if (*error != NONE)
         return;
-    if (!(redir_type & PIPE))
-        redir_file(head, indic, redir_type);
-    loop_while_spaces(indic->input, &indic->i);
-    c = indic->input[indic->i];
-    check_redir_file_set((*head)->prev, error, redir_type, c);
-    if (!(*error) && (redir_type & PIPE))
-        add_cmd_list_node(head);
+    apply_redir_to_last_arg(head, indic, error, redir_type);
 }
