@@ -81,6 +81,7 @@ LINKED_LIST	=	list/my_list.c					\
 				list/my_free_list.c				\
 				list/my_concat_list.c			\
 				list/my_rev_list.c				\
+				list/my_list_dup.c				\
 				list/my_node.c					\
 				list/my_node_from.c				\
 				list/my_find_node.c				\

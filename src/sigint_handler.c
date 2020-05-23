@@ -7,25 +7,12 @@
 
 #include "minishell.h"
 
-void sigint_handler_for_prompt(int signum UNUSED)
-{
-    char current_directory[4097];
-
-    my_putstr("\n");
-    print_command_prompt(getcwd(current_directory, 4097), DEFAULT_ENVIRONMENT);
-}
-
 void sigint_handler_for_process(int signum UNUSED)
 {
     return;
 }
 
-sighandler_t bind_sigint_signal(int func)
+void bind_sigint_signal(void)
 {
-    sighandler_t sigint_handler[] = {
-        sigint_handler_for_prompt,
-        sigint_handler_for_process
-    };
-
-    return (signal(SIGINT, sigint_handler[func]));
+    signal(SIGINT, sigint_handler_for_process);
 }

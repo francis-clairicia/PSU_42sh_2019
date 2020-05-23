@@ -15,9 +15,10 @@ SRC_CORE 			=	src/construct_destroy_shell_t.c									\
 SRC_AUTO_COMPLETION	=	src/auto_completion/find_completion.c							\
 						src/auto_completion/free_completion.c							\
 
-SRC_BUILTIN			=	src/builtin/alias.c												\
-						src/builtin/builtin_functions.c									\
+SRC_BUILTIN			=	src/builtin/builtin_functions.c									\
+						src/builtin/alias.c												\
 						src/builtin/cd.c												\
+						src/builtin/echo.c												\
 						src/builtin/env.c												\
 						src/builtin/exit.c												\
 						src/builtin/fg.c												\

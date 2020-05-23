@@ -73,7 +73,7 @@ void print_alias_list(alias_t *alias_list)
 
     for (; temp_list; temp_list = temp_list->next) {
         cmd_len = my_array_len(temp_list->cmd);
-        my_printf("%s    ", temp_list->alias);
+        my_printf("%s\t", temp_list->alias);
         if (cmd_len > 1) {
             cmd_list = my_2d_array_to_list(temp_list->cmd);
             concat_cmd_list = my_concat_str_list(
@@ -95,10 +95,11 @@ int alias_builtin_command(char * const *av, shell_t *shell)
     if (ac == 2)
         show_alias(av[1], shell->alias_list);
     if (ac >= 3) {
-        if (my_mass_strcmp(av[1], "alias", "unalias"))
+        if (my_mass_strcmp(av[1], "alias", "unalias", NULL)) {
             print_error(av[1], "Too dangerous to alias that");
-        else
-            add_alias_to_list(av, &shell->alias_list);
+            return (set_exit_status(shell, 1));
+        }
+        add_alias_to_list(av, &shell->alias_list);
     }
-    return (0);
+    return (set_exit_status(shell, 0));
 }

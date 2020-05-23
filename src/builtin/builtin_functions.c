@@ -8,14 +8,15 @@
 #include "minishell.h"
 
 static const struct builtin builtin_functions_list[] = {
+    {"alias", alias_builtin_command},
     {"cd", cd_builtin_command},
+    {"echo", echo_builtin_command},
     {"env", env_builtin_command},
     {"exit", exit_builtin_command},
-    {"setenv", setenv_builtin_command},
-    {"unsetenv", unsetenv_builtin_command},
     {"fg", fg_builtin_command},
-    {"alias", alias_builtin_command},
+    {"setenv", setenv_builtin_command},
     {"unalias", unalias_builtin_command},
+    {"unsetenv", unsetenv_builtin_command},
     {NULL, NULL}
 };
 
@@ -45,7 +46,9 @@ static int exec_builtin(builtin_t builtin, command_t *command,
     status = builtin(command->argv, shell);
     dup2(save_stdout, STDOUT_FILENO);
     dup2(save_stderr, STDERR_FILENO);
-    return ((in_fork) ? 1 : (status));
+    if (in_fork)
+        exit(0);
+    return (status);
 }
 
 int launch_builtin(builtin_t builtin, command_t commands[], shell_t *shell)

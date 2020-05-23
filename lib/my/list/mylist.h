@@ -98,6 +98,8 @@ int my_find_node(list_t list, const node_t *to_find);
 void my_concat_list(list_t *list1, list_t *list2);
 // Reverse a list
 void my_rev_list(list_t list);
+// Duplicate a list
+list_t my_list_dup(list_t list);
 // Concatenate a list of char to an allocated str
 char *my_list_to_str(list_t list);
 // Concatenate a list of string to an allocated str
