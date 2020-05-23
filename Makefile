@@ -26,7 +26,10 @@ SRC_BUILTIN			=	src/builtin/alias.c												\
 						src/builtin/unsetenv.c											\
 
 SRC_DCLL			=	src/dcll/add_dcll.c												\
+						src/dcll/dequeue_dcll.c											\
 						src/dcll/free_dcll.c											\
+						src/dcll/pop_dcll.c												\
+						src/dcll/rotate_dcll.c											\
 
 SRC_ENV				=	src/env_handlers/create_variable.c								\
 						src/env_handlers/find_var_env.c									\
