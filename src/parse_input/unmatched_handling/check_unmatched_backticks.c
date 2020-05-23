@@ -9,37 +9,31 @@
 #include <stddef.h>
 #include "mysh_parsing.h"
 
-static int shift_to_next_backtick(const char *cmd, const char c,
-                                    size_t *index)
+static void shift_to_next_backtick(const char *cmd, error_parse_t *error,
+                                const char c, size_t *index)
 {
-    int unmatched = (c == '"') ? UNMATCHED_DOUBLE : UNMATCHED_SINGLE;
-
+    (*error) = (c == '"') ? UNMATCHED_DOUBLE : UNMATCHED_SINGLE;
     *index += 1;
     while (cmd[*index]) {
         if (cmd[*index] == c) {
-            return (NONE);
+            (*error) = NONE;
+            return;
         }
         *index += 1;
     }
-    return (unmatched);
 }
 
 bool check_unmatched_backticks(const char *cmd, error_parse_t *error)
 {
     size_t index = 0;
-    int unmatched = NONE;
 
     if (!cmd)
         return (false);
-    for (; cmd[index] && unmatched == NONE; index += 1) {
+    for (; cmd[index] && (*error) == NONE; index += 1) {
         if (cmd[index] == '\'')
-            unmatched = shift_to_next_backtick(cmd, '\'', &index);
+            shift_to_next_backtick(cmd, error, '\'', &index);
         else if (cmd[index] == '"')
-            unmatched = shift_to_next_backtick(cmd, '"', &index);
+            shift_to_next_backtick(cmd, error, '"', &index);
     }
-    if (unmatched == NONE)
-        return (true);
-    *error = UNMATCHED_BACKTICKS;
-    my_printf("Unmatched '%c'.\n", (unmatched == UNMATCHED_SINGLE) ? '\'': '"');
-    return (false);
+    return ((*error) == NONE) ? true : false;
 }

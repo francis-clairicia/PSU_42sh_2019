@@ -25,6 +25,7 @@ int my_putstr_fd(int fd, char const *str);
 int my_strlen(char const *str);
 ssize_t my_strlen_until_c(const char *str, const char c);
 ssize_t my_strlen_until_list_c(const char *str, const char list[]);
+ssize_t my_strnlen(const char *str, const ssize_t n);
 bool my_is_char_in_str(const char *str, const char c);
 bool my_isalpha(const char c);
 int my_getnbr(char const *str);
@@ -65,6 +66,7 @@ char *my_strcat(char *dest, char const *src);
 char *my_strcat_malloc(char *restrict first, char *restrict second,
                 const bool free_first, const bool free_second);
 char *my_strncat(char *dest, char const *src, int nb);
+char *my_strncat_malloc(const char *first, const char *second, const ssize_t n);
 char *my_strdup(char const *src);
 char *my_strndup(char const *src, int n);
 char *my_strdup_char_i(const char *template, const char c, size_t *index);

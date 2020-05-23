@@ -68,6 +68,8 @@ SRC			=	my_put_nbr.c					\
 				my_get_bitshift.c				\
 				my_absolute_getnbr.c			\
 				my_isalpha.c					\
+				my_strnlen.c					\
+				my_strncat_malloc.c				\
 
 LINKED_LIST	=	list/my_list.c					\
 				list/my_create_node.c			\

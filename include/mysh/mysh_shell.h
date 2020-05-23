@@ -8,17 +8,7 @@
 #ifndef MYSH_SHELL_H_
 #define MYSH_SHELL_H_
 
-#include "mysh_parsing.h"
 #include "mylist.h"
-
-typedef struct process
-{
-    pid_t pid;
-    char *cmd;
-} process_t;
-
-process_t *init_process_struct(pid_t pid, cmd_list_t *cmd_list);
-void destroy_process_struct(process_t *process);
 
 // Alias Struct
 typedef struct alias_s {
@@ -37,6 +27,21 @@ typedef struct shell
     list_t process;
     alias_t *alias_list;
 } shell_t;
+
+#define FIND_ENV(shell) ((shell) ? shell->envp : NULL)
+
+////////////////////////
+#include "mysh_parsing.h"
+////////////////////////
+
+typedef struct process
+{
+    pid_t pid;
+    char *cmd;
+} process_t;
+
+process_t *init_process_struct(pid_t pid, cmd_list_t *cmd_list);
+void destroy_process_struct(process_t *process);
 
 shell_t *init_shell_struct(char * const *envp);
 void destroy_shell_struct(shell_t *shell);

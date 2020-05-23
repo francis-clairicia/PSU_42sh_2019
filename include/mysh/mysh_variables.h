@@ -22,6 +22,8 @@ bool add_var_to_var_list(var_list_t **var_list, const char *var_name,
 
 bool remove_var_from_var_list(var_list_t **var_list, const char *var_name);
 
+var_list_t *get_var_in_var_list(var_list_t *head, const char *var_name);
+
 void free_var_node(var_list_t *node);
 void free_var_list(var_list_t *var_list);
 

@@ -27,5 +27,5 @@ Test(minishell, launch_command_like_an_another_shell)
 
 Test(minishell, handle_null_command)
 {
-    cr_assert_eq(eval_exec_cmd(NULL, NULL), 1);
+    cr_assert_eq(eval_exec_cmd(NULL, NULL), -1);
 }

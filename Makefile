@@ -65,6 +65,8 @@ SRC_PARSE_INPUT		=	src/parse_input/commands/change_fd.c							\
 						src/parse_input/list_handling/get_array_from_arg_list.c			\
 						src/parse_input/list_handling/remove_nodes_from_list.c			\
 						src/parse_input/unmatched_handling/check_unmatched_backticks.c	\
+						src/parse_input/variable_handling/apply_vars_to_last_elem.c		\
+						src/parse_input/variable_handling/replace_var_call_by_var.c		\
 						src/parse_input/wildcards_handling/add_args_for_matching.c		\
 						src/parse_input/wildcards_handling/alter_parse_by_wildcards.c	\
 
@@ -102,7 +104,7 @@ $(NAME):	$(LDLIBS) $(OBJ)
 	$(MAKE) -s -C ./lib/my
 
 tests_run:	CFLAGS += --coverage
-tests_run:	LDLIBS += -lcriterion -lncurses
+tests_run:	LDLIBS += -lcriterion
 tests_run:	$(LDLIBS)
 	@find -name "*.gc*" -delete
 	$(CC) -o unit_tests $(SRC) tests/*.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
