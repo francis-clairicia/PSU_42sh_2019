@@ -32,6 +32,7 @@ shell_t *init_shell_struct(char * const *envp)
     my_memset(shell, 0, sizeof(*shell));
     shell->envp = my_array_dup(envp);
     shell->exit_status = 0;
+    shell->history = my_list();
     set_default_path(shell, envp);
     return (shell);
 }

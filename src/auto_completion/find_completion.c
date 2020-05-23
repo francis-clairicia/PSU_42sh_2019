@@ -20,7 +20,7 @@ static DIR *open_dir_from_path(char * path)
 }
 
 static bool add_completion(auto_completion_t **list, char *letion,
-                            bool is_folder)
+                                                    bool is_folder)
 {
     auto_completion_t *new = {0};
 

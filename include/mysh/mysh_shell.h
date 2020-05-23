@@ -25,6 +25,7 @@ typedef struct shell
     char **path;
     int exit_status;
     list_t process;
+    list_t history;
     alias_t *alias_list;
 } shell_t;
 
