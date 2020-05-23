@@ -65,6 +65,33 @@ static const char * const splitters[] = {
     NULL
 };
 
+//end -> Splitters
+
+//Parsing Lists
+typedef struct arguments {
+    char *arg;
+    struct arguments *next;
+    struct arguments *prev;
+} arguments_t;
+
+typedef struct command_list {
+    arguments_t *args;
+    char *redir_input;
+    redirection_type_t redir_input_type;
+    char *redir_output;
+    redirection_type_t redir_output_type;
+    struct command_list *next;
+    struct command_list *prev;
+} cmd_list_t;
+
+typedef struct parsed_input_list {
+    cmd_list_t *cmd_list;
+    bool in_bg;
+    splitter_type_t splitter;
+    struct parsed_input_list *next;
+    struct parsed_input_list *prev;
+} parsed_input_list_t;
+
 static const char spaces[] = " \t";
 static const char backticks[] = "\"'";
 
