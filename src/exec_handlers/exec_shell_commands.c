@@ -14,7 +14,6 @@ static int handle_status(int child_pid, int status_pipe, shell_t *shell)
     int wstatus = 0;
 
     waitpid(child_pid, &wstatus, 0);
-    enable_raw_mode();
     if (WIFSIGNALED(wstatus)) {
         if (WTERMSIG(wstatus) != SIGINT) {
             print_signal(WTERMSIG(wstatus), WCOREDUMP(wstatus), true);
@@ -41,7 +40,6 @@ static int launch_process(char const *binary, command_t commands[],
         dup2(command->input_fd, STDIN_FILENO);
         dup2(command->output_fd, STDOUT_FILENO);
         dup2(command->error_fd, STDERR_FILENO);
-        disable_raw_mode();
         if (execve(binary, command->argv, shell->envp) < 0)
             print_error(command->argv[0], error_exec(errno));
         return (1);

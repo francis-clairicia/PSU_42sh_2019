@@ -67,7 +67,6 @@ int mysh(void)
     remove_var_from_env("OLDPWD", shell);
     if (!isatty(0))
         return (launch_given_commands(shell));
-    enable_raw_mode();
     atexit(disable_raw_mode);
     increase_shlvl(shell);
     while (command_prompt(&cmd, status)) {
