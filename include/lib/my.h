@@ -26,6 +26,7 @@ int my_strlen(char const *str);
 ssize_t my_strlen_until_c(const char *str, const char c);
 ssize_t my_strlen_until_list_c(const char *str, const char list[]);
 bool my_is_char_in_str(const char *str, const char c);
+bool my_isalpha(const char c);
 int my_getnbr(char const *str);
 long my_getnbr_long(char const *str);
 int my_getnbr_base(char const *str, char const *base);

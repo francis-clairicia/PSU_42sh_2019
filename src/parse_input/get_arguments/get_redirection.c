@@ -36,7 +36,8 @@ static void redir_file(cmd_list_t **head, indicator_t *indic,
     char quote = '\0';
 
     indic->separator = false;
-    while (!indic->separator && indic->input[indic->i]) {
+    while (!indic->separator && indic->input[indic->i]
+        && !is_char_redirection(indic->input[indic->i])) {
         redir_name = (IS_INPUT(redir_type) ? redir_input : redir_output);
         quote = is_char_backtick(indic->input[indic->i]);
         if (quote)

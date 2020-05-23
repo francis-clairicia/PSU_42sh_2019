@@ -33,6 +33,10 @@ static bool parse_each_argument(parse_list_t **head, indicator_t *indic,
         return (true);
     if (!check_for_redirection_elem(cur_cmd_list, indic, error))
         get_unquoted_arg(cur_cmd_list, indic);
+    if (*error != NONE)
+        return (false);
+    //if (indic->last_quotation != WAS_SINGLE)
+    //    apply_vars_to_last_elems((*head)->prev);
     if (indic->last_quotation == WAS_UNQUOTED)
         apply_wildcards_changes((*head)->prev);
     return (true);

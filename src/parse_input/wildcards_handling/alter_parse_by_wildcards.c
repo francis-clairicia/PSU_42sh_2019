@@ -18,9 +18,11 @@ static void apply_wildcards_to_node(parse_list_t *cur_node,
     }
 }
 
-static bool parsing_node_contain_sev_args(const parse_list_t *node)
+static bool can_treat_wildcards(const parse_list_t *node)
 {
-    if (!node || !(node->cmd_list) || !(node->cmd_list->args))
+    if (!node || !(node->cmd_list) || node->cmd_list->prev->args)
+        return (false);
+    if (node->cmd_list->prev->prev->redir_output_type == PIPE)
         return (false);
     if (node->cmd_list->args->prev == node->cmd_list->args)
         return (false);
@@ -31,12 +33,12 @@ void apply_wildcards_changes(parse_list_t *cur_node)
 {
     arguments_t *tmp = NULL;
 
-    if (!parsing_node_contain_sev_args(cur_node))
+    if (!can_treat_wildcards(cur_node))
         return;
-    tmp = cur_node->cmd_list->args->next;
+    tmp = cur_node->cmd_list->prev->args->next;
     do {
         if (WILDCARDS_IN_STR(tmp->arg))
             apply_wildcards_to_node(cur_node, &tmp);
         tmp = tmp->next;
-    } while (tmp != cur_node->cmd_list->args);
+    } while (tmp != cur_node->cmd_list->prev->args);
 }

@@ -22,11 +22,11 @@
 
 //Redirections Input Characters Comparisons.
 typedef enum redirection_type {
-    PIPE = 1,
-    APPEND_TO_FILE = 1 << 1,
-    REDIR_IN_FILE = 1 << 2,
-    READ_FROM_STDIN_AS_INPUT = 1 << 3,
-    READ_FROM_FILE_AS_INPUT = 1 << 4,
+    PIPE = 0b1,
+    APPEND_TO_FILE = 0b10,
+    REDIR_IN_FILE = 0b100,
+    READ_FROM_STDIN_AS_INPUT = 0b1000,
+    READ_FROM_FILE_AS_INPUT = 0b10000,
 } redirection_type_t;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,8 @@ typedef struct parse_list {
 //////////////////////////////////
 
 #define WAS_UNQUOTED (1)
-#define WAS_QUOTED (2)
+#define WAS_SINGLE (2)
+#define WAS_DOUBLE (3)
 
 typedef struct indicator_s {
     const char *input;
@@ -372,6 +373,16 @@ void set_redir_type(cmd_list_t **head, error_parse_t *error,
                     const redirection_type_t redir_type);
 
 void apply_wildcards_changes(parse_list_t *cur_node);
+
+/////////////////////////////////////////////////////////
+
+///////////////////////
+//     Variables     //
+///////////////////////
+
+#define IS_CHAR_VAR_STOPPER(c) (!c || c == '/' || is_char_spaces(c)) \
+
+/////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////
 
