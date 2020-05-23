@@ -19,6 +19,7 @@
 
 #include <termios.h>
 
+#include "mylist.h"
 #include "mysh_shell.h"
 #include "dcll.h"
 #include "keys.h"
@@ -37,6 +38,7 @@ typedef struct line_s
     int index;
     bool completed;
     bool exit;
+    list_t *history;
 } line_t;
 
 //Save the actual terminal driver settings at the first function call

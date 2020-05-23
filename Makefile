@@ -68,7 +68,10 @@ SRC_PARSE_INPUT		=	src/parse_input/commands/change_fd.c							\
 						src/parse_input/wildcards_handling/add_args_for_matching.c		\
 						src/parse_input/wildcards_handling/alter_parse_by_wildcards.c	\
 
-SRC_TERM_DRIVER		=	src/terminal_driver/control_line/arrow_keys.c					\
+SRC_TERM_DRIVER		=	src/terminal_driver/control_line/arrows/down.c					\
+						src/terminal_driver/control_line/arrows/left.c					\
+						src/terminal_driver/control_line/arrows/right.c					\
+						src/terminal_driver/control_line/arrows/up.c					\
 						src/terminal_driver/control_line/process_ctrl_keys.c			\
 						src/terminal_driver/control_line/shift_line.c					\
 						src/terminal_driver/control_line/special_keys.c					\
