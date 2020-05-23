@@ -49,7 +49,7 @@ void delete_alias(char * const *av, alias_t **alias_l)
     *alias_l = save_list;
 }
 
-int unalias_builtin_command(char * const *av, shell_t *shell UNUSED)
+int unalias_builtin_command(char * const *av, shell_t *shell)
 {
     int ac = my_array_len(av);
 
