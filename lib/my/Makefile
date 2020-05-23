@@ -67,6 +67,7 @@ SRC			=	my_put_nbr.c					\
 				match.c							\
 				my_get_bitshift.c				\
 				my_absolute_getnbr.c			\
+				my_isalpha.c					\
 
 LINKED_LIST	=	list/my_list.c					\
 				list/my_create_node.c			\

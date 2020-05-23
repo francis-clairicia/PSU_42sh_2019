@@ -24,5 +24,5 @@ void get_quoted_arg(cmd_list_t **head, indicator_t *indic)
         (*head)->prev->args->prev->arg = tmp;
     }
     indic->i += 1;
-    indic->last_quotation = WAS_QUOTED;
+    indic->last_quotation = (backtick == '"') ? WAS_DOUBLE : WAS_SINGLE;
 }
