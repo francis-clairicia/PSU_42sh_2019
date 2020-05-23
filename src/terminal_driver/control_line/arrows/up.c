@@ -9,19 +9,14 @@
 
 static void clear_line(line_t *line, node_t *node)
 {
-    register int index = 0;
     register int cmd_size = 0;
 
-    if (line->index > 0)
-        printf("\x1b[%dD", line->index);
+    reset_line(line->index);
     fflush(stdout);
     if (!node)
         return;
     cmd_size = my_strlen(NODE_DATA(node, char *));
-    for (; index < cmd_size; index += 1)
-        write(1, " ", 1);
-    printf("\x1b[%dD", cmd_size);
-    fflush(stdout);
+    refresh_line(cmd_size + line->index);
 }
 
 static bool load_history_node(line_t *line)

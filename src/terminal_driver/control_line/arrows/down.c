@@ -9,19 +9,14 @@
 
 static void clear_line(line_t *line, node_t *node)
 {
-    register int index = 0;
     register int cmd_size = 0;
 
-    if (line->index > 0)
-        printf("\x1b[%dD", line->index);
+    reset_line(line->index);
     fflush(stdout);
     if (!node)
         return;
     cmd_size = my_strlen(NODE_DATA(node, char *));
-    for (; index < cmd_size; index += 1)
-        write(1, " ", 1);
-    printf("\x1b[%dD", cmd_size);
-    fflush(stdout);
+    refresh_line(cmd_size + line->index);
 }
 
 static bool load_history_node(line_t *line)
@@ -30,8 +25,9 @@ static bool load_history_node(line_t *line)
         return (false);
     if (!(line->hist_node))
         return (false);
-    if (!(line->hist_node->previous))
-        return (false);
+    if (!(line->hist_node->previous)) {
+        refresh_line(my_strlen(NODE_DATA(line->hist_node, char *)));
+    }
     line->hist_node = line->hist_node->previous;
     return (true);
 }
@@ -42,8 +38,9 @@ void process_arrow_down(line_t *line)
 
     if (!load_history_node(line))
         return;
-    new_cmd = NODE_DATA(line->hist_node, char *);
-    clear_line(line, line->hist_node->next);
+    if (line->hist_node)
+        new_cmd = NODE_DATA(line->hist_node, char *);
+    clear_line(line, line->hist_node);
     if (new_cmd)
         printf(new_cmd);
     fflush(stdout);

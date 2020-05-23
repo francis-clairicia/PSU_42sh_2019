@@ -60,6 +60,10 @@ void die(char *str);
 
 char *get_term_line(shell_t *shell);
 
+void reset_line(int size);
+
+void refresh_line(int size);
+
 void shift_line_right(line_t *line, int key);
 
 #endif /* !TERMINAL_DRIVER_H_ */
