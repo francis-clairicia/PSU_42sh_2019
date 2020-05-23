@@ -13,6 +13,8 @@
 typedef struct var_list_s {
     char *var_name;
     char *var_value;
+    bool word_list;
+    bool read_only;
     struct var_list_s *next;
     struct var_list_s *prev;
 } var_list_t;
