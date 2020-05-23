@@ -8,14 +8,15 @@
 #include "minishell.h"
 
 static const struct builtin builtin_functions_list[] = {
+    {"alias", alias_builtin_command},
     {"cd", cd_builtin_command},
+    {"echo", echo_builtin_command},
     {"env", env_builtin_command},
     {"exit", exit_builtin_command},
-    {"setenv", setenv_builtin_command},
-    {"unsetenv", unsetenv_builtin_command},
     {"fg", fg_builtin_command},
-    {"alias", alias_builtin_command},
+    {"setenv", setenv_builtin_command},
     {"unalias", unalias_builtin_command},
+    {"unsetenv", unsetenv_builtin_command},
     {NULL, NULL}
 };
 

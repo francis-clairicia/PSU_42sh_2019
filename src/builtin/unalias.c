@@ -8,7 +8,7 @@
 #include "minishell.h"
 #include "my.h"
 
-void destroy_node(alias_t **node)
+void destroy_alias_node(alias_t **node)
 {
     my_free_array((*node)->cmd);
     free((*node)->alias);
@@ -22,7 +22,7 @@ void destroy_every_alias(alias_t **alias_list)
 
     for (; *alias_list; *alias_list = (*alias_list)->next) {
         temp_list = *alias_list;
-        destroy_node(&temp_list);
+        destroy_alias_node(&temp_list);
     }
     *alias_list = NULL;
 }
@@ -35,13 +35,13 @@ void delete_alias(char * const *av, alias_t **alias_l)
     if (*alias_l && my_array_contains(av + 1, (*alias_l)->alias)) {
         *alias_l = (*alias_l)->next;
         save_list = *alias_l;
-        destroy_node(&temp_list);
+        destroy_alias_node(&temp_list);
     }
     for (; *alias_l && (*alias_l)->next;) {
         if (my_array_contains(av + 1, (*alias_l)->next->alias)) {
             temp_list = (*alias_l)->next;
             (*alias_l)->next = (*alias_l)->next->next;
-            destroy_node(&temp_list);
+            destroy_alias_node(&temp_list);
             continue;
         }
         *alias_l = (*alias_l)->next;
@@ -53,13 +53,15 @@ int unalias_builtin_command(char * const *av, shell_t *shell)
 {
     int ac = my_array_len(av);
 
-    if (ac == 1)
+    if (ac == 1) {
         print_error("unalias", "Too few arguments");
+        return (set_exit_status(shell, 1));
+    }
     if (ac >= 2) {
         if (my_array_contains(av + 1, "*"))
             destroy_every_alias(&shell->alias_list);
         else
             delete_alias(av, &shell->alias_list);
     }
-    return (0);
+    return (set_exit_status(shell, 1));
 }

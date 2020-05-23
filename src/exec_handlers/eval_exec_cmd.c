@@ -64,16 +64,13 @@ static int launch_all_commands(parse_list_t *list, shell_t *shell)
 
 int eval_exec_cmd(char const *command_line, shell_t *shell)
 {
-    parse_list_t *list = NULL;
     error_parse_t error = NONE;
+    parse_list_t *list = parse_input(command_line, &error);
     int status = 0;
 
-    list = parse_input(command_line, &error);
-    if (!list)
-        return ((error == UNMATCHED_BACKTICKS) ? -1 : 1);
     if (error != NONE) {
         print_parsing_error(error);
-        status = -1;
+        status = (list == NULL) ? 1 : -1;
     } else {
         status = launch_all_commands(list, shell);
     }

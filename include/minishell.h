@@ -64,14 +64,15 @@ struct builtin
 
 int launch_builtin(builtin_t builtin, command_t commands[], shell_t *shell);
 builtin_t is_builtin(char * const *cmd);
+int alias_builtin_command(char * const *av, shell_t *shell);
 int cd_builtin_command(char * const *av, shell_t *shell);
 int env_builtin_command(char * const *av, shell_t *shell);
 int exit_builtin_command(char * const *av, shell_t *shell);
-int setenv_builtin_command(char * const *av, shell_t *shell);
-int unsetenv_builtin_command( char * const *av, shell_t *shell);
+int echo_builtin_command(char * const *av, shell_t *shell);
 int fg_builtin_command(char * const *av, shell_t *shell);
-int alias_builtin_command(char * const *av, shell_t *shell);
+int setenv_builtin_command(char * const *av, shell_t *shell);
 int unalias_builtin_command(char * const *av, shell_t *shell);
+int unsetenv_builtin_command( char * const *av, shell_t *shell);
 
 #define print_env(shell) \
     env_builtin_command((char *[]){"env", NULL}, shell)
@@ -81,6 +82,8 @@ int unalias_builtin_command(char * const *av, shell_t *shell);
 #define remove_var_from_env(variable, shell) \
     unsetenv_builtin_command((char *[]){"unsetenv", \
     (char *)variable, NULL}, shell)
+
+void destroy_every_alias(alias_t **alias_list);
 
 void bind_sigint_signal(void);
 
