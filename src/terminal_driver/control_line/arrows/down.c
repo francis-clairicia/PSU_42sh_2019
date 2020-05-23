@@ -24,22 +24,30 @@ static void clear_line(line_t *line, node_t *node)
     fflush(stdout);
 }
 
+static bool load_history_node(line_t *line)
+{
+    if (!line)
+        return (false);
+    if (!(line->hist_node))
+        return (false);
+    if (!(line->hist_node->previous))
+        return (false);
+    line->hist_node = line->hist_node->previous;
+    return (true);
+}
+
 void process_arrow_down(line_t *line)
 {
     char *new_cmd = NULL;
-    node_t *cur_node = NULL;
 
-    if (!line || !(line->hist_node) || !(line->hist_node->previous) ||
-        !(line->hist_node->previous->previous))
+    if (!load_history_node(line))
         return;
-    cur_node = line->hist_node->previous;
-    new_cmd = NODE_DATA(cur_node->previous, char *);
-    clear_line(line, cur_node);
+    new_cmd = NODE_DATA(line->hist_node, char *);
+    clear_line(line, line->hist_node->next);
     if (new_cmd)
         printf(new_cmd);
     fflush(stdout);
     line->index = my_strlen(new_cmd);
     memset(line->buffer, 0, LINE_SIZE);
     my_strcpy(line->buffer, new_cmd);
-    line->hist_node = cur_node;
 }

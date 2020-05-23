@@ -40,6 +40,7 @@ typedef struct line_s
     bool completed;
     bool exit;
     node_t *hist_node;
+    list_t history;
 } line_t;
 
 //Save the actual terminal driver settings at the first function call

@@ -24,7 +24,7 @@ char *get_term_line(shell_t *shell)
 
     if (!shell)
         return (NULL);
-    line.hist_node = shell->history.start;
+    line.history = shell->history;
     enable_raw_mode();
     while (!(line.completed)) {
         process_key(&line);
