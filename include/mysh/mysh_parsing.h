@@ -12,12 +12,12 @@
 #include <stddef.h>
 #include "my.h"
 
-#include "../dcll.h"
-
+////////////////
 #define NONE (0)
+////////////////
 
 ///////////////////////
-//    Redirection    //
+//    Redirections   //
 ///////////////////////
 
 //Redirections Input Characters Comparisons.
@@ -92,7 +92,7 @@ static inline bool is_char_redirection(const char c)
     return (my_is_char_in_str(first_chars_redirections, c));
 }
 
-static inline char is_char_backstick(const char c)
+static inline char is_char_backtick(const char c)
 {
     char match = '\0';
     size_t i = 0;
@@ -141,6 +141,18 @@ typedef struct parse_list {
 
 //////////////////////////////////
 
+#define WAS_UNQUOTED (1)
+#define WAS_QUOTED (2)
+
+typedef struct indicator_s {
+    const char *input;
+    size_t i;
+    bool separator;
+    size_t last_quotation;
+} indicator_t;
+
+//////////////////////////////////
+
 ///////////////////////////////////////////////
 //         Parsing Error Handling            //
 ///////////////////////////////////////////////
@@ -168,7 +180,7 @@ static inline void print_parsing_error(const error_parse_t error)
 };
 
 /////////////////////////////////////////////
-//         Unmatched caracters             //
+//         Unmatched characters             //
 /////////////////////////////////////////////
 
 //////////////////////////////
@@ -242,37 +254,46 @@ redirection_type_t get_redirection_enum(const char *restrict shifted_input,
 splitter_type_t get_splitter_enum(const char *restrict shifted_input,
                                     int *size);
 
-// Gets Arguments and enums.
+/////////////////
+
+
+// Gets Arguments and enums. //
 
 //Gets a quoted arg, put it in a new-last node of the given cmd_list,
 //if separator is false, otherwise, concatenates it to the last arg
 //of the last element of cmd_list.
 //
 //Increases index to the new arg/splitter/space.
-void get_quoted_arg(cmd_list_t **head, const bool separator,
-                    const char *input, size_t *i);
+void get_quoted_arg(cmd_list_t **head, indicator_t *indic);
 
 //Gets an unquoted arg, put it in a new-last node of the given cmd_list,
 //if separator is false, otherwise, concatenates it to the last arg
 //of the last element of cmd_list.
 //
 //Increases index to the new arg/splitter/space/end of input.
-void get_unquoted_arg(cmd_list_t **head, const bool separator,
-                    const char *input, size_t *i);
+void get_unquoted_arg(cmd_list_t **head, indicator_t *indic);
 
 //Gets a splitter, adds a new-last node to the parsed_input list,
 //sets it the newly-found splitter.
 //
 //Increases index to the new arg/splitter/space/end of input.
-bool get_splitter(parse_list_t **head, error_parse_t *error,
-                const char *input, size_t *i);
+bool get_splitter(parse_list_t **head, indicator_t *indic,
+                    error_parse_t *error);
 
 //Gets a redirection, creates a new-last node in the given cmd_list,
 //
 //
 //Increases index to the new arg/splitter/space/end of input.
-void get_redirection(cmd_list_t **head, error_parse_t *error,
-                    const char *input, size_t *i);
+void get_redirection(cmd_list_t **head, indicator_t *indic,
+                    error_parse_t *error);
+
+bool check_for_backtick_elem(cmd_list_t **cur_cmd_list, indicator_t *indic);
+
+bool check_for_splitter_elem(parse_list_t **head, indicator_t *indic,
+                            error_parse_t *error);
+
+bool check_for_redirection_elem(cmd_list_t **cur_cmd_list, indicator_t *indic,
+                                error_parse_t *error);
 
 /////////////////////////
 
@@ -340,8 +361,7 @@ typedef struct argument_globber_s {
 //Add args to the given arg list from a given string where
 //add_args_for_matching() is going to try to find files from potential
 //paths hidden into match_str to do so.
-bool add_args_for_matching(arguments_t **head, arguments_t *tmp,
-                            const char *match_str);
+bool add_args_for_matching(arguments_t **head, arguments_t *tmp);
 
 void check_redir_file_set(const cmd_list_t *cur_cmd,
                         error_parse_t *error,

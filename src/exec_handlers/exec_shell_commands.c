@@ -7,7 +7,6 @@
 
 #include <string.h>
 #include "minishell.h"
-#include "terminal_driver.h"
 
 static int handle_status(int child_pid, int status_pipe, shell_t *shell)
 {

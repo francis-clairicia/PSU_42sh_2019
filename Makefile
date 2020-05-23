@@ -49,14 +49,15 @@ SRC_JOB				=	src/job_control/check_process.c									\
 
 SRC_PARSE_INPUT		=	src/parse_input/commands/change_fd.c							\
 						src/parse_input/commands/command_struct.c						\
+						src/parse_input/commands/parse_cmd_list.c						\
 						src/parse_input/file_handling/split_info_from_str.c				\
 						src/parse_input/get_arguments/check_and_apply_redir.c			\
+						src/parse_input/get_arguments/check_for_parse_elem.c			\
 						src/parse_input/get_arguments/get_enums.c						\
 						src/parse_input/get_arguments/get_quoted_arg.c					\
 						src/parse_input/get_arguments/get_redirection.c					\
 						src/parse_input/get_arguments/get_splitter.c					\
 						src/parse_input/get_arguments/get_unquoted_arg.c				\
-						src/parse_input/get_arguments/parse_cmd_list.c					\
 						src/parse_input/get_arguments/parse_input.c						\
 						src/parse_input/list_handling/add_nodes_to_list.c				\
 						src/parse_input/list_handling/free_arguments.c					\
@@ -105,7 +106,7 @@ tests_run:	LDLIBS += -lcriterion -lncurses
 tests_run:	$(LDLIBS)
 	@find -name "*.gc*" -delete
 	$(CC) -o unit_tests $(SRC) tests/*.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
-	-./unit_tests
+	./unit_tests
 	$(RM) unit_tests test*.gc*
 	mkdir -p coverage
 	mv *.gc* coverage/

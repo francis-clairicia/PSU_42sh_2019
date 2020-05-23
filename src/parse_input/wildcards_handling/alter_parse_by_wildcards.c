@@ -12,7 +12,7 @@ static void apply_wildcards_to_node(parse_list_t *cur_node,
 {
     arguments_t *save_tmp = (*tmp)->next;
 
-    if (add_args_for_matching(&cur_node->cmd_list->args, *tmp, (*tmp)->arg)) {
+    if (add_args_for_matching(&cur_node->cmd_list->args, *tmp)) {
         remove_node_from_arg_list_index(&cur_node->cmd_list->args, *tmp);
         (*tmp) = save_tmp;
     }

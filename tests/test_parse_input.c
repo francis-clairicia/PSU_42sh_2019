@@ -5,7 +5,6 @@
 ** test_parse_input.c
 */
 
-#include <string.h>
 #include <criterion/criterion.h>
 #include "mysh_parsing.h"
 

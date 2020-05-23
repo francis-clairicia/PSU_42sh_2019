@@ -13,7 +13,7 @@ Test(is_char_spaces, given_spaces)
     register size_t i = 0;
 
     while (spaces[i]) {
-        cr_expect(is_char_spaces(spaces[i]));
+        cr_assert(is_char_spaces(spaces[i]));
         i += 1;
     }
 }

@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** 42sh
+** PSU_42sh_2019
 ** File description:
 ** Gets a splitter and adds a parsed_list node.
 */
@@ -9,12 +9,12 @@
 #include "mysh_parsing.h"
 
 static bool shift_to_next_arg(const splitter_type_t splitter_type,
-                                const char *input, size_t *i)
+                                indicator_t *indic)
 {
     if (splitter_type == 0)
         return (false);
-    *i += my_strlen(splitters[splitter_type - 1]);
-    loop_while_spaces(input, i);
+    indic->i += my_strlen(splitters[splitter_type - 1]);
+    loop_while_spaces(indic->input, &indic->i);
     return (true);
 }
 
@@ -48,15 +48,18 @@ static bool inv_null_checker(parse_list_t *cur_node,
     return (false);
 }
 
-bool get_splitter(parse_list_t **head, error_parse_t *error,
-                    const char *input, size_t *i)
+bool get_splitter(parse_list_t **head, indicator_t *indic,
+                    error_parse_t *error)
 {
+    splitter_type_t splitter_type = NONE;
     int size = 0;
-    splitter_type_t splitter_type = get_splitter_enum(&input[(*i)], &size);
+    char c = '\0';
 
-    if (!shift_to_next_arg(splitter_type, input, i))
+    splitter_type = get_splitter_enum(&indic->input[indic->i], &size);
+    if (!shift_to_next_arg(splitter_type, indic))
         return (false);
-    if (inv_null_checker((*head)->prev, error, splitter_type, input[*i]))
+    c = indic->input[indic->i];
+    if (inv_null_checker((*head)->prev, error, splitter_type, c))
         return (true);
-    return (set_splitter_alterations(head, splitter_type, input[*i]));
+    return (set_splitter_alterations(head, splitter_type, c));
 }

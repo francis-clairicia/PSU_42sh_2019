@@ -23,7 +23,6 @@ SRC			=	my_put_nbr.c					\
 				my_strcat.c						\
 				my_strcat_malloc.c				\
 				my_compute_square_root.c		\
-				my_find_char.c					\
 				my_is_prime.c					\
 				my_str_isnum.c					\
 				my_getnbr.c						\
@@ -82,8 +81,10 @@ LINKED_LIST	=	list/my_list.c					\
 				list/my_node.c					\
 				list/my_node_from.c				\
 				list/my_find_node.c				\
+				list/my_remove_node.c			\
 				list/my_delete_node.c			\
-				list/my_delete_node_from.c
+				list/my_delete_node_from.c		\
+				list/rotate_list.c
 
 PRINTF		=	printf/my_printf.c					\
 				printf/my_dprintf.c					\
