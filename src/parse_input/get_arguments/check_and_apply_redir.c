@@ -24,20 +24,20 @@ void set_redir_type(cmd_list_t **head, error_parse_t *error,
     }
 }
 
-void check_redir_file_set(const cmd_list_t *cur_cmd, error_parse_t *error,
+void check_redir_file_set(const cmd_list_t *cmd, error_parse_t *error,
                         const redirection_type_t redir_type,
-                        const char cur_char)
+                        const char c)
 {
     if (!(redir_type & PIPE)) {
-        if ((IS_INPUT(redir_type) && !(cur_cmd->redir_input))
-            || (IS_OUTPUT(redir_type) && !(cur_cmd->redir_output))) {
+        if ((IS_INPUT(redir_type) && !(cmd->redir_input))
+            || (IS_OUTPUT(redir_type) && !(cmd->redir_output))) {
             *error = MISSING_NAME_FOR_REDIRECT;
             return;
         }
     }
-    if (((cur_cmd->redir_output_type & PIPE)
-        && (!cur_cmd->args || is_char_splitter(cur_char)
-        || cur_char == '\0'))) {
+    if (((!(cmd->redir_output_type & PIPE) && !cmd->args && !c)
+        || ((cmd->redir_output_type & PIPE)
+        && (!cmd->args || is_char_splitter(c) || !c )))) {
         *error = INVALID_NULL_COMMAND;
         return;
     }
