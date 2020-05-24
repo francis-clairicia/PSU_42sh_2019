@@ -50,9 +50,8 @@ static void examinate_directory_files(DIR **directory, file_extent_t root_file,
             matching->treated = true;
             new_arg = add_arg_list_node_index(globber.head, globber.cur_node);
             new_arg->arg = path_cur_file;
-        } else {
-            if (path_cur_file)
-                free(path_cur_file);
+        } else if (path_cur_file) {
+            free(path_cur_file);
         }
     }
 }

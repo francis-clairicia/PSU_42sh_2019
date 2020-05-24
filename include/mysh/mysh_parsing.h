@@ -88,21 +88,21 @@ typedef enum redirection_type {
 ////////////////////////////////////////////////////////////////
 
 //Given a redirection_type_t enum, returns if it matches with an input type.
-static inline bool _is_input(const redirection_type_t redir)
+static inline bool is_input(const redirection_type_t redir)
 {
     return (redir & (READ_FROM_STDIN_AS_INPUT | READ_FROM_FILE_AS_INPUT));
 }
 
-#define IS_INPUT(var) _is_input((redirection_type_t)var)
+#define IS_INPUT(var) is_input((redirection_type_t)var)
 ////////////////////////////////////////////////////////////////
 
 //Given a redirection_type_t enum, returns if it matches with an output type.
-static inline bool _is_output(const redirection_type_t redir)
+static inline bool is_output(const redirection_type_t redir)
 {
     return (redir & (PIPE | APPEND_TO_FILE | REDIR_IN_FILE));
 }
 
-#define IS_OUTPUT(var) _is_output((redirection_type_t)var)
+#define IS_OUTPUT(var) is_output((redirection_type_t)var)
 ////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
@@ -134,9 +134,9 @@ typedef enum splitter_type {
 // -> Redirections //
 /////////////////////
 
-static const char _fc_redirections[] = "|><";
+static const char fc_redirections[] = "|><";
 
-static const char * const _redirections[] = {
+static const char * const redirections[] = {
     "|",
     ">>",
     ">",
@@ -148,16 +148,16 @@ static const char * const _redirections[] = {
 //A Redirection Character is a character that implies either
 //the input or the output of a command to be redirected.
 
-#define FIRST_CHAR_REDIRECTION (_fc_redirections)
-#define REDIRECTIONS_ARRAY (_redirections)
+#define FIRST_CHAR_REDIRECTION (fc_redirections)
+#define REDIRECTIONS_ARRAY (redirections)
 
 //////////////////
 // -> Splitters //
 //////////////////
 
-static const char _fc_splitters[] = ";&|";
+static const char fc_splitters[] = ";&|";
 
-static const char * const _splitters[] = {
+static const char * const splitters[] = {
     ";",
     "&&",
     "||",
@@ -165,23 +165,23 @@ static const char * const _splitters[] = {
     NULL
 };
 
-#define FIRST_CHAR_SPLITTER (_fc_splitters)
-#define SPLITTERS_ARRAY (_splitters)
+#define FIRST_CHAR_SPLITTER (fc_splitters)
+#define SPLITTERS_ARRAY (splitters)
 
 
-static const char _spaces[] = " \t";
-#define SPACES (_spaces)
+static const char spaces[] = " \t";
+#define SPACES (spaces)
 
-static const char _arg_quotes[] = "\"'";
-#define ARGUMENT_QUOTES (_arg_quotes)
+static const char arg_quotes[] = "\"'";
+#define ARGUMENT_QUOTES (arg_quotes)
 
 #define MAGIC_QUOTE_CHAR ('`')
 
 //First characters of:
 //
 //SPACES + ARGUMENT_QUOTES + MAGIC_QUOTE_CHAR + SPLITTERS + REDIRECTIONS
-static const char _fc_stoppers[] = " \t\"'`;&|><";
-#define FIRST_CHAR_STOPPER (_fc_stoppers)
+static const char fc_stoppers[] = " \t\"'`;&|><";
+#define FIRST_CHAR_STOPPER (fc_stoppers)
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -191,24 +191,24 @@ static const char _fc_stoppers[] = " \t\"'`;&|><";
 
 //////////////////////////////////////////////////////////
 
-static inline bool _loop_while_spaces(const char *input, size_t *i)
+static inline bool loop_while_spaces(const char *input, size_t *i)
 {
     return (my_loop_in_str_while_list_c(input, SPACES, i));
 }
 
 #define LOOP_SPACES(input, address_of_index) \
-            (_loop_while_spaces(input, address_of_index))
+            (loop_while_spaces(input, address_of_index))
 //////////////////////////////////////////////////////////
 
-static inline bool _is_char_spaces(const char c)
+static inline bool is_char_spaces(const char c)
 {
     return (my_is_char_in_str(SPACES, c));
 }
 
-#define IS_CHAR_SPACES(c) (_is_char_spaces(c))
+#define IS_CHAR_SPACES(c) (is_char_spaces(c))
 //////////////////////////////////////////////////////////
 
-static inline char _is_char_arg_quote(const char c)
+static inline char is_char_arg_quote(const char c)
 {
     char match = '\0';
     size_t i = 0;
@@ -220,31 +220,31 @@ static inline char _is_char_arg_quote(const char c)
     return (match);
 }
 
-#define IS_CHAR_ARGUMENT_QUOTES(c) (_is_char_arg_quote(c))
+#define IS_CHAR_ARGUMENT_QUOTES(c) (is_char_arg_quote(c))
 //////////////////////////////////////////////////////////
 
-static inline bool _is_char_splitter(const char c)
+static inline bool is_char_splitter(const char c)
 {
     return (my_is_char_in_str(FIRST_CHAR_SPLITTER, c));
 }
 
-#define IS_CHAR_SPLITTER(c) (_is_char_splitter(c))
+#define IS_CHAR_SPLITTER(c) (is_char_splitter(c))
 //////////////////////////////////////////////////////////
 
-static inline bool _is_char_redirection(const char c)
+static inline bool is_char_redirection(const char c)
 {
     return (my_is_char_in_str(FIRST_CHAR_REDIRECTION, c));
 }
 
-#define IS_CHAR_REDIRECTION(c) (_is_char_redirection(c))
+#define IS_CHAR_REDIRECTION(c) (is_char_redirection(c))
 //////////////////////////////////////////////////////////
 
-static inline bool _is_char_stopper(const char c)
+static inline bool is_char_stopper(const char c)
 {
     return (my_is_char_in_str(FIRST_CHAR_STOPPER, c));
 }
 
-#define IS_CHAR_STOPPER(c) (_is_char_stopper(c))
+#define IS_CHAR_STOPPER(c) (is_char_stopper(c))
 //////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
@@ -276,11 +276,9 @@ typedef struct command_list {
     struct command_list *prev;
 } cmd_list_t;
 
-//Each node is made by splitting the input with splitters,
-//Holds a boolean to remember if a process is in background.
+//Each node is made by splitting the input with splitters.
 typedef struct parse_list {
     cmd_list_t *cmd_list;
-    bool in_bg;
     splitter_type_t splitter;
     struct parse_list *next;
     struct parse_list *prev;
@@ -556,12 +554,12 @@ static const char _variable_stoppers[] = "/ \t";
 
 //////////////////////////////////////////////////////////
 
-static inline bool _is_char_variable_stopper(const char c)
+static inline bool is_char_variable_stopper(const char c)
 {
     return ((c == '\0') | (my_is_char_in_str(VAR_STOPPERS, c)));
 }
 
-#define IS_CHAR_VAR_STOPPER(c) (_is_char_variable_stopper(c))
+#define IS_CHAR_VAR_STOPPER(c) (is_char_variable_stopper(c))
 //////////////////////////////////////////////////////////
 
 #define GET_SIZE_REPLACED(str, i, size_call, size_replace) \
