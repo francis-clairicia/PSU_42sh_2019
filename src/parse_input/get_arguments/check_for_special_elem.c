@@ -13,6 +13,7 @@ void check_for_splitter_elem(bool *found_arg, parse_list_t **head,
     if (!(*found_arg) && IS_CHAR_SPLITTER(indic->input[indic->i])) {
         if (get_splitter(head, indic, error)) {
             (*found_arg) = true;
+            indic->last_cmd_alias = NULL;
         }
     }
 }

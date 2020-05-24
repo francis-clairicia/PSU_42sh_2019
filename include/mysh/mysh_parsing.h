@@ -303,6 +303,7 @@ typedef struct indicator_s {
     size_t i;
     bool separator;
     size_t last_quotation;
+    cmd_list_t *last_cmd_alias;
 } indicator_t;
 
 //////////////////////////////////
@@ -322,6 +323,8 @@ bool check_unmatched_chars(const char *cmd, parse_error_t *error);
 ///////////////////////
 #include "mysh_shell.h"
 ///////////////////////
+
+#define LAST_CMD(parse_list) ((*parse_list)->prev->cmd_list)
 
 // Parses an input into a parse_list_t *list.
 parse_list_t *parse_input(shell_t *shell, const char *input,
@@ -463,6 +466,10 @@ void check_for_splitter_elem(bool *found_arg, parse_list_t **head,
 //redirection.
 void check_for_redirection_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
                                 indicator_t *indic, parse_error_t *error);
+
+//Checks if the last argument contains aliases.
+void check_for_alias(shell_t *shell, cmd_list_t **cmd,
+                    cmd_list_t **last_cmd);
 
 //Checks for MISSING_NAME_REDIRECT and INVALID_NULL_COMMAND errors.
 void check_redir_file_set(const cmd_list_t *cur_cmd, parse_error_t *error,
