@@ -85,21 +85,29 @@ SRC_SHELL			=	src/shell_struct/init_shell.c									\
 						src/shell_struct/destroy_shell.c								\
 						src/shell_struct/default_variables/path.c						\
 
-SRC_TERM_DRIVER		=	src/terminal_driver/control_line/arrows/down.c					\
+SRC_TERM_DRIVER		=	src/terminal_driver/auto_completion/find_completion.c			\
+						src/terminal_driver/auto_completion/free_completion.c			\
+						src/terminal_driver/auto_completion/process_file_completion.c	\
+						src/terminal_driver/auto_completion/process_history_completion.c\
+						src/terminal_driver/control_line/arrows/down.c					\
 						src/terminal_driver/control_line/arrows/left.c					\
 						src/terminal_driver/control_line/arrows/right.c					\
 						src/terminal_driver/control_line/arrows/up.c					\
-						src/terminal_driver/control_line/process_ctrl_keys.c			\
+						src/terminal_driver/control_line/ctrl/cbackspace.c				\
+						src/terminal_driver/control_line/ctrl/c.c						\
+						src/terminal_driver/control_line/ctrl/d.c						\
+						src/terminal_driver/control_line/ctrl/q.c						\
+						src/terminal_driver/control_line/single_keys/backspace.c		\
+						src/terminal_driver/control_line/single_keys/enter.c			\
+						src/terminal_driver/control_line/single_keys/tab.c				\
 						src/terminal_driver/control_line/reset_line.c					\
 						src/terminal_driver/control_line/shift_line.c					\
-						src/terminal_driver/control_line/special_keys.c					\
 						src/terminal_driver/init/init_term_driver.c						\
 						src/terminal_driver/process/process_keys.c						\
 						src/terminal_driver/die.c										\
 						src/terminal_driver/get_term_line.c								\
 
 SRC					=	$(SRC_CORE)														\
-						$(SRC_AUTO_COMPLETION)											\
 						$(SRC_BUILTIN)													\
 						$(SRC_DCLL)														\
 						$(SRC_ENV)														\

@@ -23,6 +23,7 @@
 #include "mysh_shell.h"
 #include "dcll.h"
 #include "keys.h"
+#include "auto_completion.h"
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
@@ -58,12 +59,24 @@ void process_key(line_t *line);
 //Prints given error message and exits the program
 void die(char *str);
 
+//Main function of termios module
+//Loops until got Enter-key, ctrl-Q or even ctrl-D
+//Keeps reading input and handles it
 char *get_term_line(shell_t *shell);
 
+//Move cursor left size time
 void reset_line(int size);
 
+//Sets all next chars in range of size to blank and
+//returns back to the origin point
 void refresh_line(int size);
 
 void shift_line_right(line_t *line, int key);
 
+void shift_line_left(line_t *line);
+
+bool completion_by_files(line_t *line, char *to_complete,
+                                        int to_complete_size);
+bool completion_by_history(line_t *line, char *to_complete,
+                                        int to_complete_size);
 #endif /* !TERMINAL_DRIVER_H_ */
