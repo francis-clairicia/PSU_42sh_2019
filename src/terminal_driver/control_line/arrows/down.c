@@ -38,9 +38,11 @@ void process_arrow_down(line_t *line)
 
     if (!load_history_node(line))
         return;
-    if (line->hist_node)
+    if (line->hist_node) {
         new_cmd = NODE_DATA(line->hist_node, char *);
-    clear_line(line, line->hist_node);
+        clear_line(line, line->hist_node->previous);
+    } else
+       clear_line(line, line->hist_node);
     if (new_cmd)
         printf(new_cmd);
     fflush(stdout);
