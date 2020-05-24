@@ -40,7 +40,7 @@ static void update_history_completion(line_t *line, char *historic_cmd,
     }
 }
 
-static void completion_by_history(line_t *line, char *to_complete,
+static bool completion_by_history(line_t *line, char *to_complete,
                                                 int to_complete_size)
 {
     node_t *node = line->history.start;
@@ -52,19 +52,25 @@ static void completion_by_history(line_t *line, char *to_complete,
             !my_str_eq_str_n(historic_cmd, to_complete, to_complete_size))
             continue;
         update_history_completion(line, historic_cmd, to_complete_size);
-        break;
+        return (true);
     }
+    return (false);
 }
 
 void process_tabulation(line_t *line)
 {
     char *to_complete = NULL;
     int to_complete_size = 0;
+    int index_save = 0;
 
     if (!line)
         return;
+    index_save = line->index;
     to_complete = get_word_to_complete(line, &to_complete_size);
-    if (!to_complete)
+    if (!to_complete) {
+        line->index = index_save;
         return;
-    completion_by_history(line, to_complete, to_complete_size);
+    }
+    if (!completion_by_history(line, to_complete, to_complete_size))
+        line->index = index_save;
 }
