@@ -25,8 +25,10 @@ static bool set_splitter_alterations(parse_list_t **head,
     if (!((*head)->cmd_list->args) || is_char_splitter(c))
         return (true);
     (*head)->prev->splitter = splitter_type;
-    add_parsed_list_node(head);
-    add_cmd_list_node(&((*head)->prev->cmd_list));
+    if (c) {
+        add_parsed_list_node(head);
+        add_cmd_list_node(&((*head)->prev->cmd_list));
+    }
     return (true);
 }
 
