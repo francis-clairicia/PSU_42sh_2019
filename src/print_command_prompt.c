@@ -52,5 +52,6 @@ void print_command_prompt(char const *cwd, char * const *envp)
     if (print_user(envp))
         my_putchar(' ');
     print_current_directory(cwd, envp);
+    print_git_branch(cwd);
     my_putstr("]$ ");
 }

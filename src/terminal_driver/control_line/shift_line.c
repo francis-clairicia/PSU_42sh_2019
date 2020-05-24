@@ -34,7 +34,7 @@ void shift_line_right(line_t *line, int key)
     strncpy(line->buffer + line->index + 1, cpy_buff,
                                                 LINE_SIZE - line->index - 1);
     line->buffer[line->index] = key;
-    printf(line->buffer + line->index);
+    my_putstr(line->buffer + line->index);
     size = my_strlen(line->buffer + line->index);
     if (size > 1)
         printf("\x1b[%dD", size - 1);

@@ -9,6 +9,7 @@ SRC_MAIN			=	src/main.c														\
 						src/mysh.c														\
 
 SRC_CORE 			=	src/print_command_prompt.c										\
+						src/print_git_branch.c											\
 						src/sigint_handler.c											\
 
 SRC_AUTO_COMPLETION	=	src/auto_completion/find_completion.c							\
