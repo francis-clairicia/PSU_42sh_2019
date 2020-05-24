@@ -34,6 +34,8 @@ void check_for_alias(shell_t *shell, cmd_list_t **cmd,
         *last_cmd = (*cmd);
     else if (*last_cmd == (*cmd))
         return;
+    if (!(*last_cmd))
+        return;
     for (tmp = shell->alias_list; tmp; tmp = tmp->next) {
         if (!my_strcmp((*cmd)->args->arg, tmp->alias)) {
             apply_alias(&(*cmd)->args, tmp->cmd);

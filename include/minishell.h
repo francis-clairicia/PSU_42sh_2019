@@ -40,6 +40,7 @@ int eval_exec_cmd(char const *command_line, shell_t *shell);
 int exec_shell_commands(command_t commands[], shell_t *shell);
 int exec_piped_commands(cmd_list_t *cmd_list, shell_t *shell);
 void print_command_prompt(char const *cwd, char * const *envp);
+void print_git_branch(char const *cwd);
 char *get_path_to_executable(char const *binary, char * const *path_list);
 char *join_path(char const *path_1, char const *path_2);
 char *find_binary_in_path(char const *binary, char * const *path_list);

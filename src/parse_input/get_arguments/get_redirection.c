@@ -61,8 +61,10 @@ static void apply_redir_to_last_arg(cmd_list_t **head, indicator_t *indic,
     LOOP_SPACES(indic->input, &indic->i);
     c = indic->input[indic->i];
     check_redir_file_set((*head)->prev, error, redir_type, c);
-    if (!(*error) && (redir_type & PIPE))
+    if (!(*error) && (redir_type & PIPE)) {
         add_cmd_list_node(head);
+        indic->last_cmd_alias = NULL;
+    }
 }
 
 void get_redirection(cmd_list_t **head, indicator_t *indic,
