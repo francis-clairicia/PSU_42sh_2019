@@ -16,7 +16,7 @@ bool change_dir_through_home(shell_t *shell, char const *arg)
 
     home_var = get_var_env(shell->envp, "HOME");
     if (!home_var) {
-        my_putstr_error("No $home variable set.\n");
+        my_putstr_error("No $HOME variable set.\n");
         return (false);
     }
     tmp_arg = my_strcat_malloc(home_var, (char *)&arg[1], 0, 0);
