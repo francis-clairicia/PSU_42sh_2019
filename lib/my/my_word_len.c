@@ -15,6 +15,6 @@ int my_word_len(char const *word)
         return (0);
     for (; word[index] != ' ' &&
         word[index] != '\t' &&
-        word[index]; index +=1);
+        word[index]; index += 1);
     return (index);
 }

@@ -20,8 +20,8 @@ static char *get_word_to_complete(line_t *line, int *size, bool *is_hist)
             line->index = tmp_index;
             *is_hist = true;
             return (line->buffer + tmp_index + 1);
-        } else if (tmp_index == 0 ||
-            line->buffer[tmp_index - 1] == ' ' || line->buffer[tmp_index - 1] == '\t') {
+        } else if (tmp_index == 0 || line->buffer[tmp_index - 1] == ' ' ||
+            line->buffer[tmp_index - 1] == '\t') {
             *size = line->index - tmp_index;
             line->index = tmp_index;
             return (line->buffer + tmp_index);

@@ -9,6 +9,7 @@
 #include "mysh_shell.h"
 
 int kill(pid_t pid, int sig);
+
 int killpg(int pgrp, int sig);
 
 static char *add_redirection(char *cmd, cmd_list_t *cmd_list)
