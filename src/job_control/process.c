@@ -68,6 +68,8 @@ process_t *init_process_struct(pid_t pid, cmd_list_t *cmd_list)
         my_memset(process, 0, sizeof(*process));
         process->pid = pid;
         process->cmd = get_cmd(cmd_list);
+        process->running = true;
+        process->checked = false;
     }
     return (process);
 }
