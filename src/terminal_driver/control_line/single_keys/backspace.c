@@ -7,8 +7,6 @@
 
 #include "terminal_driver.h"
 
-void shift_line_left(line_t *line);
-
 void process_backspace(line_t *line)
 {
     if (!line)
