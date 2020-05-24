@@ -146,6 +146,7 @@ typedef struct parse_list {
 #define WAS_UNQUOTED (1)
 #define WAS_SINGLE (2)
 #define WAS_DOUBLE (3)
+#define WAS_MAGIC (4)
 
 typedef struct indicator_s {
     const char *input;
@@ -279,6 +280,8 @@ void get_quoted_arg(cmd_list_t **head, indicator_t *indic);
 //Increases index to the new arg/splitter/space/end of input.
 void get_unquoted_arg(cmd_list_t **head, indicator_t *indic);
 
+void get_magic_quotes(shell_t *shell, cmd_list_t **head, indicator_t *indic);
+
 //Gets a splitter, adds a new-last node to the parsed_input list,
 //sets it the newly-found splitter.
 //
@@ -293,16 +296,23 @@ bool get_splitter(parse_list_t **head, indicator_t *indic,
 void get_redirection(cmd_list_t **head, indicator_t *indic,
                     error_parse_t *error);
 
-bool check_for_backtick_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+//Get argument from the output of a command which was between magic quotes
+void get_args_from_output(arguments_t **args, char const *command_line,
+    shell_t *shell);
+
+void check_for_backtick_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
                             indicator_t *indic);
 
-bool check_for_splitter_elem(bool *found_arg, parse_list_t **head,
+void check_for_splitter_elem(bool *found_arg, parse_list_t **head,
                             indicator_t *indic, error_parse_t *error);
 
-bool check_for_redirection_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+void check_for_redirection_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
                                 indicator_t *indic, error_parse_t *error);
 
-void check_for_unquoted_elem(const bool found_arg, cmd_list_t **cur_cmd_list,
+void check_for_magic_quotes(bool *found_arg, shell_t *shell,
+                        cmd_list_t **cur_cmd_list, indicator_t *indic);
+
+void check_for_unquoted_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
                             indicator_t *indic);
 
 void check_redir_file_set(const cmd_list_t *cur_cmd,

@@ -31,7 +31,7 @@ char *get_path_to_executable(char const *binary, char * const *path_list)
 {
     char *filepath = NULL;
 
-    if (my_strchr_index(binary, '/') >= 0) {
+    if (my_strlen(binary) == 0 || my_strchr_index(binary, '/') >= 0) {
         if (!check_access(binary))
             return (NULL);
         return (my_strdup(binary));

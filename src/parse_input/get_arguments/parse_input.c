@@ -31,11 +31,14 @@ static bool parse_each_argument(parse_list_t **head, indicator_t *indic,
     check_for_backtick_elem(&found_arg, cur_cmd_list, indic);
     check_for_splitter_elem(&found_arg, head, indic, error);
     check_for_redirection_elem(&found_arg, cur_cmd_list, indic, error);
-    check_for_unquoted_elem(found_arg, cur_cmd_list, indic);
-    if ((*error) == NONE && indic->last_quotation != WAS_SINGLE)
+    check_for_unquoted_elem(&found_arg, cur_cmd_list, indic);
+    if ((*error) == NONE && indic->last_quotation != WAS_SINGLE
+        && indic->last_quotation != WAS_MAGIC)
         apply_vars_to_last_elem((*head)->prev, shell, error);
-    if ((*error) == NONE && indic->last_quotation == WAS_UNQUOTED)
+    if ((*error) == NONE && indic->last_quotation == WAS_UNQUOTED
+        && indic->last_quotation != WAS_MAGIC)
         apply_wildcards_changes((*head)->prev);
+    check_for_magic_quotes(&found_arg, shell, cur_cmd_list, indic);
     return (true);
 }
 

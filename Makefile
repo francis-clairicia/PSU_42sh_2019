@@ -54,6 +54,7 @@ SRC_PARSE_INPUT		=	src/parse_input/commands/change_fd.c							\
 						src/parse_input/get_arguments/check_and_apply_redir.c			\
 						src/parse_input/get_arguments/check_for_parse_elem.c			\
 						src/parse_input/get_arguments/get_enums.c						\
+						src/parse_input/get_arguments/get_magic_quotes.c				\
 						src/parse_input/get_arguments/get_quoted_arg.c					\
 						src/parse_input/get_arguments/get_redirection.c					\
 						src/parse_input/get_arguments/get_splitter.c					\
@@ -65,6 +66,7 @@ SRC_PARSE_INPUT		=	src/parse_input/commands/change_fd.c							\
 						src/parse_input/list_handling/get_array_from_arg_list.c			\
 						src/parse_input/list_handling/remove_nodes_from_list.c			\
 						src/parse_input/unmatched_handling/check_unmatched_chars.c		\
+						src/parse_input/magic_quote_handling/get_args_from_output.c		\
 						src/parse_input/variable_handling/add_var_to_var_list.c			\
 						src/parse_input/variable_handling/apply_vars_to_last_elem.c		\
 						src/parse_input/variable_handling/free_var_list.c				\
@@ -84,6 +86,7 @@ SRC_TERM_DRIVER		=	src/terminal_driver/control_line/arrows/down.c					\
 						src/terminal_driver/control_line/arrows/right.c					\
 						src/terminal_driver/control_line/arrows/up.c					\
 						src/terminal_driver/control_line/process_ctrl_keys.c			\
+						src/terminal_driver/control_line/reset_line.c					\
 						src/terminal_driver/control_line/shift_line.c					\
 						src/terminal_driver/control_line/special_keys.c					\
 						src/terminal_driver/init/init_term_driver.c						\
