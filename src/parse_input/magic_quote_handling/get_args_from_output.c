@@ -42,8 +42,9 @@ static void set_arguments_to_list(arguments_t **args_list, char **args_array)
     free(args_array);
 }
 
-static void set_empty_args(arguments_t **args)
+static void set_empty_args(arguments_t **args, char **array)
 {
+    my_free_array(array);
     if (*args)
         return;
     add_arg_list_node(args);
@@ -63,7 +64,7 @@ void get_args_from_output(arguments_t **args, char const *command_line,
     if (!args || !command_line)
         return;
     if (!command_line[0])
-        return (set_empty_args(args));
+        return (set_empty_args(args, array_args));
     if (pipe(pipefd) == -1)
         return;
     array_args = run_command(command_line, pipefd, &child_pid, shell);
@@ -71,5 +72,5 @@ void get_args_from_output(arguments_t **args, char const *command_line,
     if (array_args && WIFEXITED(wstatus) && WEXITSTATUS(wstatus) != 1)
         set_arguments_to_list(args, array_args);
     else
-        my_free_array(array_args);
+        set_empty_args(args, array_args);
 }

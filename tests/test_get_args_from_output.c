@@ -34,7 +34,10 @@ Test(get_args_from_output, do_not_put_arg_with_exit)
     shell_t *shell = init_shell_struct(NULL);
 
     get_args_from_output(&args, "exit", shell);
-    cr_expect_null(args);
+    cr_expect_not_null(args);
+    if (args)
+        cr_expect_str_empty(args->arg);
+    free_args_list(args);
     destroy_shell_struct(shell);
 }
 
@@ -45,7 +48,10 @@ Test(get_args_from_output, do_not_put_arg_on_error)
 
     cr_redirect_stderr();
     get_args_from_output(&args, "ls the_unknown_file_or_dir", shell);
-    cr_expect_null(args);
+    cr_expect_not_null(args);
+    if (args)
+        cr_expect_str_empty(args->arg);
+    free_args_list(args);
     cr_expect_stderr_eq_str("ls: cannot access 'the_unknown_file_or_dir': "
         "No such file or directory\n");
     destroy_shell_struct(shell);
