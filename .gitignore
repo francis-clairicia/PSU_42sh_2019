@@ -6,6 +6,7 @@ __pycache__
 
 # Dump Binaries
 a.out
+boucle_inf
 42sh
 unit_tests
 coverage

@@ -45,7 +45,7 @@ static int exec_command(cmd_list_t *cmd_list, shell_t *shell, bool background)
     if (process) {
         my_append_to_list(&(shell->process), process, process_t *);
         process->index = shell->process.size;
-        my_printf("[%d] %d\n", process->index, process->pid);
+        my_printf("[%lu] %d\n", process->index, process->pid);
     }
     return (0);
 }

@@ -18,13 +18,15 @@ void destroy_alias_node(alias_t **node)
 
 void destroy_every_alias(alias_t **alias_list)
 {
-    alias_t *temp_list;
+    alias_t *temp_list = NULL;
 
-    for (; *alias_list; *alias_list = (*alias_list)->next) {
+    if (!alias_list)
+        return;
+    while (*alias_list) {
         temp_list = *alias_list;
+        *alias_list = (*alias_list)->next;
         destroy_alias_node(&temp_list);
     }
-    *alias_list = NULL;
 }
 
 void delete_alias(char * const *av, alias_t **alias_l)
