@@ -42,7 +42,7 @@ void process_arrow_down(line_t *line)
         new_cmd = NODE_DATA(line->hist_node, char *);
         clear_line(line, line->hist_node->previous);
     } else
-       clear_line(line, line->hist_node);
+        clear_line(line, line->hist_node);
     if (new_cmd)
         printf(new_cmd);
     fflush(stdout);
