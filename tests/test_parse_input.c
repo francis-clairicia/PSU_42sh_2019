@@ -22,9 +22,9 @@ Test(parse_input, easy_input)
     shell_t *shell = init_shell_struct(NULL);
     parse_list_t *list = NULL;
     const char input[] = "ls -a";
-    error_parse_t error = NONE;
+    parse_error_t error = NONE;
 
-    list = parse_input(input, shell, &error);
+    list = parse_input(shell, input, &error);
     cr_expect_not_null(list);
     if (list) {
         cr_expect_eq(my_strcmp(list->cmd_list->args->arg, "ls"), 0);
@@ -42,9 +42,9 @@ Test(parse_input, hard_input)
     parse_list_t *list = NULL;
     const char input[] = "ls \"-a\"|\t cat '-e' > 'txt'\"a\"";
     shell_t *shell = init_shell_struct(NULL);
-    error_parse_t error = NONE;
+    parse_error_t error = NONE;
 
-    list = parse_input(input, shell, &error);
+    list = parse_input(shell, input, &error);
     cr_expect_not_null(list);
     if (list) {
         cr_expect_eq(my_strcmp(list->cmd_list->args->arg, "ls"), 0);

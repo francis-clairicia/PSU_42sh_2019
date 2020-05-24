@@ -13,8 +13,8 @@ static bool shift_to_next_arg(const splitter_type_t splitter_type,
 {
     if (splitter_type == 0)
         return (false);
-    indic->i += my_strlen(splitters[splitter_type - 1]);
-    loop_while_spaces(indic->input, &indic->i);
+    indic->i += my_strlen(SPLITTERS_ARRAY[splitter_type - 1]);
+    LOOP_SPACES(indic->input, &indic->i);
     return (true);
 }
 
@@ -22,7 +22,7 @@ static bool set_splitter_alterations(parse_list_t **head,
                                     const splitter_type_t splitter_type,
                                     const char c)
 {
-    if (!((*head)->cmd_list->args) || is_char_splitter(c))
+    if (!((*head)->cmd_list->args) || IS_CHAR_SPLITTER(c))
         return (true);
     (*head)->prev->splitter = splitter_type;
     if (c) {
@@ -33,17 +33,17 @@ static bool set_splitter_alterations(parse_list_t **head,
 }
 
 static bool inv_null_checker(parse_list_t *cur_node,
-                            error_parse_t *error,
+                            parse_error_t *error,
                             const splitter_type_t splitter_type,
                             const char c)
 {
     if ((splitter_type == OR && (!cur_node->cmd_list
-        || !cur_node->cmd_list->args || !c || is_char_splitter(c)))) {
+        || !cur_node->cmd_list->args || !c || IS_CHAR_SPLITTER(c)))) {
         *error = INVALID_NULL_COMMAND;
         return (true);
     }
     if ((splitter_type == AND && cur_node->cmd_list
-        && cur_node->cmd_list->args && (!c || is_char_splitter(c)))) {
+        && cur_node->cmd_list->args && (!c || IS_CHAR_SPLITTER(c)))) {
         *error = INVALID_NULL_COMMAND;
         return (true);
     }
@@ -51,7 +51,7 @@ static bool inv_null_checker(parse_list_t *cur_node,
 }
 
 bool get_splitter(parse_list_t **head, indicator_t *indic,
-                    error_parse_t *error)
+                    parse_error_t *error)
 {
     splitter_type_t splitter_type = NONE;
     int size = 0;

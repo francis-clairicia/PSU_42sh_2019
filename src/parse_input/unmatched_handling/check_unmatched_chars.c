@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include "mysh_parsing.h"
 
-static void set_error_char_val(error_parse_t *error, const char c)
+static void set_error_char_val(parse_error_t *error, const char c)
 {
     switch (c) {
         case ('\''):
@@ -18,13 +18,13 @@ static void set_error_char_val(error_parse_t *error, const char c)
         case ('"'):
             (*error) = UNMATCHED_DOUBLE;
             break;
-        case ('`'):
+        case (MAGIC_QUOTE_CHAR):
             (*error) = UNMATCHED_MAGIC;
             break;
     }
 }
 
-static void shift_to_next_match(const char *cmd, error_parse_t *error,
+static void shift_to_next_match(const char *cmd, parse_error_t *error,
                                 const char c, size_t *index)
 {
     set_error_char_val(error, c);
@@ -38,26 +38,26 @@ static void shift_to_next_match(const char *cmd, error_parse_t *error,
     }
 }
 
-static void compare_with_quotes(const char *cmd, const char *quotes,
-                                    error_parse_t *error, size_t *index)
+static void compare_with_quotes(const char *cmd, const char *all_to_match_chars,
+                                parse_error_t *error, size_t *index)
 {
     size_t i = 0;
 
-    for (; quotes[i] && *error == NONE; i += 1) {
-        if (cmd[*index] == quotes[i])
-            shift_to_next_match(cmd, error, quotes[i], index);
+    for (; all_to_match_chars[i] && *error == NONE; i += 1) {
+        if (cmd[*index] == all_to_match_chars[i])
+            shift_to_next_match(cmd, error, all_to_match_chars[i], index);
     }
 }
 
-bool check_unmatched_chars(const char *cmd, error_parse_t *error)
+bool check_unmatched_chars(const char *cmd, parse_error_t *error)
 {
-    const char quotes[] = "'\"`";
+    const char all_to_match_chars[] = "'\"`";
     size_t index = 0;
 
     if (!cmd)
         return (false);
     for (; cmd[index] && (*error) == NONE; index += 1) {
-        compare_with_quotes(cmd, quotes, error, &index);
+        compare_with_quotes(cmd, all_to_match_chars, error, &index);
     }
     return ((*error) == NONE) ? true : false;
 }

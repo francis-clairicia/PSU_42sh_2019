@@ -7,7 +7,7 @@
 
 #include "mysh_parsing.h"
 
-void set_redir_type(cmd_list_t **head, error_parse_t *error,
+void set_redir_type(cmd_list_t **head, parse_error_t *error,
                     const redirection_type_t redir_type)
 {
     if (IS_INPUT(redir_type)) {
@@ -24,7 +24,7 @@ void set_redir_type(cmd_list_t **head, error_parse_t *error,
     }
 }
 
-void check_redir_file_set(const cmd_list_t *cmd, error_parse_t *error,
+void check_redir_file_set(const cmd_list_t *cmd, parse_error_t *error,
                         const redirection_type_t redir_type,
                         const char c)
 {
@@ -35,9 +35,9 @@ void check_redir_file_set(const cmd_list_t *cmd, error_parse_t *error,
             return;
         }
     }
-    if (((!(cmd->redir_output_type & PIPE) && !cmd->args && !c)
+    if (((!(cmd->redir_output_type & PIPE) && !cmd->args && c == '\0')
         || ((cmd->redir_output_type & PIPE)
-        && (!cmd->args || is_char_splitter(c) || !c )))) {
+        && (!cmd->args || IS_CHAR_SPLITTER(c) || c == '\0' )))) {
         *error = INVALID_NULL_COMMAND;
         return;
     }

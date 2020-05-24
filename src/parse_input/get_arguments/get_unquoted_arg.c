@@ -13,7 +13,8 @@ void get_unquoted_arg(cmd_list_t **head, indicator_t *indic)
     char **last_arg = NULL;
     char *tmp = NULL;
 
-    tmp = my_strdup_list_i(&(indic->input[indic->i]), all_splitters, &indic->i);
+    tmp = my_strdup_list_i(&(indic->input[indic->i]),
+                        FIRST_CHAR_STOPPER, &indic->i);
     if (!indic->separator && (*head)->prev->args) {
         last_arg = &((*head)->prev->args->prev->arg);
         *last_arg = my_strcat_malloc(*last_arg, tmp, true, true);

@@ -54,6 +54,7 @@ int my_strstr_index(char const *str, char const *to_find);
 int my_strcmp(char const *s1, char const *s2);
 bool my_mass_strcmp(const char *template, ...);
 int my_strncmp(char const *s1, char const *s2, int n);
+bool my_str_eq_str_n(const char *s1, const char *s2, const size_t n);
 char *my_strupcase(char *str);
 char *my_strlowcase(char *str);
 char *my_strcapitalize(char *str);

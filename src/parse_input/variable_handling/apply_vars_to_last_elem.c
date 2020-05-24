@@ -9,7 +9,7 @@
 #include "mysh_parsing.h"
 #include "minishell.h"
 
-static char *find_variable_value(shell_t *shell, error_parse_t *error,
+static char *find_variable_value(shell_t *shell, parse_error_t *error,
                                 const char *variable)
 {
     char *value = NULL;
@@ -32,7 +32,7 @@ static bool shift_to_next_var(const char *str, size_t *index)
     return (true);
 }
 
-static void get_vars_from_to(shell_t *shell, error_parse_t *error,
+static void get_vars_from_to(shell_t *shell, parse_error_t *error,
                             char **str)
 {
     size_t index = 0;
@@ -58,7 +58,7 @@ static void get_vars_from_to(shell_t *shell, error_parse_t *error,
 }
 
 void apply_vars_to_last_elem(parse_list_t *cur_node, shell_t *shell,
-                            error_parse_t *error)
+                            parse_error_t *error)
 {
     cmd_list_t *last_list = NULL;
 

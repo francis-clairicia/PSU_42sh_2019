@@ -12,7 +12,9 @@ static void add_unquoted_redir(char **redir_name, indicator_t *indic)
 {
     char *tmp = NULL;
 
-    tmp = my_strdup_list_i(&indic->input[indic->i], all_splitters, &indic->i);
+    tmp = my_strdup_list_i(&indic->input[indic->i],
+                            FIRST_CHAR_STOPPER,
+                            &indic->i);
     (*redir_name) = my_strcat_malloc((*redir_name), tmp, 1, 1);
 }
 
@@ -37,26 +39,26 @@ static void redir_file(cmd_list_t **head, indicator_t *indic,
 
     indic->separator = false;
     while (!indic->separator && indic->input[indic->i]
-        && !is_char_redirection(indic->input[indic->i])) {
+        && !IS_CHAR_REDIRECTION(indic->input[indic->i])) {
         redir_name = (IS_INPUT(redir_type) ? redir_input : redir_output);
-        quote = is_char_backtick(indic->input[indic->i]);
+        quote = IS_CHAR_ARGUMENT_QUOTES(indic->input[indic->i]);
         if (quote)
             add_quoted_redir(redir_name, indic, quote);
         else
             add_unquoted_redir(redir_name, indic);
-        indic->separator = loop_while_spaces(indic->input, &indic->i);
+        indic->separator = LOOP_SPACES(indic->input, &indic->i);
     }
 }
 
 static void apply_redir_to_last_arg(cmd_list_t **head, indicator_t *indic,
-                                    error_parse_t *error,
+                                    parse_error_t *error,
                                     const redirection_type_t redir_type)
 {
     char c = '\0';
 
     if (!(redir_type & PIPE))
         redir_file(head, indic, redir_type);
-    loop_while_spaces(indic->input, &indic->i);
+    LOOP_SPACES(indic->input, &indic->i);
     c = indic->input[indic->i];
     check_redir_file_set((*head)->prev, error, redir_type, c);
     if (!(*error) && (redir_type & PIPE))
@@ -64,7 +66,7 @@ static void apply_redir_to_last_arg(cmd_list_t **head, indicator_t *indic,
 }
 
 void get_redirection(cmd_list_t **head, indicator_t *indic,
-                        error_parse_t *error)
+                        parse_error_t *error)
 {
     redirection_type_t redir_type = NONE;
     int size = 0;
@@ -75,7 +77,7 @@ void get_redirection(cmd_list_t **head, indicator_t *indic,
         return;
     }
     indic->i += size;
-    loop_while_spaces(indic->input, &indic->i);
+    LOOP_SPACES(indic->input, &indic->i);
     set_redir_type(head, error, redir_type);
     if (*error != NONE)
         return;

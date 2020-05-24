@@ -12,13 +12,13 @@ Test(is_char_spaces, given_spaces)
 {
     register size_t i = 0;
 
-    while (spaces[i]) {
-        cr_assert(is_char_spaces(spaces[i]));
+    while (SPACES[i]) {
+        cr_assert(IS_CHAR_SPACES(SPACES[i]));
         i += 1;
     }
 }
 
 Test(is_char_spaces, given_others)
 {
-    cr_assert_eq(is_char_spaces('c'), false);
+    cr_assert_eq(IS_CHAR_SPACES('c'), false);
 }

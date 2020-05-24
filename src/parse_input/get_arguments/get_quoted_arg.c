@@ -10,12 +10,12 @@
 
 void get_quoted_arg(cmd_list_t **head, indicator_t *indic)
 {
-    const char backtick = indic->input[indic->i];
+    const char quote = indic->input[indic->i];
     char **last_arg = NULL;
     char *tmp = NULL;
 
     indic->i += 1;
-    tmp = my_strdup_char_i(&(indic->input[indic->i]), backtick, &indic->i);
+    tmp = my_strdup_char_i(&(indic->input[indic->i]), quote, &indic->i);
     if (!indic->separator && (*head)->prev->args) {
         last_arg = &((*head)->prev->args->prev->arg);
         *last_arg = my_strcat_malloc(*last_arg, tmp, true, true);
@@ -24,5 +24,5 @@ void get_quoted_arg(cmd_list_t **head, indicator_t *indic)
         (*head)->prev->args->prev->arg = tmp;
     }
     indic->i += 1;
-    indic->last_quotation = (backtick == '"') ? WAS_DOUBLE : WAS_SINGLE;
+    indic->last_quotation = (quote == '"') ? WAS_DOUBLE : WAS_SINGLE;
 }

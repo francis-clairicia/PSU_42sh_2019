@@ -14,9 +14,9 @@ redirection_type_t get_redirection_enum(const char *restrict shifted_input,
     register size_t index = 0;
     redirection_type_t cur_type = 1;
 
-    while (redirections[index]) {
-        *size = my_strlen(redirections[index]);
-        if (!my_strncmp(shifted_input, redirections[index], *size))
+    while (REDIRECTIONS_ARRAY[index]) {
+        *size = my_strlen(REDIRECTIONS_ARRAY[index]);
+        if (!my_strncmp(shifted_input, REDIRECTIONS_ARRAY[index], *size))
             return (cur_type);
         index += 1;
         cur_type <<= 1;
@@ -29,9 +29,9 @@ splitter_type_t get_splitter_enum(const char *restrict shifted_input,
 {
     splitter_type_t index = 0;
 
-    while (splitters[index]) {
-        *size = my_strlen(splitters[index]);
-        if (!my_strncmp(shifted_input, splitters[index], *size))
+    while (SPLITTERS_ARRAY[index]) {
+        *size = my_strlen(SPLITTERS_ARRAY[index]);
+        if (!my_strncmp(shifted_input, SPLITTERS_ARRAY[index], *size))
             return (index + 1);
         index += 1;
     }
