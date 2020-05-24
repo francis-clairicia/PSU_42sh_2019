@@ -86,10 +86,15 @@ SRC_TERM_DRIVER		=	src/terminal_driver/control_line/arrows/down.c					\
 						src/terminal_driver/control_line/arrows/left.c					\
 						src/terminal_driver/control_line/arrows/right.c					\
 						src/terminal_driver/control_line/arrows/up.c					\
-						src/terminal_driver/control_line/process_ctrl_keys.c			\
+						src/terminal_driver/control_line/ctrl/backspace.c				\
+						src/terminal_driver/control_line/ctrl/c.c						\
+						src/terminal_driver/control_line/ctrl/d.c						\
+						src/terminal_driver/control_line/ctrl/q.c						\
+						src/terminal_driver/control_line/single_keys/backspace.c		\
+						src/terminal_driver/control_line/single_keys/enter.c			\
+						src/terminal_driver/control_line/single_keys/tab.c				\
 						src/terminal_driver/control_line/reset_line.c					\
 						src/terminal_driver/control_line/shift_line.c					\
-						src/terminal_driver/control_line/special_keys.c					\
 						src/terminal_driver/init/init_term_driver.c						\
 						src/terminal_driver/process/process_keys.c						\
 						src/terminal_driver/die.c										\

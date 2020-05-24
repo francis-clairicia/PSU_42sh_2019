@@ -7,54 +7,51 @@
 
 #include "minishell.h"
 
-static void print_process(char const *cmd)
-{
-    if (!cmd)
-        return;
-    my_printf("\t%s", cmd);
-}
-
 static void print_process_status(process_t *process)
 {
     int wstatus = 0;
 
-    waitpid(process->pid, &wstatus, 0);
-    if (WIFEXITED(wstatus)) {
-        if (WEXITSTATUS(wstatus) == 0)
-            my_putstr("Done");
-        else
-            my_printf("Exit %d", WEXITSTATUS(wstatus));
+    if (process->running) {
+        if (__getpgid(process->pid) < 0)
+            process->running = false;
+        return;
     }
-    if (WIFSIGNALED(wstatus))
-        print_signal(WTERMSIG(wstatus), false, false);
-    print_process(process->cmd);
-    if (WIFSIGNALED(wstatus) && WCOREDUMP(wstatus))
-        my_putstr(" (core dumped)");
-    my_putchar('\n');
+    waitpid(process->pid, &wstatus, 0);
+    my_printf("[%lu]\t", process->index);
+    if (WEXITSTATUS(wstatus) == 0)
+        my_putstr("Done");
+    else if (WEXITSTATUS(wstatus) > 127)
+        print_signal(WEXITSTATUS(wstatus) - 127, false, false);
+    else
+        my_printf("Exit %d", WEXITSTATUS(wstatus));
+    my_printf("\t%s\n", process->cmd);
+    process->checked = true;
 }
 
-static void check_process_status(node_t *node, list_t *node_to_delete)
+static void check_process_status(list_t *process_list, node_t **node,
+    list_t *node_to_delete)
 {
-    process_t *process = NODE_DATA_PTR(node, process_t);
+    node_t *actual = *node;
+    process_t *process = NODE_DATA(actual, process_t *);
 
-    if (__getpgid(process->pid) >= 0)
-        return;
-    my_printf("[%lu]\t", node->index);
-    print_process_status(process);
-    my_put_in_list(node_to_delete, node, node_t *);
+    *node = (*node)->next;
+    if (process->checked) {
+        my_remove_node(process_list, actual);
+        my_insert_node(node_to_delete, actual, -1, 0);
+    }
 }
 
 void check_background_process(shell_t *shell)
 {
+    node_t *node = NULL;
     list_t node_to_delete = my_list();
 
     if (!shell)
         return;
-    for (node_t *node = shell->process.start; node; node = node->next) {
-        check_process_status(node, &node_to_delete);
-    }
-    for (node_t *node = node_to_delete.start; node; node = node->next) {
-        my_delete_node(&(shell->process), NODE_DATA(node, node_t *), NULL);
-    }
-    my_free_list(&node_to_delete, NULL);
+    for (node = shell->process.start; node; node = node->next)
+        print_process_status(NODE_DATA(node, process_t *));
+    node = shell->process.start;
+    while (node)
+        check_process_status(&shell->process, &node, &node_to_delete);
+    my_free_list(&node_to_delete, &destroy_process_struct);
 }

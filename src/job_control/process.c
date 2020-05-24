@@ -5,7 +5,10 @@
 ** process.c
 */
 
+#include <signal.h>
 #include "mysh_shell.h"
+
+int kill(pid_t pid, int sig);
 
 static char *add_redirection(char *cmd, cmd_list_t *cmd_list)
 {
@@ -68,6 +71,8 @@ process_t *init_process_struct(pid_t pid, cmd_list_t *cmd_list)
         my_memset(process, 0, sizeof(*process));
         process->pid = pid;
         process->cmd = get_cmd(cmd_list);
+        process->running = true;
+        process->checked = false;
     }
     return (process);
 }
@@ -77,5 +82,7 @@ void destroy_process_struct(process_t *process)
     if (!process)
         return;
     free(process->cmd);
+    if (process->running)
+        kill(process->pid, SIGKILL);
     free(process);
 }
