@@ -62,5 +62,5 @@ int unalias_builtin_command(char * const *av, shell_t *shell)
     if (ac >= 2) {
         delete_alias(av, &shell->alias_list);
     }
-    return (set_exit_status(shell, 1));
+    return (set_exit_status(shell, 0));
 }
