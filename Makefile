@@ -53,6 +53,7 @@ SRC_PARSE_INPUT		=	src/parse_input/commands/change_fd.c							\
 						src/parse_input/commands/parse_cmd_list.c						\
 						src/parse_input/file_handling/split_info_from_str.c				\
 						src/parse_input/get_arguments/check_and_apply_redir.c			\
+						src/parse_input/get_arguments/check_for_alias.c					\
 						src/parse_input/get_arguments/check_for_arg_elem.c				\
 						src/parse_input/get_arguments/check_for_special_elem.c			\
 						src/parse_input/get_arguments/get_enums.c						\

@@ -34,17 +34,17 @@ static void apply_last_elem_changes(parse_list_t **head, indicator_t *indic,
 static bool parse_each_argument(parse_list_t **head, indicator_t *indic,
                                 shell_t *shell, parse_error_t *error)
 {
-    cmd_list_t **cur_cmd_list = &(*head)->prev->cmd_list;
     bool found_arg = false;
 
     if (!set_separator(indic))
         return (false);
-    check_for_quoted_elem(&found_arg, cur_cmd_list, indic);
+    check_for_quoted_elem(&found_arg, &LAST_CMD(head), indic);
     check_for_splitter_elem(&found_arg, head, indic, error);
-    check_for_redirection_elem(&found_arg, cur_cmd_list, indic, error);
-    check_for_unquoted_elem(&found_arg, cur_cmd_list, indic);
+    check_for_redirection_elem(&found_arg, &LAST_CMD(head), indic, error);
+    check_for_unquoted_elem(&found_arg, &LAST_CMD(head), indic);
+    check_for_alias(shell, &LAST_CMD(head), &indic->last_cmd_alias);
     apply_last_elem_changes(head, indic, shell, error);
-    check_for_magic_quotes(&found_arg, shell, cur_cmd_list, indic);
+    check_for_magic_quotes(&found_arg, shell, &LAST_CMD(head), indic);
     return (true);
 }
 
