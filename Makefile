@@ -64,7 +64,7 @@ SRC_PARSE_INPUT		=	src/parse_input/commands/change_fd.c							\
 						src/parse_input/list_handling/free_parsed_input.c				\
 						src/parse_input/list_handling/get_array_from_arg_list.c			\
 						src/parse_input/list_handling/remove_nodes_from_list.c			\
-						src/parse_input/unmatched_handling/check_unmatched_backticks.c	\
+						src/parse_input/unmatched_handling/check_unmatched_chars.c		\
 						src/parse_input/variable_handling/add_var_to_var_list.c			\
 						src/parse_input/variable_handling/apply_vars_to_last_elem.c		\
 						src/parse_input/variable_handling/free_var_list.c				\

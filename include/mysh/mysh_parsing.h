@@ -169,6 +169,7 @@ typedef enum error_parse {
     UNDEFINED_VARIABLE,
     UNMATCHED_SINGLE,
     UNMATCHED_DOUBLE,
+    UNMATCHED_MAGIC,
 } error_parse_t;
 
 static const char *parsing_errors[] = {
@@ -180,6 +181,7 @@ static const char *parsing_errors[] = {
     "Undefined variable.\n",
     "Unmatched '''.\n",
     "Unmatched '\"'.\n",
+    "Unmatched '`'.\n",
 };
 
 static inline void print_parsing_error(const error_parse_t error)
@@ -193,7 +195,7 @@ static inline void print_parsing_error(const error_parse_t error)
 //
 //Returns True (1) if not.
 //Returns False (0) otherwise.
-bool check_unmatched_backticks(const char *cmd, error_parse_t *error);
+bool check_unmatched_chars(const char *cmd, error_parse_t *error);
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -291,13 +293,17 @@ bool get_splitter(parse_list_t **head, indicator_t *indic,
 void get_redirection(cmd_list_t **head, indicator_t *indic,
                     error_parse_t *error);
 
-bool check_for_backtick_elem(cmd_list_t **cur_cmd_list, indicator_t *indic);
+bool check_for_backtick_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+                            indicator_t *indic);
 
-bool check_for_splitter_elem(parse_list_t **head, indicator_t *indic,
-                            error_parse_t *error);
+bool check_for_splitter_elem(bool *found_arg, parse_list_t **head,
+                            indicator_t *indic, error_parse_t *error);
 
-bool check_for_redirection_elem(cmd_list_t **cur_cmd_list, indicator_t *indic,
-                                error_parse_t *error);
+bool check_for_redirection_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+                                indicator_t *indic, error_parse_t *error);
+
+void check_for_unquoted_elem(const bool found_arg, cmd_list_t **cur_cmd_list,
+                            indicator_t *indic);
 
 void check_redir_file_set(const cmd_list_t *cur_cmd,
                         error_parse_t *error,

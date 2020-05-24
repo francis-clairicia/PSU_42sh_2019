@@ -28,14 +28,10 @@ static bool parse_each_argument(parse_list_t **head, indicator_t *indic,
 
     if (!set_separator(indic))
         return (false);
-    if (!found_arg && check_for_backtick_elem(cur_cmd_list, indic))
-        found_arg = true;
-    if (!found_arg && check_for_splitter_elem(head, indic, error))
-        found_arg = true;
-    if (!found_arg && check_for_redirection_elem(cur_cmd_list, indic, error))
-        found_arg = true;
-    if (!found_arg)
-        get_unquoted_arg(cur_cmd_list, indic);
+    check_for_backtick_elem(&found_arg, cur_cmd_list, indic);
+    check_for_splitter_elem(&found_arg, head, indic, error);
+    check_for_redirection_elem(&found_arg, cur_cmd_list, indic, error);
+    check_for_unquoted_elem(found_arg, cur_cmd_list, indic);
     if ((*error) == NONE && indic->last_quotation != WAS_SINGLE)
         apply_vars_to_last_elem((*head)->prev, shell, error);
     if ((*error) == NONE && indic->last_quotation == WAS_UNQUOTED)
@@ -50,7 +46,7 @@ parse_list_t *parse_input(const char *input, shell_t *shell,
     indicator_t indic = {.input = input, .i = 0,
                     .separator = false, .last_quotation = NONE};
 
-    if (!input || !shell || !check_unmatched_backticks(input, error))
+    if (!input || !shell || !check_unmatched_chars(input, error))
         return (NULL);
     add_parsed_list_node(&parsing_list);
     if (!parsing_list)
