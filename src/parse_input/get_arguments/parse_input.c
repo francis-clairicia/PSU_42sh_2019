@@ -42,7 +42,7 @@ static bool parse_each_argument(parse_list_t **head, indicator_t *indic,
     check_for_splitter_elem(&found_arg, head, indic, error);
     check_for_redirection_elem(&found_arg, &LAST_CMD(head), indic, error);
     check_for_unquoted_elem(&found_arg, &LAST_CMD(head), indic);
-    check_for_alias(shell, &LAST_CMD(head), &indic->last_cmd_alias);
+    check_for_alias(shell, &(LAST_CMD(head)->prev), &indic->last_cmd_alias);
     apply_last_elem_changes(head, indic, shell, error);
     check_for_magic_quotes(&found_arg, shell, &LAST_CMD(head), indic);
     return (true);
