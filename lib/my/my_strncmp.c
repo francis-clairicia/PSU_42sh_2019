@@ -7,19 +7,24 @@
 
 #include <stddef.h>
 
-int my_strcmp(char const *s1, char const *s2);
-
-int my_strlen(char const *str);
-
-char *my_strncpy(char *dest, char const *src, int n);
-
 int my_strncmp(char const *s1, char const *s2, int n)
 {
-    char s1_cut[n + 1];
+    int i = 0;
 
     if (s1 == NULL || s2 == NULL)
-        return (my_strcmp(s1, s2));
-    if (n >= my_strlen(s1))
-        return (my_strcmp(s1, s2));
-    return (my_strcmp(my_strncpy(s1_cut, s1, n), s2));
+        return (-1);
+    while ((s1[i] != '\0') && (s2[i] != '\0') && i < n) {
+        if (s1[i] < s2[i])
+            return (-1);
+        if (s1[i] > s2[i])
+            return (1);
+        i += 1;
+    }
+    if (i == n || ((s1[i] == '\0') && (s2[i] == '\0'))) {
+        return (0);
+    } else if (s1[i] == '\0') {
+        return (-1);
+    } else {
+        return (1);
+    }
 }
