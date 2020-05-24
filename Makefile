@@ -15,7 +15,8 @@ SRC_CORE 			=	src/print_command_prompt.c										\
 SRC_AUTO_COMPLETION	=	src/auto_completion/find_completion.c							\
 						src/auto_completion/free_completion.c							\
 
-SRC_BUILTIN			=	src/builtin/builtin_functions.c									\
+SRC_BUILTIN			=	src/builtin/cd_special_cases/cd_home_format.c					\
+						src/builtin/builtin_functions.c									\
 						src/builtin/alias.c												\
 						src/builtin/cd.c												\
 						src/builtin/echo.c												\

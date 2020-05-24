@@ -39,9 +39,11 @@ static int change_directory(char const *arg, shell_t *shell)
 {
     if (my_strcmp(arg, "-") == 0)
         return (go_to_old_directory(shell));
+    if (eligible_for_home(arg)) {
+        return (change_dir_through_home(shell, arg));
+    }
     if (chdir(arg) < 0) {
         print_error(arg, strerror(errno));
-        shell->exit_status = 1;
         return (0);
     }
     return (1);
@@ -51,7 +53,7 @@ static int set_pwd_var(char *pwd, shell_t *shell)
 {
     if (set_var_to_env("OLDPWD", pwd, shell) == -1)
         return (-1);
-    if (set_var_to_env("PWD", getcwd(pwd, 4097), shell))
+    if (set_var_to_env("PWD", getcwd(pwd, 4097), shell) == -1)
         return (-1);
     return (set_exit_status(shell, 0));
 }

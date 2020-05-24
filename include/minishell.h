@@ -75,6 +75,9 @@ int setenv_builtin_command(char * const *av, shell_t *shell);
 int unalias_builtin_command(char * const *av, shell_t *shell);
 int unsetenv_builtin_command( char * const *av, shell_t *shell);
 
+bool eligible_for_home(char const *arg);
+bool change_dir_through_home(shell_t *shell, char const *arg);
+
 #define print_env(shell) \
     env_builtin_command((char *[]){"env", NULL}, shell)
 #define set_var_to_env(variable, value, shell) \
