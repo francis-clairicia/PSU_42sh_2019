@@ -47,6 +47,6 @@ Test(get_args_from_output, do_not_put_arg_on_error)
     get_args_from_output(&args, "ls the_unknown_file_or_dir", shell);
     cr_expect_null(args);
     cr_expect_stderr_eq_str("ls: cannot access 'the_unknown_file_or_dir': "
-        "No such file or directory\n");
+                            "No such file or directory\n");
     destroy_shell_struct(shell);
 }
