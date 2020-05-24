@@ -14,9 +14,6 @@ static bool exec_next_command(parse_list_t **node,
         return (true);
     if (status == 1)
         return (false);
-    (*node) = (*node)->next;
-    if (*node == list)
-        return (false);
     if ((*node)->splitter == AND) {
         if (status < 0) {
             return (false);
@@ -26,6 +23,9 @@ static bool exec_next_command(parse_list_t **node,
             return (false);
         }
     }
+    (*node) = (*node)->next;
+    if (*node == list)
+        return (false);
     return (true);
 }
 
