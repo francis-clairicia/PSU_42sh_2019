@@ -12,12 +12,12 @@ static char *get_word_to_complete(line_t *line, int *size)
     int tmp_index = line->index;
 
     if (!size)
-        return;
-    while (tmp_index > 0 && line->buffer[tmp_index] != ' ' ||
-                            line->buffer[tmp_index] != '\t') {
+        return (NULL);
+    while (tmp_index >= 0 && (line->buffer[tmp_index] != ' ' ||
+                            line->buffer[tmp_index] != '\t')) {
         if (line->buffer[tmp_index] == '!') {
-            *size = line->index - tmp_index;
-            return (line->buffer + tmp_index);
+            *size = line->index - tmp_index - 1;
+            return (line->buffer + tmp_index + 1);
         }
         tmp_index--;
     }
@@ -32,8 +32,8 @@ static void completion_by_history(line_t *line, char *to_complete,
 
     for (; node; node = node->next) {
         historic_cmd = NODE_DATA(node, char *);
-        if (!historic_cmd ||
-            my_strncmp(to_complete, historic_cmd, to_complete_size))
+        int a = my_strncmp(to_complete, historic_cmd, to_complete_size);
+        if (!historic_cmd)
             continue;
         refresh_line(to_complete_size + 1);
         while (historic_cmd[0]) {
