@@ -11,7 +11,7 @@ static char *get_word_to_complete(line_t *line, int *size)
 {
     int tmp_index = line->index;
 
-    if (!size)
+    if (!size || !tmp_index)
         return (NULL);
     while (tmp_index >= 0 && (line->buffer[tmp_index] != ' ' ||
                             line->buffer[tmp_index] != '\t')) {
@@ -24,6 +24,19 @@ static char *get_word_to_complete(line_t *line, int *size)
     return (NULL);
 }
 
+static void update_history_completion(line_t *line, char *historic_cmd,
+                                                    int to_complete_size)
+{
+    reset_line(to_complete_size + 1);
+    my_memset(line->buffer + line->index - (to_complete_size + 1), 0,
+                                                to_complete_size + 1);
+    line->index -= to_complete_size + 1;
+    while (historic_cmd[0]) {
+        shift_line_right(line, historic_cmd[0]);
+        historic_cmd++;
+    }
+}
+
 static void completion_by_history(line_t *line, char *to_complete,
                                                 int to_complete_size)
 {
@@ -32,14 +45,10 @@ static void completion_by_history(line_t *line, char *to_complete,
 
     for (; node; node = node->next) {
         historic_cmd = NODE_DATA(node, char *);
-        int a = my_strncmp(to_complete, historic_cmd, to_complete_size);
-        if (!historic_cmd)
+        if (!historic_cmd ||
+            !my_str_eq_str_n(historic_cmd, to_complete, to_complete_size))
             continue;
-        refresh_line(to_complete_size + 1);
-        while (historic_cmd[0]) {
-            shift_line_right(line, historic_cmd[0]);
-            historic_cmd++;
-        }
+        update_history_completion(line, historic_cmd, to_complete_size);
         break;
     }
 }
