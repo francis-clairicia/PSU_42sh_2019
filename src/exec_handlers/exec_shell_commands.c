@@ -41,7 +41,7 @@ static int launch_process(char const *binary, command_t commands[],
         dup2(command->error_fd, STDERR_FILENO);
         if (execve(binary, command->argv, shell->envp) < 0)
             print_error(command->argv[0], error_exec(errno));
-        return (1);
+        exit(0);
     }
     destroy_command(command);
     if (commands[1].argv != NULL)

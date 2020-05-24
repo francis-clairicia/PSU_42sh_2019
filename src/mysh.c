@@ -27,11 +27,10 @@ static int command_prompt(char **line, int stop_shell, shell_t *shell)
 {
     char current_directory[4097];
 
-    if (stop_shell == 1) {
-        if (*line != NULL)
-            free(*line);
+    if (*line != NULL)
+        free(*line);
+    if (stop_shell == 1)
         return (0);
-    }
     print_command_prompt(getcwd(current_directory, 4097), DEFAULT_ENVIRONMENT);
     *line = get_term_line(shell);
     if (!(*line))

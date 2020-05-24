@@ -65,12 +65,13 @@ static int launch_all_commands(parse_list_t *list, shell_t *shell)
 int eval_exec_cmd(char const *command_line, shell_t *shell)
 {
     error_parse_t error = NONE;
-    parse_list_t *list = parse_input(command_line, &error);
+    parse_list_t *list = NULL;
     int status = 0;
 
-    if (error != NONE) {
+    list = parse_input(command_line, shell, &error);
+    if (error != NONE || (!shell)) {
         print_parsing_error(error);
-        status = (list == NULL) ? 1 : -1;
+        status = -1;
     } else {
         status = launch_all_commands(list, shell);
     }

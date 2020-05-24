@@ -29,7 +29,10 @@ Test(unsetenv_builtin_command, remove_var_form_environment)
 
 Test(unsetenv_builtin_command, print_error_when_no_arg_is_given)
 {
+    shell_t *shell = init_shell_struct(NULL);
+
     cr_redirect_stderr();
-    cr_expect_eq(eval_exec_cmd("unsetenv", NULL), -1);
+    cr_expect_eq(eval_exec_cmd("unsetenv", shell), -1);
     cr_expect_stderr_eq_str("unsetenv: Too few arguments.\n");
+    destroy_shell_struct(shell);
 }

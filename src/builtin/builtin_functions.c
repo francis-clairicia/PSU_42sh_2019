@@ -46,7 +46,9 @@ static int exec_builtin(builtin_t builtin, command_t *command,
     status = builtin(command->argv, shell);
     dup2(save_stdout, STDOUT_FILENO);
     dup2(save_stderr, STDERR_FILENO);
-    return ((in_fork) ? 1 : (status));
+    if (in_fork)
+        exit(0);
+    return (status);
 }
 
 int launch_builtin(builtin_t builtin, command_t commands[], shell_t *shell)

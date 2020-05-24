@@ -83,8 +83,6 @@ int unsetenv_builtin_command( char * const *av, shell_t *shell);
     unsetenv_builtin_command((char *[]){"unsetenv", \
     (char *)variable, NULL}, shell)
 
-void destroy_every_alias(alias_t **alias_list);
-
 void bind_sigint_signal(void);
 
 void print_error(char const *filepath, char const *error);

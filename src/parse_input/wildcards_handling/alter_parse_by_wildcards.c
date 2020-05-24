@@ -20,7 +20,7 @@ static void apply_wildcards_to_node(parse_list_t *cur_node,
 
 static bool can_treat_wildcards(const parse_list_t *node)
 {
-    if (!node || !(node->cmd_list) || node->cmd_list->prev->args)
+    if (!node || !(node->cmd_list) || !node->cmd_list->prev->args)
         return (false);
     if (node->cmd_list->prev->prev->redir_output_type == PIPE)
         return (false);

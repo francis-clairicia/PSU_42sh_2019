@@ -22,9 +22,12 @@ Test(env_builtin_command, print_environment)
 
 Test(env_builtin_command, handle_args)
 {
+    shell_t *shell = init_shell_struct(NULL);
+
     cr_redirect_stderr();
-    cr_expect_eq(eval_exec_cmd("env -i", NULL), -1);
+    cr_expect_eq(eval_exec_cmd("env -i", shell), -1);
     cr_expect_stderr_eq_str("env: Too many arguments.\n");
+    destroy_shell_struct(shell);
 }
 
 Test(env_builtin_command, handle_null_env)

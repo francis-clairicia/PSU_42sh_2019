@@ -22,11 +22,11 @@
 
 //Redirections Input Characters Comparisons.
 typedef enum redirection_type {
-    PIPE = 0b1,
-    APPEND_TO_FILE = 0b10,
-    REDIR_IN_FILE = 0b100,
-    READ_FROM_STDIN_AS_INPUT = 0b1000,
-    READ_FROM_FILE_AS_INPUT = 0b10000,
+    PIPE = 1,
+    APPEND_TO_FILE = 1 << 1,
+    REDIR_IN_FILE = 1 << 2,
+    READ_FROM_STDIN_AS_INPUT = 1 << 3,
+    READ_FROM_FILE_AS_INPUT = 1 << 4,
 } redirection_type_t;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,8 +52,9 @@ static const char * const redirections[] = {
 
 typedef enum splitter_type {
     SEMI_COLUMN = 1,
-    AND = 2,
-    OR = 3
+    AND,
+    OR,
+    BG,
 } splitter_type_t;
 
 static const char first_chars_splitters[] = ";&|";
@@ -62,6 +63,7 @@ static const char * const splitters[] = {
     ";",
     "&&",
     "||",
+    "&",
     NULL
 };
 
@@ -144,6 +146,7 @@ typedef struct parse_list {
 #define WAS_UNQUOTED (1)
 #define WAS_SINGLE (2)
 #define WAS_DOUBLE (3)
+#define WAS_MAGIC (4)
 
 typedef struct indicator_s {
     const char *input;
@@ -159,43 +162,41 @@ typedef struct indicator_s {
 ///////////////////////////////////////////////
 
 typedef enum error_parse {
-    UNMATCHED_BACKTICKS = -1,
     MISSING_NAME_FOR_REDIRECT = 1,
     AMBIGUOUS_INPUT_REDIRECT,
     AMBIGUOUS_OUTPUT_REDIRECT,
     INVALID_NULL_COMMAND,
+    ILLEGAL_VARIABLE_NAME,
+    UNDEFINED_VARIABLE,
+    UNMATCHED_SINGLE,
+    UNMATCHED_DOUBLE,
+    UNMATCHED_MAGIC,
 } error_parse_t;
 
 static const char *parsing_errors[] = {
     "Missing name for redirect.\n",
     "Ambiguous input redirect.\n",
     "Ambiguous output redirect.\n",
-    "Invalid null command.\n"
+    "Invalid null command.\n",
+    "Illegal variable name.\n",
+    "Undefined variable.\n",
+    "Unmatched '''.\n",
+    "Unmatched '\"'.\n",
+    "Unmatched '`'.\n",
 };
 
 static inline void print_parsing_error(const error_parse_t error)
 {
-    if (error <= 0)
+    if (error <= NONE)
         return;
     my_putstr_error(parsing_errors[error - 1]);
 };
-
-/////////////////////////////////////////////
-//         Unmatched characters             //
-/////////////////////////////////////////////
-
-//////////////////////////////
-
-#define UNMATCHED_SINGLE (1)
-#define UNMATCHED_DOUBLE (2)
-
-//////////////////////////////
 
 //Checks and prints if need if a matching quotation error is within cmd.
 //
 //Returns True (1) if not.
 //Returns False (0) otherwise.
-bool check_unmatched_backticks(const char *cmd, error_parse_t *error);
+bool check_unmatched_chars(const char *cmd, error_parse_t *error);
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -204,8 +205,13 @@ bool check_unmatched_backticks(const char *cmd, error_parse_t *error);
 ** //        PARSING FUNCTIONS               //
 */ ////////////////////////////////////////////
 
+///////////////////////
+#include "mysh_shell.h"
+///////////////////////
+
 // Parses an input into a parse_list_t *list.
-parse_list_t *parse_input(const char *input, error_parse_t *error);
+parse_list_t *parse_input(const char *input, shell_t *shell,
+                        error_parse_t *error);
 
 // ADD NODES TO LISTS //
 
@@ -274,6 +280,8 @@ void get_quoted_arg(cmd_list_t **head, indicator_t *indic);
 //Increases index to the new arg/splitter/space/end of input.
 void get_unquoted_arg(cmd_list_t **head, indicator_t *indic);
 
+void get_magic_quotes(shell_t *shell, cmd_list_t **head, indicator_t *indic);
+
 //Gets a splitter, adds a new-last node to the parsed_input list,
 //sets it the newly-found splitter.
 //
@@ -288,13 +296,32 @@ bool get_splitter(parse_list_t **head, indicator_t *indic,
 void get_redirection(cmd_list_t **head, indicator_t *indic,
                     error_parse_t *error);
 
-bool check_for_backtick_elem(cmd_list_t **cur_cmd_list, indicator_t *indic);
+//Get argument from the output of a command which was between magic quotes
+void get_args_from_output(arguments_t **args, char const *command_line,
+    shell_t *shell);
 
-bool check_for_splitter_elem(parse_list_t **head, indicator_t *indic,
-                            error_parse_t *error);
+void check_for_backtick_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+                            indicator_t *indic);
 
-bool check_for_redirection_elem(cmd_list_t **cur_cmd_list, indicator_t *indic,
-                                error_parse_t *error);
+void check_for_splitter_elem(bool *found_arg, parse_list_t **head,
+                            indicator_t *indic, error_parse_t *error);
+
+void check_for_redirection_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+                                indicator_t *indic, error_parse_t *error);
+
+void check_for_magic_quotes(bool *found_arg, shell_t *shell,
+                        cmd_list_t **cur_cmd_list, indicator_t *indic);
+
+void check_for_unquoted_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+                            indicator_t *indic);
+
+void check_redir_file_set(const cmd_list_t *cur_cmd,
+                        error_parse_t *error,
+                        const redirection_type_t redir_type,
+                        const char cur_char);
+
+void set_redir_type(cmd_list_t **head, error_parse_t *error,
+                    const redirection_type_t redir_type);
 
 /////////////////////////
 
@@ -364,14 +391,6 @@ typedef struct argument_globber_s {
 //paths hidden into match_str to do so.
 bool add_args_for_matching(arguments_t **head, arguments_t *tmp);
 
-void check_redir_file_set(const cmd_list_t *cur_cmd,
-                        error_parse_t *error,
-                        const redirection_type_t redir_type,
-                        const char cur_char);
-
-void set_redir_type(cmd_list_t **head, error_parse_t *error,
-                    const redirection_type_t redir_type);
-
 void apply_wildcards_changes(parse_list_t *cur_node);
 
 /////////////////////////////////////////////////////////
@@ -380,7 +399,22 @@ void apply_wildcards_changes(parse_list_t *cur_node);
 //     Variables     //
 ///////////////////////
 
+///////////////////////////
+#include "mysh_variables.h"
+///////////////////////////
+
+#define VAR_STOPPERS "/ \t"
 #define IS_CHAR_VAR_STOPPER(c) (!c || c == '/' || is_char_spaces(c)) \
+
+#define GET_SIZE_REPLACED(str, i, size_call, size_replace) \
+                ((i + size_replace + (my_strlen(str) - i - size_call))) \
+
+
+void apply_vars_to_last_elem(parse_list_t *cur_node, shell_t *shell,
+                            error_parse_t *error);
+
+bool replace_var_call_by_var(char **str, const char *var_call,
+                            const char *var_replace);
 
 /////////////////////////////////////////////
 

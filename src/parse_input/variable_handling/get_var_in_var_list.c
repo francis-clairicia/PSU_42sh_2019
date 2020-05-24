@@ -16,7 +16,7 @@ var_list_t *get_var_in_var_list(var_list_t *head, const char *var_name)
         return (NULL);
     tmp = head;
     do {
-        if (my_str_eq_str(tmp->var_name, var_name))
+        if (!my_strcmp(tmp->var_name, var_name))
             return (tmp);
         tmp = tmp->next;
     } while (tmp != head);

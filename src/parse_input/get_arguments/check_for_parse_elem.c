@@ -7,31 +7,48 @@
 
 #include "mysh_parsing.h"
 
-bool check_for_backtick_elem(cmd_list_t **cur_cmd_list, indicator_t *indic)
+void check_for_backtick_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+                            indicator_t *indic)
 {
-    if (is_char_backtick(indic->input[indic->i])) {
+    if (!(*found_arg) && is_char_backtick(indic->input[indic->i])) {
         get_quoted_arg(cur_cmd_list, indic);
-        return (true);
+        (*found_arg) = true;
     }
-    return (false);
 }
 
-bool check_for_splitter_elem(parse_list_t **head, indicator_t *indic,
-                            error_parse_t *error)
+void check_for_splitter_elem(bool *found_arg, parse_list_t **head,
+                            indicator_t *indic, error_parse_t *error)
 {
-    if (is_char_splitter(indic->input[indic->i])) {
-        if (get_splitter(head, indic, error))
-            return (true);
+    if (!(*found_arg) && is_char_splitter(indic->input[indic->i])) {
+        if (get_splitter(head, indic, error)) {
+            (*found_arg) = true;
+        }
     }
-    return (false);
 }
 
-bool check_for_redirection_elem(cmd_list_t **cur_cmd_list, indicator_t *indic,
-                                error_parse_t *error)
+void check_for_redirection_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+                            indicator_t *indic, error_parse_t *error)
 {
-    if (is_char_redirection(indic->input[indic->i])) {
+    if (!(*found_arg) && is_char_redirection(indic->input[indic->i])) {
         get_redirection(cur_cmd_list, indic, error);
-        return (true);
+        (*found_arg) = true;
     }
-    return (false);
+}
+
+void check_for_magic_quotes(bool *found_arg, shell_t *shell,
+                        cmd_list_t **cur_cmd_list, indicator_t *indic)
+{
+    if (!(*found_arg) && indic->input[indic->i] == '`') {
+        get_magic_quotes(shell, cur_cmd_list, indic);
+        (*found_arg) = true;
+    }
+}
+
+void check_for_unquoted_elem(bool *found_arg, cmd_list_t **cur_cmd_list,
+                            indicator_t *indic)
+{
+    if (!(*found_arg) && indic->input[indic->i] != '`') {
+        get_unquoted_arg(cur_cmd_list, indic);
+        (*found_arg) = true;
+    }
 }

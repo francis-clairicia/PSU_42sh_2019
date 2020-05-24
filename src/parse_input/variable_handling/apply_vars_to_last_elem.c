@@ -9,39 +9,64 @@
 #include "mysh_parsing.h"
 #include "minishell.h"
 
-static bool get_vars_from_to(char * const * envp, char **str)
+static char *find_variable_value(shell_t *shell, error_parse_t *error,
+                                const char *variable)
 {
-    size_t index = 0;
-    char *asked_var = NULL;
-    char *env_var = NULL;
+    char *value = NULL;
 
-    if (my_strlen(*str) <= 1)
-        return (true);
-    for (; (*str)[index]; index += 1) {
-        if ((*str)[index] == '$' && (*str)[index + 1]
-            && ((*str)[index + 1] != '/' && !is_char_spaces((*str)[index + 1])))
-            break;
-    }
-    if (!(*str)[index])
-        return (true);
-    if (!my_isalpha((*str)[index])) {
-        my_putstr("Illegal variable name.\n");
-        return (false);
-    }
-    env_var = get_var_env(envp, asked_var);
-    return (get_vars_from_to(envp, &str[index]));
+    value = get_var_env(FIND_ENV(shell), variable);
+    if (!value && (*error) == NONE)
+        (*error) = UNDEFINED_VARIABLE;
+    return (value);
 }
 
-bool apply_vars_to_last_elem(parse_list_t *cur_node, char * const *envp)
+static bool shift_to_next_var(const char *str, size_t *index)
+{
+    for (; str[*index]; *index += 1) {
+        if (str[*index] == '$' && !IS_CHAR_VAR_STOPPER(str[(*index) + 1]))
+            break;
+    }
+    if (!str[*index])
+        return (false);
+    *index += 1;
+    return (true);
+}
+
+static void get_vars_from_to(shell_t *shell, error_parse_t *error,
+                            char **str)
+{
+    size_t index = 0;
+    char *var_call = NULL;
+    char *var_value = NULL;
+
+    if (my_strlen(*str) <= 1 || (*error) != NONE)
+        return;
+    if (!shift_to_next_var(*str, &index))
+        return;
+    if (!my_isalpha((*str)[index])) {
+        (*error) = ILLEGAL_VARIABLE_NAME;
+        return;
+    }
+    var_call = my_strdup_until_list_c(&(*str)[index - 1], VAR_STOPPERS);
+    var_value = find_variable_value(shell, error, &var_call[1]);
+    if (*error != NONE || !replace_var_call_by_var(str, var_call, var_value)) {
+        FREE_PTR(var_call);
+        return;
+    }
+    FREE_PTR(var_call);
+    get_vars_from_to(shell, error, str);
+}
+
+void apply_vars_to_last_elem(parse_list_t *cur_node, shell_t *shell,
+                            error_parse_t *error)
 {
     cmd_list_t *last_list = NULL;
 
-    if (!cur_node)
-        return (true);
+    if (!cur_node || !(cur_node->cmd_list)|| !(cur_node->cmd_list->prev))
+        return;
     last_list = cur_node->cmd_list->prev;
-    if (!get_vars_from_to(envp, &last_list->redir_input))
-        return (false);
-    if (!get_vars_from_to(envp, &last_list->redir_output))
-        return (false);
-    return (true);
+    get_vars_from_to(shell, error, &last_list->redir_input);
+    get_vars_from_to(shell, error, &last_list->redir_output);
+    if (last_list->args)
+        get_vars_from_to(shell, error, &last_list->args->prev->arg);
 }
