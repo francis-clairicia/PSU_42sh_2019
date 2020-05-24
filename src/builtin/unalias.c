@@ -19,13 +19,10 @@ void destroy_alias_node(alias_t **node)
 void destroy_every_alias(alias_t **alias_list)
 {
     alias_t *temp_list;
-    alias_t *save_list;
 
-    while (*alias_list) {
+    for (; *alias_list; *alias_list = (*alias_list)->next) {
         temp_list = *alias_list;
-        save_list = (*alias_list)->next;
         destroy_alias_node(&temp_list);
-        *alias_list = save_list;
     }
     *alias_list = NULL;
 }
@@ -60,9 +57,8 @@ int unalias_builtin_command(char * const *av, shell_t *shell)
         print_error("unalias", "Too few arguments");
         return (set_exit_status(shell, 1));
     }
-    my_show_word_array(av);
     if (ac >= 2) {
-        if (my_array_contains(av, "*"))
+        if (my_array_contains(av + 1, "*"))
             destroy_every_alias(&shell->alias_list);
         else
             delete_alias(av, &shell->alias_list);

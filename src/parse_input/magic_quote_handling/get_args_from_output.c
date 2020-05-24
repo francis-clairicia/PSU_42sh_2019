@@ -44,8 +44,6 @@ static void set_arguments_to_list(arguments_t **args_list, char **args_array)
 
 static void set_empty_args(arguments_t **args)
 {
-    if ((*args))
-        return;
     add_arg_list_node(args);
     if (!(*args))
         return;
