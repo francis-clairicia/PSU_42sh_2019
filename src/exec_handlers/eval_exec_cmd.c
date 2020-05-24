@@ -29,24 +29,20 @@ static bool exec_next_command(parse_list_t **node,
     return (true);
 }
 
-static int exec_command(cmd_list_t *cmd_list, shell_t *shell, bool background)
+static int exec_command(cmd_list_t *cmd_list, shell_t *shell)
 {
-    process_t *process = NULL;
     int child_pid = 0;
 
-    if (!background)
+    if (1)
         return (exec_piped_commands(cmd_list, shell));
     child_pid = fork();
     if (child_pid == 0) {
         exec_piped_commands(cmd_list, shell);
-        exit(shell->exit_status);
+        return (1);
     }
-    process = init_process_struct(child_pid, cmd_list);
-    if (process) {
-        my_append_to_list(&(shell->process), process, process_t *);
-        process->index = shell->process.size;
-        my_printf("[%lu] %d\n", process->index, process->pid);
-    }
+    my_append_to_list(&(shell->process),
+        init_process_struct(child_pid, cmd_list), process_t *);
+    my_printf("[%d] %d\n", shell->process.size, child_pid);
     return (0);
 }
 
@@ -58,7 +54,7 @@ static int launch_all_commands(parse_list_t *list, shell_t *shell)
     parse_list_t *node = list;
 
     while (exec_next_command(&node, list, i, status)) {
-        status = exec_command(node->cmd_list, shell, (node->splitter == BG));
+        status = exec_command(node->cmd_list, shell);
         if (status < 0)
             error = 1;
         i += 1;

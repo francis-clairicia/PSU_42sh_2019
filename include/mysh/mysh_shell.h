@@ -47,9 +47,6 @@ typedef struct process
 {
     pid_t pid;
     char *cmd;
-    size_t index;
-    bool running;
-    bool checked;
 } process_t;
 
 process_t *init_process_struct(pid_t pid, cmd_list_t *cmd_list);

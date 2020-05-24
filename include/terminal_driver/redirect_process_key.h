@@ -22,7 +22,6 @@ void process_ctrl_q(line_t *line);
 void process_ctrl_c(line_t *line);
 void process_ctrl_d(line_t *line);
 void process_enter(line_t *line);
-void process_tabulation(line_t *line);
 
 static void (*redirect_process_key[])(line_t *) = {
     process_arrow_left,
@@ -36,8 +35,7 @@ static void (*redirect_process_key[])(line_t *) = {
     process_ctrl_q,
     process_ctrl_c,
     process_ctrl_d,
-    process_enter,
-    process_tabulation
+    process_enter
 };
 
 static const int redirect_key_template[] =
@@ -53,8 +51,7 @@ static const int redirect_key_template[] =
     CTRL_KEY('q'),
     0x03,
     0x04,
-    '\r',
-    '\t'
+    '\r'
 };
 
 static inline int get_redirect_key_idx(int key)

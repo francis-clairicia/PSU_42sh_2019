@@ -71,7 +71,6 @@ SRC			=	my_put_nbr.c					\
 				my_strnlen.c					\
 				my_strncat_malloc.c				\
 				my_str_eq_str_n.c				\
-				my_word_len.c					\
 
 LINKED_LIST	=	list/my_list.c					\
 				list/my_create_node.c			\

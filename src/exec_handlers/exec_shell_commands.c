@@ -19,7 +19,6 @@ static int handle_status(int child_pid, int status_pipe, shell_t *shell)
             return (set_exit_status(shell, 127 + WTERMSIG(wstatus)));
         }
         my_putstr_error("\n");
-        return (set_exit_status(shell, 1));
     }
     if (status_pipe != 0)
         return (status_pipe);

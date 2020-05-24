@@ -27,7 +27,6 @@ int my_putstr(char const *str);
 int my_putstr_error(char const *str);
 int my_putstr_fd(int fd, char const *str);
 int my_strlen(char const *str);
-int my_word_len(char const *word);
 ssize_t my_strlen_until_c(const char *str, const char c);
 ssize_t my_strlen_until_list_c(const char *str, const char list[]);
 ssize_t my_strnlen(const char *str, const ssize_t n);

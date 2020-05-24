@@ -18,15 +18,13 @@ void destroy_alias_node(alias_t **node)
 
 void destroy_every_alias(alias_t **alias_list)
 {
-    alias_t *temp_list = NULL;
+    alias_t *temp_list;
 
-    if (!alias_list)
-        return;
-    while (*alias_list) {
+    for (; *alias_list; *alias_list = (*alias_list)->next) {
         temp_list = *alias_list;
-        *alias_list = (*alias_list)->next;
         destroy_alias_node(&temp_list);
     }
+    *alias_list = NULL;
 }
 
 void delete_alias(char * const *av, alias_t **alias_l)
@@ -60,7 +58,10 @@ int unalias_builtin_command(char * const *av, shell_t *shell)
         return (set_exit_status(shell, 1));
     }
     if (ac >= 2) {
-        delete_alias(av, &shell->alias_list);
+        if (my_array_contains(av + 1, "*"))
+            destroy_every_alias(&shell->alias_list);
+        else
+            delete_alias(av, &shell->alias_list);
     }
-    return (set_exit_status(shell, 0));
+    return (set_exit_status(shell, 1));
 }

@@ -54,7 +54,5 @@ int my_remove_node(list_t *list, node_t *node)
     else
         remove_middle_node(node);
     list->size -= 1;
-    node->next = NULL;
-    node->previous = NULL;
     return (1);
 }
