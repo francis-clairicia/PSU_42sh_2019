@@ -17,6 +17,7 @@ static char *get_word_to_complete(line_t *line, int *size)
                             line->buffer[tmp_index] != '\t')) {
         if (line->buffer[tmp_index] == '!') {
             *size = line->index - tmp_index - 1;
+            line->index = tmp_index;
             return (line->buffer + tmp_index + 1);
         }
         tmp_index--;
@@ -27,10 +28,12 @@ static char *get_word_to_complete(line_t *line, int *size)
 static void update_history_completion(line_t *line, char *historic_cmd,
                                                     int to_complete_size)
 {
+    register int size = 0;
+
+    size = my_word_len(line->buffer + line->index);
     reset_line(to_complete_size + 1);
-    my_memset(line->buffer + line->index - (to_complete_size + 1), 0,
-                                                to_complete_size + 1);
-    line->index -= to_complete_size + 1;
+    refresh_line(size);
+    my_memset(line->buffer + line->index, 0, size);
     while (historic_cmd[0]) {
         shift_line_right(line, historic_cmd[0]);
         historic_cmd++;
