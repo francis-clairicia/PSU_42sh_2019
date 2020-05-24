@@ -60,10 +60,7 @@ int unalias_builtin_command(char * const *av, shell_t *shell)
         return (set_exit_status(shell, 1));
     }
     if (ac >= 2) {
-        if (my_array_contains(av + 1, "*"))
-            destroy_every_alias(&shell->alias_list);
-        else
-            delete_alias(av, &shell->alias_list);
+        delete_alias(av, &shell->alias_list);
     }
     return (set_exit_status(shell, 1));
 }
